@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('home');
 });
+
+// call controller folder admin
+Route::group(['namespace'=>'Admin'],function(){
+    
+    // call controller modul
+    Route::group(['prefix'=>'product'],function(){
+        Route::get('/view_product','ProductController@index')->name('view_product');
+    });
+    
+});
