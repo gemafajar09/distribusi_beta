@@ -16,11 +16,22 @@ Route::get('/', function () {
 });
 
 // call controller folder admin
-Route::group(['namespace'=>'Admin'],function(){
-    
+Route::group(['namespace' => 'Admin'], function () {
+
     // call controller modul
-    Route::group(['prefix'=>'product'],function(){
-        Route::get('/view_product','ProductController@index')->name('view_product');
+    Route::group(['prefix' => 'product'], function () {
+        Route::get('/view_product', 'ProductController@index')->name('view_product');
     });
-    
+    Route::group(['prefix' => 'cabang'], function () {
+        Route::get('/index', 'CabangController@index')->name('cabang');
+    });
+    Route::group(['prefix' => 'satuan'], function () {
+        Route::get('/index', 'SatuanController@index')->name('satuan');
+    });
+    Route::group(['prefix' => 'cost'], function () {
+        Route::get('/index', 'CostController@index')->name('cost');
+    });
+    Route::group(['prefix' => 'sales'], function () {
+        Route::get('/index', 'SalesController@index')->name('sales');
+    });
 });
