@@ -5,26 +5,18 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Models\Produk;
+use App\Models\Stok;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
-
-class ProductController extends Controller
+class StokController extends Controller
 {
     public function __construct()
     {
         $this->rules = array(
-            'id_produk'=>'numeric',
-            'produk_type'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
-            'id_brand'=>'required|numeric',
-            'produk_nama'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
-            'produk_harga'=>'required|numeric',
-            'stok'=>'required|numeric',
-            'id_satuan'=>'required|numeric'
-        );
-        $this->messages = array(
-            'regex' => 'The Symbol Are Not Allowed'
-                   
+            'stok_id'=>'numeric',
+            'produk_id'=>'required|numeric',
+            'jumlah'=>'required|numeric',
+            'id_cabang'=>'required|numeric',
         );
     }
 
@@ -33,14 +25,15 @@ class ProductController extends Controller
         $data = $this->join_builder();
         return datatables()->of($data)->toJson();
         
-       
     }
-    
+
     public function join_builder($id=null){
-        // tempat join hanya menselect beberapa field tambahkan master brand
-        $data = DB::table('tbl_produk')
-                ->join('tbl_satuan','tbl_satuan.id_satuan','=','tbl_produk.id_satuan')
-                ->join('tbl_brand','tbl_brand.id_brand','=','tbl_produk.id_brand')
+        // tempat join hanya menselect beberapa field tambah join brand
+        $data = DB::table('tbl_stok')
+                ->join('tbl_cabang','tbl_stok.id_cabang','=','tbl_cabang.id_cabang')
+                ->join('tbl_produk','tbl_stok.produk_id','=','tbl_produk.produk_id')
+                ->join('tbl_satuan','tbl_produk.id_satuan','=','tbl_satuan.id_satuan')
+                ->join('tbl_brand','tbl_produk.id_brand','=','tbl_brand.id_brand')
                 ->get();
         return $data;
     }
@@ -49,9 +42,9 @@ class ProductController extends Controller
     {
         try{
             if($id){
-                $data = Produk::findOrFail($id);
+                $data = Stok::findOrFail($id);
             }else{
-                $data = Produk::all();
+                $data = Stok::all();
             }
             return response()->json(['data'=>$data,'status'=>200]);
         }catch(ModelNotFoundException $e){
@@ -61,29 +54,25 @@ class ProductController extends Controller
 
     public function add(Request $request){
         // id_brand belum final
-        $validator = Validator::make($request->all(),$this->rules,$this->messages);
+        $validator = Validator::make($request->all(),$this->rules);
         if($validator->fails()){
             return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
         }else{
-            return response()->json(['id'=>Produk::create($request->all())->produk_id,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
+            return response()->json(['id'=>Stok::create($request->all())->stok_id,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
     }
-
-
+    
     public function edit(Request $request){
-        $id = $request->input('produk_id');
+        $id = $request->input('stok_id');
         try{
-            $edit = Produk::findOrFail($id);
-            $validator = Validator::make($request->all(),$this->rules,$this->messages);
+            $edit = Stok::findOrFail($id);
+            $validator = Validator::make($request->all(),$this->rules);
             if($validator->fails()){
                 return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
             }else{
-                $edit->produk_type = $request->input('produk_type');
-                $edit->id_brand = $request->input('id_brand');
-                $edit->produk_nama = $request->input('produk_nama');
-                $edit->produk_harga = $request->input('produk_harga');
-                $edit->stok = $request->input('stok');
-                $edit->id_satuan = $request->input('id_satuan');
+                $edit->produk_id = $request->input('produk_id');
+                $edit->jumlah = $request->input('jumlah');
+                $edit->id_cabang = $request->input('id_cabang');
                 $edit->save();
                 return response()->json(['message'=>'Data Berhasil Di Edit','data'=>$edit,'status'=>200]);
             }
@@ -95,17 +84,11 @@ class ProductController extends Controller
 
     public function remove(Request $request, $id){
         try{
-            $data = Produk::findOrFail($id);
+            $data = Stok::findOrFail($id);
             $data->delete();
             return response()->json(['message'=>'Data Berhasil Di Hapus','status'=>200]);
         }catch (ModelNotFoundException $e) {
             return response()->json(['message'=>'Data Tidak Ditemukan','status'=>404]);
         }
     }
-
-
-
-    
-
-    
 }
