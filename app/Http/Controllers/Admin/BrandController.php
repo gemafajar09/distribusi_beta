@@ -48,7 +48,7 @@ class BrandController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Brand::create($request->all())->id_brand,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -60,7 +60,7 @@ class BrandController extends Controller
             $edit = Brand::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->nama_brand = $request->input('nama_brand');
                 $edit->save();

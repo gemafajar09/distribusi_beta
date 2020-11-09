@@ -52,7 +52,7 @@ class SalesController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Sales::create($request->all())->id_sales,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -64,7 +64,7 @@ class SalesController extends Controller
             $edit = Sales::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->nama_sales = $request->input('nama_sales');
                 $edit->alamat = $request->input('alamat');

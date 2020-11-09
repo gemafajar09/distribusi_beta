@@ -50,7 +50,7 @@ class SatuanController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Satuan::create($request->all())->id_satuan,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -62,7 +62,7 @@ class SatuanController extends Controller
             $edit = Satuan::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->id_satuan = $request->input('id_satuan');
                 $edit->nama_satuan = $request->input('nama_satuan');

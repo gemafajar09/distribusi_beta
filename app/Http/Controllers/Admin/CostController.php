@@ -59,7 +59,7 @@ class CostController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Cost::create($request->all())->cost_id,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -71,7 +71,7 @@ class CostController extends Controller
             $edit = Cost::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->id_sales = $request->input('id_sales');
                 $edit->tanggal = $request->input('tanggal');

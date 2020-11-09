@@ -65,7 +65,7 @@ class CustomerController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Customer::create($request->all())->id_customer,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -77,7 +77,7 @@ class CustomerController extends Controller
             $edit = Customer::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->nama_customer = $request->input('nama_customer');
                 $edit->nama_perusahaan = $request->input('nama_perusahaan');

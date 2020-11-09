@@ -56,7 +56,7 @@ class StokController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Stok::create($request->all())->stok_id,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -68,7 +68,7 @@ class StokController extends Controller
             $edit = Stok::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->produk_id = $request->input('produk_id');
                 $edit->jumlah = $request->input('jumlah');

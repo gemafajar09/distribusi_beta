@@ -54,7 +54,7 @@ class CabangController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Cabang::create($request->all())->id_cabang,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -66,7 +66,7 @@ class CabangController extends Controller
             $edit = Cabang::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->nama_cabang = $request->input('nama_cabang');
                 $edit->alamat = $request->input('alamat');

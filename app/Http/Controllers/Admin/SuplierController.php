@@ -59,7 +59,7 @@ class SuplierController extends Controller
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
-            return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+            return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
             return response()->json(['id'=>Suplier::create($request->all())->id_suplier,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
@@ -71,7 +71,7 @@ class SuplierController extends Controller
             $edit = Suplier::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
-                return response()->json(['messageForm'=>$validator->errors(),'status'=>422]);
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
                 $edit->nama_suplier = $request->input('nama_suplier');
                 $edit->nama_perusahaan = $request->input('nama_perusahaan');
