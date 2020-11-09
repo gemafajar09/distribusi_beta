@@ -4,28 +4,26 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use App\Models\Satuan;
+use App\Models\Brand;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
-
-class SatuanController extends Controller
+class BrandController extends Controller
 {
     public function __construct()
     {
         $this->rules = array(
-            'id_satuan'=>'numeric',
-            'nama_satuan'=>'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
-            'keterangan_satuan'=>'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
+            'id_brand'=>'numeric',
+            'nama_brand'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
         );
         $this->messages = array(
-            'regex' => 'The Symbol Are Not Allowed',       
+            'regex' => 'The Symbol Are Not Allowed'
+                   
         );
     }
 
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
-        return datatables()->of(Satuan::all())->toJson();
+        return datatables()->of(Brand::all())->toJson();
     }
 
     public function join_builder($id=null){
@@ -36,9 +34,9 @@ class SatuanController extends Controller
     {
         try{
             if($id){
-                $data = Satuan::findOrFail($id);
+                $data = Brand::findOrFail($id);
             }else{
-                $data = Satuan::all();
+                $data = Brand::all();
             }
             return response()->json(['data'=>$data,'status'=>200]);
         }catch(ModelNotFoundException $e){
@@ -52,21 +50,19 @@ class SatuanController extends Controller
         if($validator->fails()){
             return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
-            return response()->json(['id'=>Satuan::create($request->all())->id_satuan,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
+            return response()->json(['id'=>Brand::create($request->all())->id_brand,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
     }
 
     public function edit(Request $request){
-        $id = $request->input('id_satuan');
+        $id = $request->input('id_brand');
         try{
-            $edit = Satuan::findOrFail($id);
+            $edit = Brand::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
                 return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
-                $edit->id_satuan = $request->input('id_satuan');
-                $edit->nama_satuan = $request->input('nama_satuan');
-                $edit->keterangan_satuan = $request->input('keterangan_satuan');
+                $edit->nama_brand = $request->input('nama_brand');
                 $edit->save();
                 return response()->json(['message'=>'Data Berhasil Di Edit','data'=>$edit,'status'=>200]);
             }
@@ -78,7 +74,7 @@ class SatuanController extends Controller
 
     public function remove(Request $request, $id){
         try{
-            $data = Satuan::findOrFail($id);
+            $data = Brand::findOrFail($id);
             $data->delete();
             return response()->json(['message'=>'Data Berhasil Di Hapus','status'=>200]);
         }catch (ModelNotFoundException $e) {

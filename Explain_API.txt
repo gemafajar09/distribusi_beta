@@ -1,0 +1,31 @@
+1. membuat migrasi = tbl_produk,tbl_stok
+2. membuat model = Produk,Stok
+3. membuat controller ->selain datatable,index,show menggunakan query builder, ini menggunakan eloquent(edit,create,delete) = ProdukController,StokController
+4. membuat routes API / End Point = produk,stok
+6. tipe : RestFull Api => (GET,POST,PUT,DELETE)
+
+Contoh : Call End Point :
+	=>http://127.0.0.1:8000/api/produk
+Contoh :
+ // api produk
+    Route::get('produk/datatable','ProductController@datatable'); => For Data Table
+    Route::get('produk/{id}','ProductController@get'); => For Spesifik Data
+    Route::get('produk','ProductController@get'); => For All Data
+    Route::post('produk','ProductController@add'); => For Insert Data
+    Route::put('produk','ProductController@edit'); => For Edit Data
+    Route::delete('produk/{id}','ProductController@remove'); => For Delete Data
+
+
+// Ambigu 
+
+1. table produk
+	- Id Brand -> apakah ini menjadi foreign key bagi table master brand ?
+2. table Stok
+	- Satuan -> karna pada table produk telah ada satuan 
+3. table satuan
+	- penambahan field keterangan_satuan
+4. table cost
+	- field cost nama
+5. tbl customer
+	- field telpon atau telepon soalnya di table suplier field nya telepon di tbl_cabang no_telpon, tbl_sales phone	
+
