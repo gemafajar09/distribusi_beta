@@ -34,4 +34,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::group(['prefix' => 'sales'], function () {
         Route::get('/index', 'SalesController@index')->name('sales');
     });
+    Route::group(['prefix' => 'gudang'], function () {
+        Route::get('/index', 'GudangController@index')->name('gudang');
+    });
 });
