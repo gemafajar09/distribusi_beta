@@ -4,6 +4,10 @@
 @include('component/head')
 
 <body class="nav-md">
+    <!-- jQuery -->
+    <script src="{{asset('/assets/vendors/jquery/dist/jquery.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <div class="container body">
         <div class="main_container">
             <div class="col-md-3 left_col">
