@@ -42,7 +42,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('cabang', 'CabangController@get');
     Route::post('cabang', 'CabangController@add');
     Route::put('cabang', 'CabangController@edit');
-    Route::delete('cabang/{id}', 'CabangController@remove');
+    Route::delete('cabang/remove/{id}', 'CabangController@remove');
 
     // api satuan
     Route::get('satuan/datatable', 'SatuanController@datatable');
