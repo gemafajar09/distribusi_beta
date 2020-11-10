@@ -51,22 +51,22 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Form Tambah Data</h5>
-                <button type="button" class="close" name="tutupModalTambah" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-minus"></i> Edit Data Satuan</h5>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="">Nama Satuan</label>
-                    <input type="text" id="id_satuan">
+                    <input type="hidden" id="id_satuan">
                     <input type="text" id="nm_satuan" class="form-control" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="">Keterangan Satuan</label>
                     <textarea id="kt_satuan" cols="30" rows="10" class="form-control"></textarea>
                 </div>
-                <button class="btn btn-success" onclick="editData()" type="button">Edit Data</button>
+                <div class="modal-footer">
+                    <button class="btn btn-success" onclick="editData()" type="button">Edit Data</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+                </div>
             </div>
         </div>
     </div>
