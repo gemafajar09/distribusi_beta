@@ -92,4 +92,12 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('brand', 'BrandController@add');
     Route::put('brand', 'BrandController@edit');
     Route::delete('brand/{id}', 'BrandController@remove');
+
+    // api brand
+    Route::get('gudang/datatable', 'GudangController@datatable');
+    Route::get('gudang/{id}', 'GudangController@get');
+    Route::get('gudang', 'GudangController@get');
+    Route::post('gudang', 'GudangController@add');
+    Route::put('gudang', 'GudangController@edit');
+    Route::delete('gudang/{id}', 'GudangController@remove');
 });
