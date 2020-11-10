@@ -1,5 +1,3 @@
-<!-- jQuery -->
-<script src="{{asset('/assets/vendors/jquery/dist/jquery.min.js')}}"></script>
 <!-- Bootstrap -->
 <script src="{{asset('/assets/vendors/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
 <!-- FastClick -->
@@ -54,3 +52,6 @@
 <script src="{{asset('/assets/vendors/jszip/dist/jszip.min.js')}}"></script>
 <script src="{{asset('/assets/vendors/pdfmake/build/pdfmake.min.js')}}"></script>
 <script src="{{asset('/assets/vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+
+{{-- Datatable --}}
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.21/datatables.min.js"></script>
