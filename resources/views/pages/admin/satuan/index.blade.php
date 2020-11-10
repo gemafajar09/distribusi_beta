@@ -163,7 +163,6 @@
             toastr.info(data.message)
             $('#modal').modal('hide')
             tables.ajax.reload()
-            bersih()
         })
     }
 

@@ -5,16 +5,42 @@
 @section('page-title','Ini Halaman Cabang')
 <!-- Page Content -->
 @section('content')
-<h1>Welcome Cabang</h1>
 <div class="mt-2">
     <div class="x_content">
         <div class="row">
+            <div class="col-sm-5 mb-2">
+                <form action="" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="">Nama Cabang</label>
+                        <input type="text" id="nama_cabang" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Alamat</label>
+                        <textarea name="" id="alamat" cols="30" rows="5" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Kode Cabang</label>
+                        <input type="text" id="kode_cabang" class="form-control">
+                    </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label for="">No. Telepon</label>
+                    <input type="number" id="telepon" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="">E-mail</label>
+                    <input type="email" id="email" class="form-control">
+                </div>
+                <button type="button" id="add" class="btn btn-round btn-success btn-clipboard"><i
+                        class="fa fa-plus"></i></button>
+                </form>
+            </div>
             <div class="col-sm-12">
                 <div class="card-box table-responsive">
-                    <button type="button" class="btn btn-round btn-success btn-clipboard" data-toggle="modal"><i
-                            class="fa fa-plus" onclick="tampilModal()"></i></button>
-                    <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
-                        cellspacing="0" width="100%">
+                    <table id="tabel" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                        width="100%">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -28,15 +54,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
-                                <td>Test</td>
-                                <td>Test</td>
-                                <td>Test</td>
-                                <td>Test</td>
-                                <td>Test</td>
-                                <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button> | <button
-                                        class="btn btn-warning"><i class="fa fa-edit" onclick="edit()"></i></button>
-                                </td>
+
                             </tr>
                         </tbody>
                     </table>
@@ -46,7 +64,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="modalCabang" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -55,44 +73,161 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="">Nama Cabang</label>
-                    <input type="text" class="form-control">
+                    <input type="hidden" id="id_cabang">
+                    <input type="text" class="form-control" id="nm_cabang">
                 </div>
                 <div class="form-group">
                     <label for="">Alamat</label>
-                    <textarea name="" id="" cols="30" rows="10" class="form-control"></textarea>
+                    <textarea name="" id="almt" cols="30" rows="10" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="">Kode Cabang</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" id="kd_cabang">
                 </div>
                 <div class="form-group">
                     <label for="">No. Telepon</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" id="tlpn">
                 </div>
                 <div class="form-group">
                     <label for="">E-mail</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" id="emails">
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success" id="Simpan" onclick="simpan()" type="button">Simpan Data</button>
-                <button class="btn btn-warning" id="Update" onclick="update()" type="button">Update Data</button>
+                <button class="btn btn-warning" onclick="editData()" type="button">Update Data</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-@endsection
+
 <script>
-    function tampilModal(){
-        $('#Simpan').css('display', 'block');
-        $('#Update').css('display', 'none');
-        $('#modalCabang').modal()
+    $(document).ready(function(){
+      tables = $('#tabel').DataTable({
+        processing : true,
+        serverSide : true,
+        ajax:{
+          url: "{{ url('/api/cabang/datatable') }}",
+        },
+        columns:[
+        {
+            data: null,
+            render: function(data, type, row, meta) {
+            return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
+          {
+            data: 'nama_cabang'
+          },
+          {
+            data:'alamat'
+          },
+          {
+            data:'kode_cabang'
+          },
+          {
+            data:'telepon'
+          },
+          {
+            data:'email'
+          },
+          {
+            data: null,
+            render: function(data, type, row, meta) {
+            return "<div>" +
+                "<button type='button' onclick='deleted(" + data.id_cabang + ")' class='btn btn-danger'>Hapus</button> | " +
+                "<button type='button' onclick='ambilData(" + data.id_cabang + ")' class='btn btn-success'>Edit</button>" +
+            "</div>" ;
+            }
+          }
+        ]
+      });
+    });
+
+    $('#add').click(function(e){
+        e.preventDefault();
+        var nama_cabang = $('#nama_cabang').val();
+        var alamat = $('#alamat').val();
+        var kode_cabang = $('#kode_cabang').val();
+        var telepon = $('#telepon').val();
+        var email = $('#email').val();
+
+        axios.post('{{url('/api/cabang/')}}',{
+            nama_cabang: nama_cabang,
+            alamat: alamat,
+            kode_cabang:kode_cabang,
+            telepon:telepon,
+            email:email
+        })
+        .then(function (res) {
+            var data = res.data
+            console.log(data.status)
+            if(data.status == 200)
+            {
+                tables.ajax.reload()
+                toastr.info(data.message)
+                bersih()
+            }
+        })
+    })
+
+    function deleted(id)
+    {
+        axios.delete('{{url('/api/cabang/remove')}}/'+id)
+            .then(function(res){
+            var data = res.data
+            tables.ajax.reload()
+            toastr.info(data.message)
+        })
     }
 
-    function edit() {
-        $('#Simpan').css('display', 'none');
-        $('#Update').css('display', 'block');
-        $('#modalCabang').modal('show');
+    function ambilData(id)
+    {
+        axios.get('{{url('/api/cabang')}}/'+ id)
+        .then(function(res) {
+            var isi = res.data
+            console.log(isi.data)
+            document.getElementById('id_cabang').value=isi.data.id_cabang;
+            document.getElementById('nm_cabang').value=isi.data.nama_cabang;
+            document.getElementById('kd_cabang').value=isi.data.kode_cabang;
+            document.getElementById('almt').value=isi.data.alamat;
+            document.getElementById('tlpn').value=isi.data.telepon;
+            document.getElementById('emails').value=isi.data.email;
+            $('#modal').modal('show');
+        })
+    }
+
+    function editData()
+    {
+        var id_cabang = document.getElementById('id_cabang').value;
+        var nama_cabang = document.getElementById('nm_cabang').value;
+        var alamat = document.getElementById('almt').value;
+        var kode_cabang = document.getElementById('kd_cabang').value;
+        var telepon = document.getElementById('tlpn').value;
+        var email = document.getElementById('emails').value;
+        axios.put('{{url('/api/cabang')}}',{
+            'id_cabang':id_cabang,
+            'nama_cabang':nama_cabang,
+            'alamat':alamat,
+            'kode_cabang':kode_cabang,
+            'telepon':telepon,
+            'email':email
+        }).then(function(res){
+            var data = res.data
+            toastr.info(data.message)
+            $('#modal').modal('hide')
+            tables.ajax.reload()
+            bersih()
+        })
+    }
+
+    function bersih()
+    {
+        document.getElementById('nama_cabang').value =null;
+        document.getElementById('kode_cabang').value =null;
+        document.getElementById('alamat').value =null;
+        document.getElementById('telepon').value =null;
+        document.getElementById('email').value =null;
     }
 </script>
+@endsection
