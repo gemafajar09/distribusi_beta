@@ -40,4 +40,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::group(['prefix' => 'spesial'], function () {
         Route::get('/index', 'SpesialHargaController@index')->name('spesial');
     });
+    Route::group(['prefix' => 'type'], function () {
+        Route::get('/index', 'TypeController@index')->name('type');
+    });
 });
