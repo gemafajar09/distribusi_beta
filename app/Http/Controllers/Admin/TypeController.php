@@ -21,6 +21,11 @@ class TypeController extends Controller
         );
     }
 
+    public function index()
+    {
+        return view("pages.admin.type.index");
+    }
+
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
         return datatables()->of(Type::all())->toJson();
