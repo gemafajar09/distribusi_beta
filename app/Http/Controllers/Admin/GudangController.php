@@ -54,7 +54,7 @@ class GudangController extends Controller
         if ($validator->fails()) {
             return response()->json(['messageForm' => $validator->errors(), 'status' => 422, 'message' => 'Data Tidak Valid']);
         } else {
-            return response()->json(['id' => Gudang::create($request->all())->id_satuan, 'message' => 'Data Berhasil Ditambahkan', 'status' => 200]);
+            return response()->json(['id' => Gudang::create($request->all())->id_gudang, 'message' => 'Data Berhasil Ditambahkan', 'status' => 200]);
         }
     }
 

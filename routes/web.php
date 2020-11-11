@@ -37,4 +37,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::group(['prefix' => 'gudang'], function () {
         Route::get('/index', 'GudangController@index')->name('gudang');
     });
+    Route::group(['prefix' => 'spesial'], function () {
+        Route::get('/index', 'SpesialHargaController@index')->name('spesial');
+    });
 });
