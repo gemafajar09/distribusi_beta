@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
+use App\Models\Type;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
-class BrandController extends Controller
+class TypeController extends Controller
 {
     public function __construct()
     {
         $this->rules = array(
-            'id_brand'=>'numeric',
-            'nama_brand'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'id_type_produk'=>'numeric',
+            'nama_type_produk'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'
@@ -23,7 +23,7 @@ class BrandController extends Controller
 
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
-        return datatables()->of(Brand::all())->toJson();
+        return datatables()->of(Type::all())->toJson();
     }
 
     public function join_builder($id=null){
@@ -34,9 +34,9 @@ class BrandController extends Controller
     {
         try{
             if($id){
-                $data = Brand::findOrFail($id);
+                $data = Type::findOrFail($id);
             }else{
-                $data = Brand::all();
+                $data = Type::all();
             }
             return response()->json(['data'=>$data,'status'=>200]);
         }catch(ModelNotFoundException $e){
@@ -50,19 +50,19 @@ class BrandController extends Controller
         if($validator->fails()){
             return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
-            return response()->json(['id'=>Brand::create($request->all())->id_brand,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
+            return response()->json(['id'=>Type::create($request->all())->id_type_produk,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
     }
 
     public function edit(Request $request){
-        $id = $request->input('id_brand');
+        $id = $request->input('id_type_produk');
         try{
-            $edit = Brand::findOrFail($id);
+            $edit = Type::findOrFail($id);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
                 return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
-                $edit->nama_brand = $request->input('nama_brand');
+                $edit->nama_type_produk = $request->input('nama_type_produk');
                 $edit->save();
                 return response()->json(['message'=>'Data Berhasil Di Edit','data'=>$edit,'status'=>200]);
             }
@@ -74,7 +74,7 @@ class BrandController extends Controller
 
     public function remove(Request $request, $id){
         try{
-            $data = Brand::findOrFail($id);
+            $data = Type::findOrFail($id);
             $data->delete();
             return response()->json(['message'=>'Data Berhasil Di Hapus','status'=>200]);
         }catch (ModelNotFoundException $e) {
