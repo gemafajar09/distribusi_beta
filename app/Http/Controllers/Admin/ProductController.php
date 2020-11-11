@@ -15,8 +15,8 @@ class ProductController extends Controller
     {
         $this->rules = array(
             'id_produk'=>'numeric',
-            'produk_type'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
-            'id_brand'=>'required|numeric',
+            'id_type_produk'=>'required|numeric',
+            'produk_brand'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'produk_nama'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'produk_harga'=>'required|numeric',
             'stok'=>'required|numeric',
@@ -40,7 +40,7 @@ class ProductController extends Controller
         // tempat join hanya menselect beberapa field tambahkan master brand
         $data = DB::table('tbl_produk')
                 ->join('tbl_satuan','tbl_satuan.id_satuan','=','tbl_produk.id_satuan')
-                ->join('tbl_brand','tbl_brand.id_brand','=','tbl_produk.id_brand')
+                ->join('tbl_type_produk','tbl_type_produk.id_type_produk','=','tbl_produk.id_type_produk')
                 ->get();
         return $data;
     }
@@ -78,8 +78,8 @@ class ProductController extends Controller
             if($validator->fails()){
                 return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
             }else{
-                $edit->produk_type = $request->input('produk_type');
-                $edit->id_brand = $request->input('id_brand');
+                $edit->id_type_produk = $request->input('id_type_produk');
+                $edit->produk_brand = $request->input('produk_brand');
                 $edit->produk_nama = $request->input('produk_nama');
                 $edit->produk_harga = $request->input('produk_harga');
                 $edit->stok = $request->input('stok');

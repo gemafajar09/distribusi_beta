@@ -86,14 +86,14 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::delete('customer/{id}', 'CustomerController@remove');
 
     // api brand
-    Route::get('brand/datatable', 'BrandController@datatable');
-    Route::get('brand/{id}', 'BrandController@get');
-    Route::get('brand', 'BrandController@get');
-    Route::post('brand', 'BrandController@add');
-    Route::put('brand', 'BrandController@edit');
-    Route::delete('brand/{id}', 'BrandController@remove');
+    Route::get('type/datatable', 'TypeController@datatable');
+    Route::get('type/{id}', 'TypeController@get');
+    Route::get('type', 'TypeController@get');
+    Route::post('type', 'TypeController@add');
+    Route::put('type', 'TypeController@edit');
+    Route::delete('type/{id}', 'TypeController@remove');
 
-    // api brand
+    // api gudang
     Route::get('gudang/datatable', 'GudangController@datatable');
     Route::get('gudang/{id}', 'GudangController@get');
     Route::get('gudang', 'GudangController@get');
