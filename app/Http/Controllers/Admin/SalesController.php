@@ -88,4 +88,9 @@ class SalesController extends Controller
         }
     }
 
+    public function getSales(){
+            $data = Sales::all('id_sales','nama_sales');
+            return response()->json(['data' => $data, 'status' => 200]);
+    }
+
 }

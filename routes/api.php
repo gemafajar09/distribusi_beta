@@ -68,6 +68,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('sales', 'SalesController@add');
     Route::put('sales', 'SalesController@edit');
     Route::delete('sales/{id}', 'SalesController@remove');
+    Route::get('getsales','SalesController@getSales');
 
     // api suplier
     Route::get('suplier/datatable', 'SuplierController@datatable');
