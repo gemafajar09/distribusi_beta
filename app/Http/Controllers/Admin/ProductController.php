@@ -14,13 +14,13 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->rules = array(
-            'id_produk'=>'numeric',
+            'produk_id'=>'numeric',
             'id_type_produk'=>'required|numeric',
             'produk_brand'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'produk_nama'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'produk_harga'=>'required|numeric',
             'stok'=>'required|numeric',
-            'id_satuan'=>'required|numeric'
+            
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'
@@ -39,10 +39,13 @@ class ProductController extends Controller
     public function join_builder($id=null){
         // tempat join hanya menselect beberapa field tambahkan master brand
         $data = DB::table('tbl_produk')
-                ->join('tbl_satuan','tbl_satuan.id_satuan','=','tbl_produk.id_satuan')
                 ->join('tbl_type_produk','tbl_type_produk.id_type_produk','=','tbl_produk.id_type_produk')
                 ->get();
         return $data;
+    }
+
+    public function index(){
+        return view('pages.admin.produk.index');
     }
 
     public function get(Request $request,$id=null)
@@ -83,7 +86,7 @@ class ProductController extends Controller
                 $edit->produk_nama = $request->input('produk_nama');
                 $edit->produk_harga = $request->input('produk_harga');
                 $edit->stok = $request->input('stok');
-                $edit->id_satuan = $request->input('id_satuan');
+                
                 $edit->save();
                 return response()->json(['message'=>'Data Berhasil Di Edit','data'=>$edit,'status'=>200]);
             }

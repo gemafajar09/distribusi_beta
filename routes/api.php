@@ -95,6 +95,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('type', 'TypeController@add');
     Route::put('type', 'TypeController@edit');
     Route::delete('type/{id}', 'TypeController@remove');
+    Route::get('gettype','TypeController@getType');
 
     // api gudang
     Route::get('gudang/datatable', 'GudangController@datatable');
