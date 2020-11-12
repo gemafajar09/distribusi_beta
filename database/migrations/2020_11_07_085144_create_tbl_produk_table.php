@@ -15,8 +15,8 @@ class CreateTblProdukTable extends Migration
     {
         Schema::create('tbl_produk', function (Blueprint $table) {
             $table->bigIncrements('produk_id');
-            $table->string('produk_type');
-            $table->integer('id_brand');
+            $table->integer('id_type_produk');
+            $table->string('produk_brand');
             $table->string('produk_nama');
             $table->integer('produk_harga');
             $table->integer('stok');

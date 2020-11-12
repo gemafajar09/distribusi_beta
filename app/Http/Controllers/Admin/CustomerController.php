@@ -31,6 +31,11 @@ class CustomerController extends Controller
         );
     }
 
+    public function index()
+    {
+        return view("pages.admin.customer.index");
+    }
+
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_builder();
