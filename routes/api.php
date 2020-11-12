@@ -78,7 +78,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('suplier', 'SuplierController@get');
     Route::post('suplier', 'SuplierController@add');
     Route::put('suplier', 'SuplierController@edit');
-    Route::delete('suplier/{id}', 'SuplierController@remove');
+    Route::delete('suplier/remove/{id}', 'SuplierController@remove');
 
     // api customer
     Route::get('customer/datatable', 'CustomerController@datatable');
@@ -111,7 +111,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('spesial', 'SpesialHargaController@add');
     Route::put('spesial', 'SpesialHargaController@edit');
     Route::delete('spesial/{id}', 'SpesialHargaController@remove');
-    
+
     Route::get('getcustomer', 'SpesialHargaController@getCustomer');
     Route::get('getproduk', 'SpesialHargaController@getProduk');
 });

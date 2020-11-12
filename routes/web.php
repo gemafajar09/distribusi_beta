@@ -40,10 +40,15 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::group(['prefix' => 'spesial'], function () {
         Route::get('/index', 'SpesialHargaController@index')->name('spesial');
     });
+
+    Route::group(['prefix' => 'suplier'], function () {
+        Route::get('/index', 'SuplierController@index')->name('suplier');
+
     Route::group(['prefix' => 'type'], function () {
         Route::get('/index', 'TypeController@index')->name('type');
     });
     Route::group(['prefix' => 'customer'], function () {
         Route::get('/index', 'CustomerController@index')->name('customer');
+
     });
 });

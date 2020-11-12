@@ -12,8 +12,13 @@
                     <li><a href="{{ route('satuan') }}">Data Satuan</a></li>
                     <li><a href="{{ route('cost') }}">Data Cost</a></li>
                     <li><a href="{{ route('sales') }}">Data Sales</a></li>
+
+                    <li><a href="{{ route('suplier') }}">Data Suplier</a></li>
+                    <li><a href="#">Data Customer</a></li>
+
                     <li><a href="#">Data Suplier</a></li>
                     <li><a href="{{route('customer')}}">Data Customer</a></li>
+
                     <li><a href="{{route('gudang')}}">Data Gudang</a></li>
                     <li><a href="{{route('spesial')}}">Data Harga Kshusus</a></li>
                     <li><a href="{{route('type')}}">Data Type Produk</a></li>
