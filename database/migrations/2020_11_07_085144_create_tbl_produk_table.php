@@ -20,7 +20,6 @@ class CreateTblProdukTable extends Migration
             $table->string('produk_nama');
             $table->integer('produk_harga');
             $table->integer('stok');
-            $table->integer('id_satuan');
         });
     }
 

@@ -86,4 +86,9 @@ class TypeController extends Controller
             return response()->json(['message'=>'Data Tidak Ditemukan','status'=>404]);
         }
     }
+
+    public function getType(){
+        $data = Type::all();
+        return response()->json(['data' => $data, 'status' => 200]);
+    }
 }
