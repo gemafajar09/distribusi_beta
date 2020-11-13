@@ -17,6 +17,7 @@
                     <li><a href="{{route('gudang')}}">Data Gudang</a></li>
                     <li><a href="{{route('spesial')}}">Data Harga Kshusus</a></li>
                     <li><a href="{{route('type')}}">Data Type Produk</a></li>
+                    <li><a href="{{route('user')}}">Data User</a></li>
                 </ul>
             </li>
 

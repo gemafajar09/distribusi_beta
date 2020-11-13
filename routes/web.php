@@ -49,4 +49,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::group(['prefix' => 'produk'], function () {
         Route::get('/index', 'ProductController@index')->name('produk');
     });
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('/index', 'UserController@index')->name('user');
+    });
 });
