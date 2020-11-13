@@ -8,20 +8,22 @@
 <div class="mt-2">
     <div class="x_content">
         <div class="row">
-            <div class="col-sm-4 mb-2">
+            <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
-                    <div class="form-group">
+                    <div class="form-row">
+                    <div class="form-group col-sm-4">
                         <label for="">Nama Gudang</label>
                         <input type="text" class="form-control" id="nama_gudang">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-3">
                         <label for="">Telepon Gudang</label>
                         <input type="text" class="form-control" id="telepon_gudang">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-5">
                         <label for="">Alamat Gudang</label>
-                        <textarea name="" id="alamat_gudang" cols="30" rows="5" class="form-control"></textarea>
+                        <textarea name="" id="alamat_gudang" cols="30" rows="1" class="form-control"></textarea>
+                    </div>
                     </div>
                     <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
                 </form>

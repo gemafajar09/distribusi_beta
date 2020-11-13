@@ -12,13 +12,17 @@
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-5">
                         <label for="">Nama Customer</label>
                         <input type="text" name="nama_customer" id="nama_customer" class="form-control" placeholder="Masukan Nama Customer">
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-5">
                         <label for="">Nama Perusahaan</label>
                         <input type="text" name="nama_perusahaan" id="nama_perusahaan" class="form-control" placeholder="Masukan Nama Perusahaan">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="">Credit Plafond</label>
+                        <input type="text" name="credit_plafond" id="credit_plafond" class="form-control">
                     </div>
                     </div>
                     <div class="form-row">
@@ -72,10 +76,9 @@
             cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    
-                    <th >ID Customer</th>
                     <th >Nama Customer</th>
                     <th >Nama Perusahaan</th>
+                    <th>Credit Plafond</th>
                     <th>Alamat</th>
                     <th>Telepon</th>
                     <th>Nama Sales</th>
@@ -103,14 +106,18 @@
             </div>
             <div class="modal-body">
             <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <input type="hidden" id="id_customer">
                         <label for="">Nama Customer</label>
                         <input type="text" name="nama_customer_edit" id="nama_customer_edit" class="form-control">
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="">Nama Perusahaan</label>
                         <input type="text" name="nama_perusahaan_edit" id="nama_perusahaan_edit" class="form-control">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="">Credit Plafond</label>
+                        <input type="text" name="credit_plafond_edit" id="credit_plafond_edit" class="form-control">
                     </div>
                     </div>
                     <div class="form-row">
@@ -169,14 +176,15 @@
         },
         columns:[
         
-          {
-            data: 'id_customer'
-          },
+          
           {
             data:'nama_customer'
           },
           {
             data:'nama_perusahaan'
+          },
+          {
+            data:'credit_plafond'
           },
           {
             data:'alamat'
@@ -230,6 +238,7 @@
         
         var nama_customer = $('#nama_customer').val();
         var nama_perusahaan = $('#nama_perusahaan').val();
+        var credit_plafond = $('#credit_plafond').val();
         var alamat = $('#alamat').val();
         var negara = $('#negara').val();
         var kota = $('#kota').val();
@@ -242,6 +251,7 @@
         axios.post('{{url('/api/customer')}}',{
             nama_customer: nama_customer,
             nama_perusahaan: nama_perusahaan,
+            credit_plafond:credit_plafond,
             alamat: alamat,
             negara: negara,
             kota: kota,
@@ -272,6 +282,7 @@
             var isi = res.data
             document.getElementById('id_customer').value=isi.data.id_customer;
             document.getElementById('nama_customer_edit').value=isi.data.nama_customer;
+            document.getElementById('credit_plafond_edit').value=isi.data.credit_plafond;
             document.getElementById('nama_perusahaan_edit').value=isi.data.nama_perusahaan;
             document.getElementById('alamat_edit').value=isi.data.alamat;
             document.getElementById('negara_edit').value=isi.data.negara;
@@ -290,6 +301,7 @@
         var id_customer = $('#id_customer').val(); 
         var nama_customer = $('#nama_customer_edit').val();
         var nama_perusahaan = $('#nama_perusahaan_edit').val();
+        var credit_plafond = $('#credit_plafond_edit').val();
         var alamat = $('#alamat_edit').val();
         var negara = $('#negara_edit').val();
         var kota = $('#kota_edit').val();
@@ -304,6 +316,7 @@
             'id_customer':id_customer,
             'nama_customer':nama_customer,
             'nama_perusahaan':nama_perusahaan,
+            'credit_plafond':credit_plafond,
             'alamat':alamat,
             'negara':negara,
             'kota':kota,
@@ -327,6 +340,7 @@
     {
         document.getElementById("nama_customer").value=null;
         document.getElementById("nama_perusahaan").value=null;
+        document.getElementById("credit_plafond").value=null;
         document.getElementById("alamat").value=null;
         document.getElementById("negara").value=null;
         document.getElementById("kota").value=null;

@@ -11,14 +11,14 @@
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
-                    <div class="form-inline mb-3">
-                    <div class="form-group mr-5">
-                        <select name="id_customer" id="id_customer" class="selectpicker" data-live-search="true" title="Masukan nama customer" autocomplete="off">
+                    <div class="form-row">
+                    <div class="form-group col-sm-6">
+                        <select name="id_customer" id="id_customer" class="selectpicker form-control" data-live-search="true" title="Masukan nama customer" autocomplete="off">
                             
                         </select>
                     </div>
-                    <div class="form-group">
-                        <select name="produk_id" id="produk_id" class="selectpicker" data-live-search="true" title="Masukan nama Produk" autocomplete="off"></select>
+                    <div class="form-group col-sm-6">
+                        <select name="produk_id" id="produk_id" class="selectpicker form-control" data-live-search="true" title="Masukan nama Produk" autocomplete="off"></select>
                     </div>
                     </div>
                     <div class="form-group">
