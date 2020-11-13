@@ -17,6 +17,7 @@ class CreateTblCustomerTable extends Migration
             $table->bigIncrements('id_customer');
             $table->string('nama_customer');
             $table->string('nama_perusahaan');
+            $table->integer('credit_plafond');
             $table->string('alamat');
             $table->string('negara');
             $table->string('kota');

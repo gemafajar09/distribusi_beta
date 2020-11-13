@@ -16,6 +16,7 @@ class CustomerController extends Controller
             'id_customer'=>'numeric',
             'nama_customer'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'nama_perusahaan'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'credit_plafond'=>'required|numeric',
             'alamat'=>'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
             'negara'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'kota'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
@@ -47,7 +48,7 @@ class CustomerController extends Controller
         // tempat join hanya menselect beberapa field
         $data = DB::table('tbl_customer')
                 ->join('tbl_sales','tbl_sales.id_sales','=','tbl_customer.id_sales')
-                ->select('id_customer','nama_customer','nama_perusahaan','tbl_customer.alamat as alamat','negara','kota','tbl_customer.telepon','kartu_kredit','fax','tbl_customer.id_sales as id_sales','nama_sales','note')
+                ->select('id_customer','nama_customer','nama_perusahaan','credit_plafond','tbl_customer.alamat as alamat','negara','kota','tbl_customer.telepon','kartu_kredit','fax','tbl_customer.id_sales as id_sales','nama_sales','note')
                 ->get();
         return $data;
     }
@@ -86,6 +87,7 @@ class CustomerController extends Controller
             }else{
                 $edit->nama_customer = $request->input('nama_customer');
                 $edit->nama_perusahaan = $request->input('nama_perusahaan');
+                $edit->credit_plafond = $request->input('credit_plafond');
                 $edit->alamat = $request->input('alamat');
                 $edit->negara = $request->input('negara');
                 $edit->kota = $request->input('kota');

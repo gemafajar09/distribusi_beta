@@ -13,6 +13,6 @@ class Customer extends Model
     protected $primaryKey = 'id_customer';
     // define fillable
     protected $fillable = [
-        'nama_customer','nama_perusahaan','alamat','negara','kota','telepon','kartu_kredit','fax','id_sales','note',
+        'nama_customer','nama_perusahaan','credit_plafond','alamat','negara','kota','telepon','kartu_kredit','fax','id_sales','note',
     ];
 }
