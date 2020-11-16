@@ -9,7 +9,7 @@
     <div class="x_content">
         <div class="row">
             <div class="col-sm-12">
-                <form action="" method="POST">
+                <!-- <form action="" method="POST">
                     @csrf
                     <div class="form-row">
                     <div class="form-group col-sm-4">
@@ -20,7 +20,7 @@
                     <div  id="wadah"></div>
                     </div>
                     <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
-                </form>
+                </form> -->
             </div>
         </div>
     </div>
