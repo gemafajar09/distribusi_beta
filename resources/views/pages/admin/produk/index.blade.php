@@ -66,7 +66,7 @@
                     <th >Brand</th>
                     <th >Nama Produk</th>
                     <th >Harga</th>
-                    <th >Stok</th>
+                    <th >Min Stok</th>
                     <th >Aksi</th>
                 </tr>
             </thead>
@@ -167,8 +167,8 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.produk_id + ")' class='btn btn-danger'>Hapus</button> | " +
-                "<button type='button' onclick='ambilData(" + data.produk_id + ")' class='btn btn-success'>Edit</button>" +
+                "<button type='button' onclick='deleted(" + data.produk_id + ")' class='btn btn-danger btn-sm'>Hapus</button> | " +
+                "<button type='button' onclick='ambilData(" + data.produk_id + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }
           }
