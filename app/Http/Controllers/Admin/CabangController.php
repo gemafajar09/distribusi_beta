@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cabang;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
-
+ 
 class CabangController extends Controller
 {
     public function __construct()
