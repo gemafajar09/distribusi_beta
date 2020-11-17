@@ -29,6 +29,12 @@
                     <li><a href="{{ route('sales_transaction') }}">Sales Transaction</a></li>
                 </ul>
             </li>
+            <li><a><i class="fa fa-file"></i> Report <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ route('cost') }}">Data Cost</a></li>
+                    <li><a href="{{ route('sales_transaction') }}">Sales Transaction</a></li>
+                </ul>
+            </li>
 
         </ul>
     </div>
