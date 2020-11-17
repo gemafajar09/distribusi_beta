@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Stok;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Arr;
 class StokController extends Controller
 {
     public function __construct()
@@ -19,21 +20,89 @@ class StokController extends Controller
             'id_cabang'=>'required|numeric',
         );
     }
+    
+    public function index(){
+        return view('pages.admin.stok.index');
+    }
 
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_builder();
-        return datatables()->of($data)->toJson();
+        $format = '%d %s | ';
+        $stok = [];
+        foreach ($data as $d) {
+            $id = $d->produk_id;
+            $jumlah = $d->jumlah;
+            $harga = $d->produk_harga;
+            $proses = DB::table('tbl_unit')->where('produk_id',$id)
+            ->join('tbl_satuan','tbl_unit.maximum_unit_name','=','tbl_satuan.id_satuan')
+            ->select('id_unit','nama_satuan as unit','default_value')
+            ->orderBy('id_unit','ASC')
+            ->get();
+            $hasilbagi=0;
+            foreach ($proses as $index => $list) {
+                $banyak =  sizeof($proses);
+                if($index == 0 ){
+                $sisa = $jumlah % $list->default_value;
+                $hasilbagi = ($jumlah-$sisa)/$list->default_value;
+                $satuan[$index] = $list->unit;
+                $lebih[$index] = $sisa;
+                $harga = $harga / $list->default_value;
+                if ($sisa > 0){
+                    $stok[$index] = sprintf($format, $sisa, $list->unit);
+                }
+                 if($banyak == $index+1){
+                    $satuan = array();
+                    $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                    $stokquantity = array_values($stok);
+                    $stok = array();
+                }
+                }else if($index == 1){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $lebih[$index] = $sisa;
+                    $harga = $harga / $list->default_value;
+                    if($sisa > 0){
+                        $stok[$index-1] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index-1]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }else if($index == 2){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $lebih[$index] = $sisa;
+                    $harga = $harga / $list->default_value;
+                    if($sisa > 0){
+                        $stok[$index-1] = sprintf($format, $sisa,  $satuan[$index-1]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }    
+            }
+            $jumlah_stok = implode(" ",$stokquantity);
+            $d->stok_quantity = $jumlah_stok;
+            $d->harga = ceil($harga * $d->jumlah);
+            $dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"produk_harga"=>$d->produk_harga,"stok_harga"=>$d->harga,"jumlah"=>$d->stok_quantity];
+        }
+       
+        return datatables()->of($dataisi)->toJson();
         
     }
 
     public function join_builder($id=null){
         // tempat join hanya menselect beberapa field tambah join brand
         $data = DB::table('tbl_stok')
-                ->join('tbl_cabang','tbl_stok.id_cabang','=','tbl_cabang.id_cabang')
                 ->join('tbl_produk','tbl_stok.produk_id','=','tbl_produk.produk_id')
-                ->join('tbl_satuan','tbl_produk.id_satuan','=','tbl_satuan.id_satuan')
-                ->join('tbl_brand','tbl_produk.id_brand','=','tbl_brand.id_brand')
                 ->get();
         return $data;
     }

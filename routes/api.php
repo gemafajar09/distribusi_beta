@@ -120,7 +120,16 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('user', 'UserController@add');
     Route::put('user', 'UserController@edit');
     Route::delete('user/{id}', 'UserController@remove');
-    
+
+    // api spesial
+    Route::get('unit/datatable', 'UnitController@datatable');
+    Route::get('unit/{id}', 'UnitController@get');
+    Route::get('unit', 'UnitController@get');
+    Route::post('unit', 'UnitController@add');
+    Route::put('unit', 'UnitController@edit');
+    Route::delete('unit/{id}', 'UnitController@remove');
+    Route::get('getunit/{id}', 'UnitController@getUnit');
+
     Route::get('getcustomer', 'SpesialHargaController@getCustomer');
     Route::get('getproduk', 'SpesialHargaController@getProduk');
 });
