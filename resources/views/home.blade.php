@@ -2,6 +2,7 @@
 @section('page-title','Ini Halaman Home')
 @section('content')
 <!-- page content -->
+
 <div class="row" style="display: inline-block;">
     <div class=" top_tiles" style="margin: 10px 0;">
         <div class="col-md-3 col-sm-3  tile">
