@@ -112,4 +112,11 @@ class SuplierController extends Controller
             return response()->json(['message' => 'Data Tidak Ditemukan', 'status' => 404]);
         }
     }
+
+    public function getSuplier(){
+        $data = DB::table('tbl_suplier')
+                ->select('id_suplier','nama_suplier')
+                ->get();
+        return response()->json(['data' => $data, 'status' => 200]);
+    }
 }

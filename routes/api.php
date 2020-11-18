@@ -79,6 +79,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('suplier', 'SuplierController@add');
     Route::put('suplier', 'SuplierController@edit');
     Route::delete('suplier/remove/{id}', 'SuplierController@remove');
+    Route::get('getsuplier','SuplierController@getSuplier');
 
     // api customer
     Route::get('customer/datatable', 'CustomerController@datatable');
@@ -130,6 +131,23 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::delete('unit/{id}', 'UnitController@remove');
     Route::get('getunit/{id}', 'UnitController@getUnit');
 
+    
     Route::get('getcustomer', 'SpesialHargaController@getCustomer');
     Route::get('getproduk', 'SpesialHargaController@getProduk');
+});
+
+Route::group(['namespace' => 'transaksi'], function () {
+
+    // api purchase
+    Route::get('registerpurchase','TransaksiPurchaseController@register')->name('register-transaksi-purchase');
+    
+
+    // api purchase tmp
+    Route::get('purchasetmp/datatable', 'TransaksiPurchaseTmpController@datatable');
+    Route::get('purchasetmp/{id}', 'TransaksiPurchaseTmpController@get');
+    Route::get('purchasetmp', 'TransaksiPurchaseTmpController@get');
+    Route::post('purchasetmp', 'TransaksiPurchaseTmpController@add');
+    Route::put('purchasetmp', 'TransaksiPurchaseTmpController@edit');
+    Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
+
 });

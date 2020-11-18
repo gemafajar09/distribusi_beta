@@ -56,5 +56,6 @@ Route::group(['namespace' => 'Admin'], function() {
 Route::group(['namespace' => 'Transaksi'], function() {
     Route::group(['prefix' => 'product'], function () {
         Route::get('/sales_transaction', 'TransaksiSalesController@index')->name('sales_transaction');
+        Route::get('/purchase_order','TransaksiPurchaseController@index')->name('purchase_order');
     });
 });

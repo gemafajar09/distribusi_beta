@@ -13,12 +13,14 @@
                     @csrf
                     <div class="form-row">
                     <div class="form-group col-sm-6">
-                        <select name="id_customer" id="id_customer" class="selectpicker form-control" data-live-search="true" title="Masukan nama customer" autocomplete="off">
+                        <label for="">Nama Customer</label>
+                        <select name="id_customer" id="id_customer" class="selectpicker" data-width="100%" data-live-search="true" title="Pilih Customer" autocomplete="off" data-size="5">
                             
                         </select>
                     </div>
                     <div class="form-group col-sm-6">
-                        <select name="produk_id" id="produk_id" class="selectpicker form-control" data-live-search="true" title="Masukan nama Produk" autocomplete="off"></select>
+                        <label for="">Nama Produk</label>
+                        <select name="produk_id" id="produk_id" class="selectpicker" data-width="100%" data-live-search="true" title="Pilih Produk" autocomplete="off" data-size="5"></select>
                     </div>
                     </div>
                     <div class="form-group">

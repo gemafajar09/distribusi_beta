@@ -7,7 +7,7 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
+        <div class="row bg-white p-3 rounded mb-3">
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
@@ -55,8 +55,8 @@
                     </div>
                     <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="">Pilih Nama Sales</label>
-                        <select name="id_sales" id="id_sales" class="selectpicker form-control" data-live-search="true" autocomplete="off" title="Pilih Nama Sales">
+                        <label for="">Nama Sales</label>
+                        <select name="id_sales" id="id_sales" class="selectpicker" data-size="5" data-width="100%" data-live-search="true" autocomplete="off" title="Pilih Nama Sales">
                         </select>
                     </div>
                     <div class="form-group col-md-6">
@@ -70,6 +70,7 @@
         </div>
     </div>
 </div>
+<div class="row">
 <div class="col-sm-12">
     <div class="card-box table-responsive">
         <table id="tabel" class="table table-striped table-responsive-sm table-bordered dt-responsive nowrap"
@@ -92,6 +93,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </div>
 
 <!-- Modal -->
@@ -151,7 +153,7 @@
                     <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="">Pilih Nama Sales</label>
-                        <select name="id_sales_edit" id="id_sales_edit" class="selectpicker form-control" data-live-search="true" autocomplete="off">
+                        <select name="id_sales_edit" id="id_sales_edit" class="selectpicker" data-live-search="true" data-width="100%" data-size="5" autocomplete="off">
                         </select>
                     </div>
                     <div class="form-group col-md-6">

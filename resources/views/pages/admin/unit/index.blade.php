@@ -14,19 +14,19 @@
                     <div class="form-row">
                     <div class="form-group col-sm-4">
                        <label for="">Nama Produk</label>
-                        <select name="produk_id" id="produk_id" class="selectpicker form-control" data-live-search="true" title="Masukan nama Produk" autocomplete="off">
+                        <select name="produk_id" id="produk_id" class="selectpicker" data-width="100%" data-live-search="true" title="Pilih Produk" autocomplete="off" data-size="5">
                             
                         </select>
                     </div>
                     <div class="form-group col-sm-4">
                     <label for="">Maximum Unit Name</label>
-                        <select name="maximum_unit_name" id="maximum_unit_name" class="selectpicker form-control" data-live-search="true" title="Masukan Maximum Unit" autocomplete="off">
+                        <select name="maximum_unit_name" id="maximum_unit_name" data-width="100%" class="selectpicker" data-live-search="true" title="Pilih Maximum Unit" data-size="5" autocomplete="off">
                             
                         </select>
                     </div>
                     <div class="form-group col-sm-4">
                     <label for="">Minimum Unit Name</label>
-                        <select name="minimum_unit_name" id="minimum_unit_name" class="selectpicker form-control" data-live-search="true" title="Masukan Minimum Unit" autocomplete="off"></select>
+                        <select name="minimum_unit_name" id="minimum_unit_name" data-width="100%" class="selectpicker" data-live-search="true" title="Pilih Minimum Unit" data-size="5" autocomplete="off"></select>
                     </div>
                     </div>
                     <div class="form-row">
