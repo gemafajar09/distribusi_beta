@@ -2,6 +2,7 @@
 
 @section('page-title','Sales Trasaction')
 @section('content')
+
 <div class="row">
     <div class="col-md-12" id="entrySales">
         <div class="card">
@@ -22,7 +23,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Invoice ID</label>
-                                        <input type="text" style="border-radius:3px" name="invoiceid" value="TOVS-{{date('Ym')}}" readonly class="form-control">
+                                        <input type="text" style="border-radius:3px; font-size:12px" name="invoiceid" value="TOVS-{{date('Ym')}}-{{session()->get('id')}}" readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -96,31 +97,34 @@
                                         <label for="">Stok ID</label>
                                         <select name="stockId" id="stockId" class="select2" style="width:100%">
                                             <option value="">STOCK ID</option>
+                                            @foreach($stockid as $a)
+                                                <option value="{{$a->produk_id}}">{{$a->produk_id}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Product ID</label>
-                                        <input type="text" style="border-radius:3px" name="productid" readonly class="form-control">
+                                        <input type="text" style="border-radius:3px" id="produkid" name="produkid" readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Product Type</label>
-                                        <input type="text" style="border-radius:3px" name="producttype" readonly class="form-control">
+                                        <input type="text" style="border-radius:3px" id="produktype" name="produktype" readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Product Brand</label>
-                                        <input type="text" style="border-radius:3px" name="productbrand" readonly class="form-control">
+                                        <input type="text" style="border-radius:3px" id="produkbrand" name="produkbrand" readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Product Name</label>
-                                        <input type="text" style="border-radius:3px" name="productname" readonly class="form-control">
+                                        <input type="text" style="border-radius:3px" id="produknama" name="produknama" readonly class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -184,10 +188,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        <!-- <Button type="button" id="show" onclick="show()" style="display:block" class="btn btn-outline-warning btn-round"><i class="fa fa-plus"></i></Button>
-                        <Button type="button" id="hide" onclick="hide()" style="display:none" class="btn btn-outline-warning btn-round"><i class="fa fa-close"></i></Button> -->
-                    </div>
+                    
                     <div class="card-body">
                         <table class="table table-striped">
                             <thead>
@@ -218,17 +219,9 @@
 <script>
     function show()
     {
-        $('#entrySales').show()
-        $('#show').hide()
-        $('#hide').show()
+        $('#entry').modal()
     }
 
-    function hide()
-    {
-        $('#entrySales').hide()
-        $('#show').show()
-        $('#hide').hide()
-    }
 
     $('#salesmanId').change(function(){
         var salesid = $(this).val()
@@ -252,6 +245,24 @@
         }).then(function(res){
             var data = res.data.data
             $('#namacustomer').val(data.nama_customer)
+        }).catch(function(err){
+            console.log(err)
+        })
+    })
+
+    $('#stockId').change(function(){
+        var stokid = $(this).val()
+
+        axios.post('{{url('/api/getProduk')}}',{
+            'produk_id': stokid,
+            'cabang': '{{session()->get('cabang')}}'
+        }).then(function(res){
+            var data = res.data.data
+            console.log(data)
+            $('#produkid').val(data[0].produk_id)
+            $('#produktype').val(data[0].nama_type_produk)
+            $('#produkbrand').val(data[0].produk_brand)
+            $('#produknama').val(data[0].produk_nama)
         }).catch(function(err){
             console.log(err)
         })

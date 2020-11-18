@@ -22,34 +22,6 @@ class LoginController extends Controller
         }
     }
 
-    // public function postLogin(Request $request)
-    // {
-    // 	$data = $request->all();
-
-    // 	$cek_username = User::where("username", $data['username'])
-    // 		->first();
-    // 	if(!empty($cek_username)) {
-    // 		$cek_password = Hash::check($data['password'], $cek_username->password);
-    // 		if($cek_password){
-    // 			$request->session()->put("id_user", $cek_username->id);
-    // 			$request->session()->put("nama_user", $cek_username->nama);
-    // 			$request->session()->put("level", $cek_username->level);
-    // 			$request->session()->put("telepon", $cek_username->telepon);
-    // 			$request->session()->put("email", $cek_username->email);
-    // 			$request->session()->put("id_cabang", $cek_username->cabang);
-
-    // 			if($cek_username->level == "Owner"){
-    // 				dd("owner");
-    // 			}elseif ($cek_username->level == "Pimpinan"){
-    // 				dd("pimpinan");
-    // 			}elseif ($cek_username->level == "Admin"){
-    // 				dd("admin");
-    // 			}
-    // 		}
-    // 	}
-    // 	return redirect("/login");
-    // }
-
     public function postLogin(Request $request){
         $this->validate($request,[
             'username' => 'required|alpha_num',

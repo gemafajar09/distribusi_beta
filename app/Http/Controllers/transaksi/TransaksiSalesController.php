@@ -11,6 +11,7 @@ use App\TransaksiSalesDetail;
 use App\TransaksiSalesTmp;
 use App\Models\Sales;
 use App\Models\Customer;
+use DB;
 
 class TransaksiSalesController extends Controller
 {
@@ -40,8 +41,15 @@ class TransaksiSalesController extends Controller
 
     public function index()
     {
+        $cabang = session()->get('cabang');
         $data['salesid'] = Sales::getAll();
         $data['customerid'] = Customer::all();
+        $data['stockid'] = DB::table('tbl_produk')
+                            ->join('tbl_stok', 'tbl_produk.produk_id', '=', 'tbl_stok.produk_id')
+                            ->where('tbl_stok.id_cabang','=',$cabang)
+                            ->select('*')
+                            ->get();
+                            // dd($cabang);
         return view('pages.transaksi.salestransaksi.index',$data);
     }
 
@@ -123,6 +131,25 @@ class TransaksiSalesController extends Controller
     public function getCustomer(Request $r)
     {
         $data = Customer::findOrFail($r->customer_id);
+        if($data == TRUE)
+        {
+            return response()->json(['data' => $data, 'status' => 200]);
+        }else{
+            return response()->json(['message' => 'Data Tidak Ditemukan', 'status' => 404]);
+        }
+    }
+    
+    public function getProduk(Request $r)
+    {
+        $cab = $r->cabang;
+        $id_produk = $r->produk_id;
+        $data =  DB::table('tbl_produk')
+                ->select('*')
+                ->join('tbl_stok', 'tbl_produk.produk_id', 'tbl_stok.produk_id')
+                ->join('tbl_type_produk', 'tbl_produk.id_type_produk', 'tbl_type_produk.id_type_produk')
+                ->where('tbl_stok.produk_id',$id_produk)
+                ->where('tbl_stok.id_cabang',$cab)
+                ->get();
         if($data == TRUE)
         {
             return response()->json(['data' => $data, 'status' => 200]);

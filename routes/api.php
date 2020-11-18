@@ -127,4 +127,5 @@ Route::group(['namespace' => 'Transaksi'], function () {
     // api transaksi sales
     Route::post('getsalestrans', 'TransaksiSalesController@getSales');
     Route::post('getCustomer', 'TransaksiSalesController@getCustomer');
+    Route::post('getProduk', 'TransaksiSalesController@getProduk');
 });
