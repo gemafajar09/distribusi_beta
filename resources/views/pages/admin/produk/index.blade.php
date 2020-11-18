@@ -14,7 +14,7 @@
                     <div class="form-row">
                     <div class="form-group col-sm-6">
                         <label for="">Tipe Produk</label>
-                        <select name="id_type_produk" id="id_type_produk" class="selectpicker form-control" data-live-search="true" title="Pilih Tipe Produk" autocomplete="off">
+                        <select name="id_type_produk" id="id_type_produk" class="selectpicker" data-style="btn-info"  data-width="100%" data-live-search="true" title="Pilih Tipe Produk" autocomplete="off" data-size="5">
                         </select>
                     </div>
                     <div class="form-group col-sm-6">
