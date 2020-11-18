@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Sales extends Model
 {
@@ -15,4 +16,9 @@ class Sales extends Model
     protected $fillable = [
         'nama_sales', 'alamat','telepon',
     ];
+
+    public static function getAll()
+    {
+        return self::all();
+    }
 }

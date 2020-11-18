@@ -19,7 +19,6 @@ class CabangController extends Controller
             'kode_cabang' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'telepon' => 'required|numeric',
             'email' => 'required|email'
-
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'

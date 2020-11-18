@@ -2,17 +2,6 @@
 
 use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -140,7 +129,6 @@ Route::group(['namespace' => 'transaksi'], function () {
 
     // api purchase
     Route::get('registerpurchase','TransaksiPurchaseController@register')->name('register-transaksi-purchase');
-    
 
     // api purchase tmp
     Route::get('purchasetmp/datatable', 'TransaksiPurchaseTmpController@datatable');
@@ -150,4 +138,8 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::put('purchasetmp', 'TransaksiPurchaseTmpController@edit');
     Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
 
+    // api transaksi sales
+    Route::post('getsalestrans', 'TransaksiSalesController@getSales');
+    Route::post('getCustomer', 'TransaksiSalesController@getCustomer');
+    Route::post('getProduk', 'TransaksiSalesController@getProduk');
 });
