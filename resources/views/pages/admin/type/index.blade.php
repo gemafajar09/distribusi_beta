@@ -7,13 +7,13 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
+    <div class="row bg-white p-3 rounded mb-4" style="box-shadow:1px 1px 4px grey;">
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="">Nama Type Produk</label>
-                        <input type="text" name="nama_type_produk" id="nama_type_produk" class="form-control" placeholder="Masukan Type Produk Ex : MAKANAN">
+                        <input type="text" name="nama_type_produk" id="nama_type_produk" class="form-control rounded" placeholder="Masukan Type Produk Ex : MAKANAN">
                     </div>
                     <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
                 </form>

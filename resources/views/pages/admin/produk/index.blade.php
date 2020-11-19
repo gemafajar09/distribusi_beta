@@ -7,25 +7,25 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
+        <div class="row bg-white p-3 rounded mb-3" style="box-shadow:1px 1px 4px grey;">
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
                     <div class="form-group col-sm-6">
                         <label for="">Tipe Produk</label>
-                        <select name="id_type_produk" id="id_type_produk" class="selectpicker" data-style="btn-info"  data-width="100%" data-live-search="true" title="Pilih Tipe Produk" autocomplete="off" data-size="5">
+                        <select name="id_type_produk" id="id_type_produk" class="selectpicker rounded"   data-width="100%" data-live-search="true" title="Pilih Tipe Produk" autocomplete="off" data-size="5">
                         </select>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="">Produk Brand</label>
-                        <input type="text" class="form-control" name="produk_brand" id="produk_brand">
+                        <input type="text" class="form-control rounded" name="produk_brand" id="produk_brand">
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-sm-6">
                             <label for="">Produk Nama</label>
-                            <input type="text" name="produk_nama" id="produk_nama" class="form-control">
+                            <input type="text" name="produk_nama" id="produk_nama" class="form-control rounded">
 
                         </div>
                         <div class="form-group col-sm-3">
@@ -35,7 +35,7 @@
                                 <div class="input-group-text">Rp</div>
                                 </div>
 
-                            <input type="number" name="produk_harga" id="produk_harga" class="form-control">
+                            <input type="number" name="produk_harga" id="produk_harga" class="form-control rounded">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
@@ -44,7 +44,7 @@
                                 <div class="input-group-prepend">
                                 <div class="input-group-text">Pcs</div>
                                 </div>
-                            <input type="number" name="stok" id="stok" class="form-control">
+                            <input type="number" name="stok" id="stok" class="form-control rounded">
                         </div>
                     </div>
                     </div>
@@ -54,6 +54,7 @@
         </div>
     </div>
 </div>
+<div class="row">
 <div class="col-sm-12">
     <div class="card-box table-responsive">
         <table id="tabel" class="table table-striped table-responsive-sm table-bordered dt-responsive nowrap"
@@ -77,6 +78,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </div>
 
 <!-- Modal -->

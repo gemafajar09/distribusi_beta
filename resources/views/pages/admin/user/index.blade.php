@@ -7,38 +7,38 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
+    <div class="row bg-white p-3 rounded mb-4" style="box-shadow:1px 1px 4px grey;">
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
                     <div class="form-group col-sm-6">
                         <label for="">Nama User</label>
-                        <input type="text" name="nama_user" id="nama_user" class="form-control" placeholder="Masukan Nama User">
+                        <input type="text" name="nama_user" id="nama_user" class="form-control rounded" placeholder="Masukan Nama User">
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" placeholder="Masukan Email">
+                        <input type="email" name="email" id="email" class="form-control rounded" placeholder="Masukan Email">
                     </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-sm-6">
                         <label for="">Username</label>
-                        <input type="text" name="username" id="username" class="form-control" placeholder="Masukan Username">
+                        <input type="text" name="username" id="username" class="form-control rounded" placeholder="Masukan Username">
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="">Password</label>
-                        <input type="password" name="password" id="password" class="form-control">
+                        <input type="password" name="password" id="password" class="form-control rounded">
                     </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-sm-4">
                         <label for="">Telepon</label>
-                        <input type="number" name="telepon" id="telepon" class="form-control">
+                        <input type="number" name="telepon" id="telepon" class="form-control rounded">
                     </div>
                     <div class="form-group col-sm-4">
                         <label for="">Level</label>
-                        <select name="level" id="level" class="form-control">
+                        <select name="level" id="level" class="form-control rounded">
                         @foreach($role as $r)
                                 <option value="{{$r->id_role}}">{{$r->nama_role}}</option>
                             @endforeach
@@ -46,7 +46,7 @@
                     </div>
                     <div class="form-group col-sm-4">
                         <label for="">Cabang</label>
-                        <select name="id_cabang" id="id_cabang" class="form-control" title="Pilih Cabang">
+                        <select name="id_cabang" id="id_cabang" class="form-control rounded" title="Pilih Cabang">
                             @foreach ($cabang as $c)
                             <option value="{{$c->id_cabang}}">{{$c->nama_cabang}}</option>
                             @endforeach
@@ -162,7 +162,7 @@
             data:'username'
           },
           {
-            data:'level'
+            data:'nama_role'
           },
           {
             data:'telepon'
@@ -202,7 +202,7 @@
 
     $('#add').click(function(e){
         e.preventDefault();
-        axios.post('{{url('/api/user')}}',{
+        axios.post('{{url('/api/user/')}}',{
             nama_user: $('#nama_user').val(),
             username: $('#username').val(),
             password: $('#password').val(),
@@ -226,7 +226,7 @@
 
     function ambilData(id)
     {
-        axios.get('{{url('/api/user')}}/'+ id)
+        axios.get('{{url('/api/user/')}}/'+ id)
         .then(function(res) {
             var isi = res.data
             document.getElementById('id_user').value=isi.data.id_user;
@@ -246,7 +246,7 @@
     {
         
 
-        axios.put('{{url('/api/user')}}',{
+        axios.put('{{url('/api/user/')}}',{
             id_user:$('#id_user').val(),
             nama_user: $('#nama_user_edit').val(),
             username: $('#username_edit').val(),

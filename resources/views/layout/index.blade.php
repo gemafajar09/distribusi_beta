@@ -28,7 +28,14 @@
                     <br />
 
                     <!-- sidebar menu -->
+                    
+                    @if(session()->get('level') == 1)
+                    @include('component.sidebar_pimpinan')
+                    @elseif(session()->get('level') == 2)
+                    @include('component.sidebar_super_admin')
+                    @elseif(session()->get('level') == 3)
                     @include('component.sidebar')
+                    @endif
                     <!-- /sidebar menu -->
 
                     <!-- /menu footer buttons -->

@@ -98,7 +98,8 @@
                 </tr>
             </tbody>
         </table>
-        <button onclick="register()" class="btn btn-danger btn-sm">Register Transaksi</button>
+        <!-- <button onclick="register()" class="btn btn-danger btn-sm">Register Transaksi</button> -->
+        <a href="#" class="btn btn-danger btn-sm" id="register">Register Transaksi</a>
     </div>
 </div>
 </div>
@@ -112,34 +113,43 @@
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/purchasetmp/datatable') }}",
+          url: "{{ url('/api/purchasetmp/datatable') }}", 
         },
         columns:[
           {
-            data:'nama_type_produk'
+            data:'nama_type_produk',
+            defaultContent:""
           },
           {
-            data:'produk_brand'
+            data:'produk_brand',
+            defaultContent:""
           },
           {
-            data:'produk_nama'
+            data:'produk_nama',
+            defaultContent:""
           },
           {
-            data:'unit_satuan_price'
+            data:'unit_satuan_price',
+            defaultContent:""
           },
           {
-            data:'stok_quantity'
+            data:'stok_quantity',
+            defaultContent:""
           },
           {
-            data:'total'
+            data:'total',
+            defaultContent:""
           },
           {
-            data:'diskon'
+            data:'diskon',
+            defaultContent:""
           },
           {
-            data:'total_price'
+            data:'total_price',
+            defaultContent:""
           },
           {
+            defaultContent:"",
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
@@ -150,7 +160,7 @@
         ]
       });
             // get produk
-            axios.get('{{url('/api/getproduk')}}')
+            axios.get('{{url('/api/getproduk/')}}')
                 .then(function (res) {
                 // handle success
                 isi = res.data
@@ -161,7 +171,7 @@
                  });
                  $('.selectpicker').selectpicker('refresh');
             });
-            axios.get('{{url('/api/getsuplier')}}')
+            axios.get('{{url('/api/getsuplier/')}}')
                 .then(function (res) {
                 // handle success
                 isi = res.data
@@ -217,10 +227,6 @@
         let unit1 = $('#unit1').val();
         let unit2 = $('#unit2').val();
         let unit3 = $('#unit3').val();
-
-        
-        
-        
         axios.get('{{url('/api/getunit/')}}/'+produk_id)
                     .then(function(res){
                         isi = res.data
@@ -279,15 +285,10 @@
         
     })
 
-    function register(){
-        axios.get('{{url('/api/registerpurchase/')}}/')
-            .then(function(res){
-            var data = res.data
-            console.log(data);
-            tables.ajax.reload()
-            toastr.info(data.message)
-        })
-    }
+    $("#register").on('click', function() {
+        window.open("{{route('register-transaksi-purchase')}}", "_blank");
+        location.reload();
+    });
 
     function deleted(id)
     {

@@ -127,8 +127,7 @@ Route::group(['namespace' => 'Admin'], function () {
 Route::group(['namespace' => 'transaksi'], function () {
 
     // api purchase
-    Route::get('registerpurchase','TransaksiPurchaseController@register')->name('register-transaksi-purchase');
-
+    
     // api purchase tmp
     Route::get('purchasetmp/datatable', 'TransaksiPurchaseTmpController@datatable');
     Route::get('purchasetmp/{id}', 'TransaksiPurchaseTmpController@get');
@@ -136,6 +135,7 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('purchasetmp', 'TransaksiPurchaseTmpController@add');
     Route::put('purchasetmp', 'TransaksiPurchaseTmpController@edit');
     Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
+    Route::get('registerpurchase','TransaksiPurchaseTmpController@register')->name('register-transaksi-purchase');
 
     // api transaksi sales
     Route::post('getsalestrans', 'TransaksiSalesController@getSales');

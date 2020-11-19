@@ -3,7 +3,7 @@
 @section('content')
 <!-- page content -->
 
-<div class="row" style="display: inline-block;">
+<!-- <div class="row" style="display: inline-block;">
     <div class=" top_tiles" style="margin: 10px 0;">
         <div class="col-md-3 col-sm-3  tile">
             <span>Total Sessions</span>
@@ -39,9 +39,9 @@
         </div>
     </div>
 </div>
-<br />
+<br /> -->
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-12 col-sm-12 ">
         <div class="dashboard_graph x_panel">
             <div class="x_title">
@@ -63,7 +63,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="row">
     <div class="col-md-4 col-sm-6 ">

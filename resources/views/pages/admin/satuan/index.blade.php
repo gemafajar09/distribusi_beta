@@ -7,17 +7,19 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
-            <div class="col-sm-4 mb-2">
+    <div class="row bg-white p-3 rounded mb-3" style="box-shadow:1px 1px 4px grey;">
+            <div class="col-sm-12 mb-2">
                 <form action="" method="POST">
                     @csrf
-                    <div class="form-group">
+                    <div class="row">
+                    <div class="form-group col-sm-6">
                         <label for="">Nama Satuan</label>
-                        <input type="text" class="form-control" id="nama_satuan">
+                        <input type="text" class="form-control rounded" id="nama_satuan">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-sm-6">
                         <label for="">Keterangan Satuan</label>
-                        <input type="text" class="form-control" id="keterangan_satuan">
+                        <input type="text" class="form-control rounded" id="keterangan_satuan">
+                    </div>
                     </div>
                     <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
                 </form>
@@ -25,6 +27,7 @@
         </div>
     </div>
 </div>
+<div class="row">
 <div class="col-sm-12">
     <div class="card-box table-responsive">
         <table id="tabel" class="table table-striped table-responsive-sm table-bordered dt-responsive nowrap"
@@ -44,6 +47,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </div>
 
 <!-- Modal -->

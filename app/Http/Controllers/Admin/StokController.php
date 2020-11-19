@@ -30,7 +30,7 @@ class StokController extends Controller
         $data = $this->join_builder();
         $format = '%d %s | ';
         $stok = [];
-        $dataisi=[];
+        $dataisi = [];
         foreach ($data as $d) {
             $id = $d->produk_id;
             $jumlah = $d->jumlah;

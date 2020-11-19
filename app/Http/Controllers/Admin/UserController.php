@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function __construct()
@@ -16,7 +17,7 @@ class UserController extends Controller
             'id_user'=>'numeric',
             'nama_user'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'username'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
-            'password'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'password'=>'required',
             'level'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'telepon'=>'required|numeric',
             'email'=>'required|email',
@@ -49,7 +50,8 @@ class UserController extends Controller
     public function join_builder($id=null){
         $data = DB::table('tbl_user')
                 ->join('tbl_cabang','tbl_cabang.id_cabang','=','tbl_user.id_cabang')
-                ->select('id_user','nama_user','username','password','level','tbl_user.telepon as telepon','tbl_user.email as email','nama_cabang')
+                ->join('tbl_role_user','tbl_role_user.id_role','=','tbl_user.level')
+                ->select('id_user','nama_user','username','password','level','nama_role','tbl_user.telepon as telepon','tbl_user.email as email','nama_cabang')
                 ->get();
         return $data;
     }
@@ -69,7 +71,8 @@ class UserController extends Controller
     }
 
     public function add(Request $request){
-        // id_brand belum final
+        $password = Hash::make($request->input('password'));
+        $request->merge(['password' => $password]);
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){
             return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
