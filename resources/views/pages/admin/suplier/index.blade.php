@@ -7,56 +7,60 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
-            <div class="col-sm-4 mb-2">
-                <div class="form-group">
+    <div class="row bg-white p-3 rounded mb-4" style="box-shadow:1px 1px 4px grey;">
+            <div class="col-sm-12 mb-2">
+                <div class="form-row">
+                <div class="form-group col-sm-4">
                     <label for="">Nama Suplier</label>
-                    <input type="text" class="form-control" id="nama_suplier">
+                    <input type="text" class="form-control rounded" id="nama_suplier">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-sm-4">
                     <label for="">Nama Perusahaan</label>
-                    <input type="text" class="form-control" id="nama_perusahaan">
+                    <input type="text" class="form-control rounded" id="nama_perusahaan">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-sm-4">
                     <label for="">Alamat</label>
-                    <textarea name="" id="alamat" cols="30" rows="5" class="form-control"></textarea>
+                    <textarea name="" id="alamat" cols="30" rows="1" class="form-control rounded"></textarea>
                 </div>
-                <div class="form-group">
+                </div>
+                <div class="form-row">
+                <div class="form-group col-sm-3">
                     <label for="">Kota</label>
-                    <input type="text" id="kota" class="form-control">
+                    <input type="text" id="kota" class="form-control rounded">
                 </div>
-                <div class="form-group">
+                <div class="form-group col-sm-3">
                     <label for="">Negara</label>
-                    <input type="text" id="negara" class="form-control">
+                    <input type="text" id="negara" class="form-control rounded">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="">Telepon</label>
+                    <input type="number" id="telepon" class="form-control rounded">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="">Fax</label>
+                    <input type="number" id="fax" class="form-control rounded">
+                </div>
+                </div>
+                <div class="form-row">
+                <div class="form-group col-sm-3">
+                    <label for="">Bank</label>
+                    <input type="text" id="bank" class="form-control rounded">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="">Nama Akun</label>
+                    <input type="text" id="nama_akun" class="form-control rounded">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="">No. Akun</label>
+                    <input type="number" id="no_akun" class="form-control rounded">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="">Note</label>
+                    <textarea name="" id="note" cols="30" rows="1" class="form-control rounded"></textarea>
+                </div>
+                </div>
                 </div>
                 <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label for="">Telepon</label>
-                    <input type="number" id="telepon" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="">Fax</label>
-                    <input type="number" id="fax" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="">Bank</label>
-                    <input type="text" id="bank" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="">Nama Akun</label>
-                    <input type="text" id="nama_akun" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="">No. Akun</label>
-                    <input type="number" id="no_akun" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="">Note</label>
-                    <textarea name="" id="note" cols="30" rows="5" class="form-control"></textarea>
-                </div>
-            </div>
         </div>
     </div>
 </div>

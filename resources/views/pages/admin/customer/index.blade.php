@@ -14,54 +14,54 @@
                     <div class="form-row">
                     <div class="form-group col-md-5">
                         <label for="">Nama Customer</label>
-                        <input type="text" name="nama_customer" id="nama_customer" class="form-control" placeholder="Masukan Nama Customer">
+                        <input type="text" name="nama_customer" id="nama_customer" class="form-control rounded" placeholder="Masukan Nama Customer">
                     </div>
                     <div class="form-group col-md-5">
                         <label for="">Nama Perusahaan</label>
-                        <input type="text" name="nama_perusahaan" id="nama_perusahaan" class="form-control" placeholder="Masukan Nama Perusahaan">
+                        <input type="text" name="nama_perusahaan" id="nama_perusahaan" class="form-control rounded" placeholder="Masukan Nama Perusahaan">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="">Credit Plafond</label>
-                        <input type="text" name="credit_plafond" id="credit_plafond" class="form-control">
+                        <input type="text" name="credit_plafond" id="credit_plafond" class="form-control rounded">
                     </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="">Alamat</label>
-                        <input type="text" name="alamat" id="alamat" class="form-control" placeholder="Masukan Alamat">
+                        <input type="text" name="alamat" id="alamat" class="form-control rounded" placeholder="Masukan Alamat">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Kota</label>
-                        <input type="text" name="kota" id="kota" class="form-control" placeholder="Masukan Alamat">
+                        <input type="text" name="kota" id="kota" class="form-control rounded" placeholder="Masukan Alamat">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Negara</label>
-                        <input type="text" name="negara" id="negara" class="form-control" placeholder="Masukan Negara">
+                        <input type="text" name="negara" id="negara" class="form-control rounded" placeholder="Masukan Negara">
                     </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="">Telepon</label>
-                        <input type="text" name="telepon" id="telepon" class="form-control" placeholder="Ex : 08..">
+                        <input type="text" name="telepon" id="telepon" class="form-control rounded" placeholder="Ex : 08..">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Kartu Kredit</label>
-                        <input type="text" name="kartu_kredit" id="kartu_kredit" class="form-control" placeholder="Ex : 4156..">
+                        <input type="text" name="kartu_kredit" id="kartu_kredit" class="form-control rounded" placeholder="Ex : 4156..">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Fax</label>
-                        <input type="text" name="fax" id="fax" class="form-control" placeholder="Ex : 9982..">
+                        <input type="text" name="fax" id="fax" class="form-control rounded" placeholder="Ex : 9982..">
                     </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="">Nama Sales</label>
-                        <select name="id_sales" id="id_sales" class="selectpicker" data-size="5" data-width="100%" data-live-search="true" autocomplete="off" title="Pilih Nama Sales">
+                        <select name="id_sales" id="id_sales" class="selectpicker rounded" data-size="5" data-width="100%" data-live-search="true" autocomplete="off" title="Pilih Nama Sales">
                         </select>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Keterangan</label>
-                        <input type="text" name="note" id="note" class="form-control" placeholder="Masukan Keterangan">
+                        <input type="text" name="note" id="note" class="form-control rounded" placeholder="Masukan Keterangan">
                     </div>
                     </div>
                     <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>

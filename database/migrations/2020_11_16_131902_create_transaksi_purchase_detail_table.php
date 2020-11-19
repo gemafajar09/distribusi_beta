@@ -14,8 +14,18 @@ class CreateTransaksiPurchaseDetailTable extends Migration
     public function up()
     {
         Schema::create('transaksi_purchase_detail', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->bigIncrements('id_transaksi_purchase_detail');
+            $table->string('invoice_id',100);
+            $table->date('invoice_date');
+            $table->string('transaksi_tipe',100);
+            $table->date('term_until');
+            $table->integer('id_suplier');
+            $table->integer('produk_id');
+            $table->integer('quantity');
+            $table->integer('unit_satuan_price');
+            $table->integer('diskon');
+            $table->integer('total_price');
+            $table->integer('id_cabang');
         });
     }
 

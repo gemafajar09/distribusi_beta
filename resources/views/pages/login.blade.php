@@ -25,19 +25,19 @@
   <body class="login">
     <div>
       <div class="login_wrapper">
-        <div class="animate form login_form">
+        <div class="animate form login_form p-3" style="box-shadow:0px 0px 5px black;">
           <section class="login_content">
             <form method="POST" action="{{ route('postLogin') }}">
             	@csrf 
               <h1>Login Form</h1>
               <div>
-                <input type="text" name="username" class="form-control" placeholder="Username" required="" />
+                <input type="text" name="username" class="form-control" placeholder="Username" required="" autocomplete="off" />
               </div>
               <div>
-                <input type="password" name="password" class="form-control" placeholder="Password" required="" />
+                <input type="password" name="password" class="form-control" placeholder="Password" required="" autocomplete="off" />
               </div>
               <div>
-                <button class="btn btn-default submit">Log in</button>	
+                <button class="btn btn-success  submit">Log in</button>	
               </div>
             </form>
               <div class="clearfix"></div>

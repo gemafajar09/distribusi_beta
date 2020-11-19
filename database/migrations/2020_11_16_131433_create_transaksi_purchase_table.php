@@ -21,10 +21,6 @@ class CreateTransaksiPurchaseTable extends Migration
             $table->date('term_until');
             $table->integer('id_suplier');
             $table->integer('produk_id');
-            $table->integer('quantity');
-            $table->integer('unit_satuan_price');
-            $table->integer('diskon');
-            $table->integer('total_price');
             $table->integer('id_cabang');
         });
     }

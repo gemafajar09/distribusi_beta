@@ -7,36 +7,38 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
+    <div class="row bg-white p-3 rounded mb-3" style="box-shadow:1px 1px 4px grey;">
             <div class="col-sm-5 mb-2">
                 <form action="" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="">Nama Cabang</label>
-                        <input type="text" id="nama_cabang" class="form-control">
+                        <input type="text" id="nama_cabang" class="form-control rounded">
                     </div>
                     <div class="form-group">
                         <label for="">Alamat</label>
-                        <textarea name="" id="alamat" cols="30" rows="5" class="form-control"></textarea>
+                        <textarea name="" id="alamat" cols="30" rows="5" class="form-control rounded"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="">Kode Cabang</label>
-                        <input type="text" id="kode_cabang" class="form-control">
+                        <input type="text" id="kode_cabang" class="form-control rounded">
                     </div>
             </div>
             <div class="col-sm-5">
                 <div class="form-group">
                     <label for="">No. Telepon</label>
-                    <input type="number" id="telepon" class="form-control">
+                    <input type="number" id="telepon" class="form-control rounded">
                 </div>
                 <div class="form-group">
                     <label for="">E-mail</label>
-                    <input type="email" id="email" class="form-control">
+                    <input type="email" id="email" class="form-control rounded">
                 </div>
                 <button type="button" id="add" class="btn btn-round btn-success btn-clipboard"><i
                         class="fa fa-plus"></i></button>
                 </form>
             </div>
+    </div>
+    <div class="row">
             <div class="col-sm-12">
                 <div class="card-box table-responsive">
                     <table id="tabel" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
@@ -78,7 +80,7 @@
                 </div>
                 <div class="form-group">
                     <label for="">Alamat</label>
-                    <textarea name="" id="almt" cols="30" rows="10" class="form-control"></textarea>
+                    <textarea name="" id="almt" cols="30" rows="2" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="">Kode Cabang</label>
@@ -161,19 +163,21 @@
         })
         .then(function (res) {
             var data = res.data
-            console.log(data.status)
+            
             if(data.status == 200)
             {
                 tables.ajax.reload()
                 toastr.info(data.message)
                 bersih()
+            }else{
+                toastr.info(data.message)
             }
         })
     })
 
     function deleted(id)
     {
-        axios.delete('{{url('/api/cabang/remove')}}/'+id)
+        axios.delete('{{url('/api/cabang/remove/')}}/'+id)
             .then(function(res){
             var data = res.data
             tables.ajax.reload()
@@ -183,7 +187,7 @@
 
     function ambilData(id)
     {
-        axios.get('{{url('/api/cabang')}}/'+ id)
+        axios.get('{{url('/api/cabang/')}}/'+ id)
         .then(function(res) {
             var isi = res.data
             console.log(isi.data)
@@ -205,7 +209,7 @@
         var kode_cabang = document.getElementById('kd_cabang').value;
         var telepon = document.getElementById('tlpn').value;
         var email = document.getElementById('emails').value;
-        axios.put('{{url('/api/cabang')}}',{
+        axios.put('{{url('/api/cabang/')}}',{
             'id_cabang':id_cabang,
             'nama_cabang':nama_cabang,
             'alamat':alamat,

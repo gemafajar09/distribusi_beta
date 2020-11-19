@@ -7,36 +7,36 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
+    <div class="row bg-white p-3 rounded mb-4" style="box-shadow:1px 1px 4px grey;">
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
                     <div class="form-group col-sm-4">
                        <label for="">Nama Produk</label>
-                        <select name="produk_id" id="produk_id" class="selectpicker" data-width="100%" data-live-search="true" title="Pilih Produk" autocomplete="off" data-size="5">
+                        <select name="produk_id" id="produk_id" class="selectpicker rounded" data-width="100%" data-live-search="true" title="Pilih Produk" autocomplete="off" data-size="5">
                             
                         </select>
                     </div>
                     <div class="form-group col-sm-4">
                     <label for="">Maximum Unit Name</label>
-                        <select name="maximum_unit_name" id="maximum_unit_name" data-width="100%" class="selectpicker" data-live-search="true" title="Pilih Maximum Unit" data-size="5" autocomplete="off">
+                        <select name="maximum_unit_name" id="maximum_unit_name" data-width="100%" class="selectpicker rounded" data-live-search="true" title="Pilih Maximum Unit" data-size="5" autocomplete="off">
                             
                         </select>
                     </div>
                     <div class="form-group col-sm-4">
                     <label for="">Minimum Unit Name</label>
-                        <select name="minimum_unit_name" id="minimum_unit_name" data-width="100%" class="selectpicker" data-live-search="true" title="Pilih Minimum Unit" data-size="5" autocomplete="off"></select>
+                        <select name="minimum_unit_name" id="minimum_unit_name" data-width="100%" class="selectpicker rounded" data-live-search="true" title="Pilih Minimum Unit" data-size="5" autocomplete="off"></select>
                     </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-md-6">
                     <label for="">Default Value</label>    
-                        <input type="text" class="form-control" id="default_value" name="default_value" placeholder="Masukan nilai nya">
+                        <input type="text" class="form-control rounded" id="default_value" name="default_value" placeholder="Masukan nilai nya">
                     </div>
                     <div class="form-group col-md-6">
                     <label for="">Keterangan</label>     
-                        <input type="text" class="form-control" id="note" name="note" value="Fix" placeholder="Keterangan">
+                        <input type="text" class="form-control rounded" id="note" name="note" value="Fix" placeholder="Keterangan">
                     </div>
                     </div>
                     <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>

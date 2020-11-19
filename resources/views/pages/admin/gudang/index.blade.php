@@ -7,22 +7,22 @@
 @section('content')
 <div class="mt-2">
     <div class="x_content">
-        <div class="row">
+    <div class="row bg-white p-3 rounded mb-4" style="box-shadow:1px 1px 4px grey;">
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
                     <div class="form-group col-sm-4">
                         <label for="">Nama Gudang</label>
-                        <input type="text" class="form-control" id="nama_gudang">
+                        <input type="text" class="form-control rounded" id="nama_gudang">
                     </div>
                     <div class="form-group col-sm-3">
                         <label for="">Telepon Gudang</label>
-                        <input type="text" class="form-control" id="telepon_gudang">
+                        <input type="text" class="form-control rounded" id="telepon_gudang">
                     </div>
                     <div class="form-group col-sm-5">
                         <label for="">Alamat Gudang</label>
-                        <textarea name="" id="alamat_gudang" cols="30" rows="1" class="form-control"></textarea>
+                        <textarea name="" id="alamat_gudang" cols="30" rows="1" class="form-control rounded"></textarea>
                     </div>
                     </div>
                     <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
