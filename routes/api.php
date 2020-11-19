@@ -120,7 +120,6 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::delete('unit/{id}', 'UnitController@remove');
     Route::get('getunit/{id}', 'UnitController@getUnit');
 
-    
     Route::get('getcustomer', 'SpesialHargaController@getCustomer');
     Route::get('getproduk', 'SpesialHargaController@getProduk');
 });
@@ -142,4 +141,6 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('getsalestrans', 'TransaksiSalesController@getSales');
     Route::post('getCustomer', 'TransaksiSalesController@getCustomer');
     Route::post('getProduk', 'TransaksiSalesController@getProduk');
+    Route::post('cekstok', 'TransaksiSalesController@cekstok');
+    Route::post('addkeranjang', 'TransaksiSalesController@addkeranjang');
 });
