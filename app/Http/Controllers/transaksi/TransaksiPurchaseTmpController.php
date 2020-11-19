@@ -50,7 +50,7 @@ class TransaksiPurchaseTmpController extends Controller
             ->get();
             $hasilbagi=0;
             foreach ($proses as $index => $list) {
-                $banyak =  sizeof($proses);
+                $banyak = sizeof($proses);
                 if($index == 0 ){
                 $sisa = $jumlah % $list->default_value;
                 $hasilbagi = ($jumlah-$sisa)/$list->default_value;
