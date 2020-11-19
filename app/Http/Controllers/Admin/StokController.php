@@ -30,16 +30,18 @@ class StokController extends Controller
         $data = $this->join_builder();
         $format = '%d %s | ';
         $stok = [];
+        $dataisi=[];
         foreach ($data as $d) {
             $id = $d->produk_id;
             $jumlah = $d->jumlah;
             $harga = $d->produk_harga;
             $proses = DB::table('tbl_unit')->where('produk_id',$id)
-            ->join('tbl_satuan','tbl_unit.maximum_unit_name','=','tbl_satuan.id_satuan')
-            ->select('id_unit','nama_satuan as unit','default_value')
-            ->orderBy('id_unit','ASC')
-            ->get();
+                        ->join('tbl_satuan','tbl_unit.maximum_unit_name','=','tbl_satuan.id_satuan')
+                        ->select('id_unit','nama_satuan as unit','default_value')
+                        ->orderBy('id_unit','ASC')
+                        ->get();
             $hasilbagi=0;
+            $stokquantity=[];
             foreach ($proses as $index => $list) {
                 $banyak =  sizeof($proses);
                 if($index == 0 ){

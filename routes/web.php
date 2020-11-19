@@ -52,6 +52,12 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::group(['prefix' => 'user'], function () {
             Route::get('/index', 'UserController@index')->name('user');
         });
+        Route::group(['prefix' => 'stok'], function () {
+            Route::get('/index', 'StokController@index')->name('stok');
+        });
+        Route::group(['prefix' => 'unit'], function () {
+            Route::get('/index', 'UnitController@index')->name('unit');
+        });
 });
 
 Route::group(['namespace' => 'Transaksi'], function() {
