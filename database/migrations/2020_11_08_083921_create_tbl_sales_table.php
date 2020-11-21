@@ -18,6 +18,7 @@ class CreateTblSalesTable extends Migration
             $table->string('nama_sales');
             $table->string('alamat');
             $table->string('telepon');
+            $table->integer('target');
         });
     }
 

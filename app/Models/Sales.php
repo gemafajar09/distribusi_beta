@@ -14,11 +14,15 @@ class Sales extends Model
     protected $primaryKey = 'id_sales';
     // define fillable
     protected $fillable = [
-        'nama_sales', 'alamat','telepon',
+        'nama_sales', 'alamat','telepon','target',
     ];
 
     public static function getAll()
     {
         return self::all();
     }
+
+    protected $attributes = [
+        'target'=>0
+    ];
 }

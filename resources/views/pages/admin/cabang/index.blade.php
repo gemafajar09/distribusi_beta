@@ -17,7 +17,7 @@
                     </div>
                     <div class="form-group">
                         <label for="">Alamat</label>
-                        <textarea name="" id="alamat" cols="30" rows="5" class="form-control rounded"></textarea>
+                        <textarea name="" id="alamat" cols="30" rows="1" class="form-control rounded"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="">Kode Cabang</label>
@@ -33,8 +33,14 @@
                     <label for="">E-mail</label>
                     <input type="email" id="email" class="form-control rounded">
                 </div>
-                <button type="button" id="add" class="btn btn-round btn-success btn-clipboard"><i
-                        class="fa fa-plus"></i></button>
+                <div class="row">
+                                        <div class="col-md-5" align="center">
+                                            <button type="button" style="width:140px;" id="add" class="btn btn-outline-success btn-sm">Add</button>
+                                        </div>
+                                        <div class="col-md-5" align="center">
+                                            <button type="button" style="width:140px;" class="btn btn-outline-danger btn-sm" onclick="bersih()">Remove All</button>
+                                        </div>
+                                    </div>
                 </form>
             </div>
     </div>

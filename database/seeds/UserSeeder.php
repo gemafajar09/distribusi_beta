@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $data = ["nama_user"=>"Admin","username"=>"admin","password"=>Hash::make('admin123'),"level"=>"3","telepon"=>"0751767435","email"=>"bilhaqi2806@gmail.com","id_cabang"=>1];
+        $data = ["nama_user"=>"Bil Haqi","username"=>"pimpinan","password"=>Hash::make('pimpinan123'),"level"=>"1","telepon"=>"0751767435","email"=>"pimpinan@gmail.com","id_cabang"=>1];
         DB::table('tbl_user')->insert($data);
     }
 }

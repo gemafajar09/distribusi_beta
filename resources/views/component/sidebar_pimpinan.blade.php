@@ -7,6 +7,13 @@
             {{session()->get('level')}} -->
             <li><a href="{{url('/')}}"><i class="fa fa-home"></i> Home</a>
             </li>
+            
+            <li><a><i class="fa fa-user"></i> Management <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                <li><a href="{{route('user')}}">User</a></li>
+            <li><a href="{{ route('cabang') }}">Cabang</a></li>
+                </ul>
+            </li>
             <li><a><i class="fa fa-file"></i> Report <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{{ route('cost') }}">Data Cost</a></li>

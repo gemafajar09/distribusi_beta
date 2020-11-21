@@ -48,7 +48,14 @@
                         </div>
                     </div>
                     </div>
-                    <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
+                    <div class="row">
+                                        <div class="col-md-2" align="center">
+                                            <button type="button" style="width:140px;" id="add" class="btn btn-outline-success btn-sm">Add</button>
+                                        </div>
+                                        <div class="col-md-2" align="center">
+                                            <button type="button" style="width:140px;" class="btn btn-outline-danger btn-sm" onclick="bersih()">Remove All</button>
+                                        </div>
+                                    </div>
                 </form>
             </div>
         </div>
