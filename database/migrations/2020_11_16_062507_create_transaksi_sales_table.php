@@ -15,6 +15,7 @@ class CreateTransaksiSalesTable extends Migration
     {
         Schema::create('transaksi_sales', function (Blueprint $table) {
             $table->bigIncrements('id_transaksi_sales');
+            $table->string('sales_type',50);
             $table->string('invoice_id',100);
             $table->date('invoice_date');
             $table->string('transaksi_tipe',100);
@@ -22,6 +23,8 @@ class CreateTransaksiSalesTable extends Migration
             $table->integer('sales_id');
             $table->integer('customer_id');
             $table->text('note');
+            $table->integer('totalsales');
+            $table->double('diskon');
             $table->timestamps();
         });
     }

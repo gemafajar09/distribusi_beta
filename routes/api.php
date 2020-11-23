@@ -142,5 +142,9 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('getCustomer', 'TransaksiSalesController@getCustomer');
     Route::post('getProduk', 'TransaksiSalesController@getProduk');
     Route::post('cekstok', 'TransaksiSalesController@cekstok');
+    Route::post('hargakusus', 'TransaksiSalesController@hargakusus');
     Route::post('addkeranjang', 'TransaksiSalesController@addkeranjang');
+    Route::get('datatable/{id}', 'TransaksiSalesController@datatable');
+    Route::post('deleteitem', 'TransaksiSalesController@deleteitem');
+    Route::post('rekaptransaksi', 'TransaksiSalesController@rekaptransaksi');
 });
