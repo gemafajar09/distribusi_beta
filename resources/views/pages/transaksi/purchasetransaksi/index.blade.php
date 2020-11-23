@@ -11,7 +11,7 @@
             <div class="col-sm-12">
                 <form action="" method="POST">
                     @csrf
-                    <div class="for-row">
+                    <div class="form-row">
                         <div class="form-group col-sm-3">
                             <label for="">Invoice ID</label>
                             <input type="text" class="form-control" id="invoice_id" value="1" readonly>
@@ -23,9 +23,9 @@
                         <div class="form-group col-sm-3">
                             <label for="">Transaction Type</label><br>
                             <div style="margin-top:10px;">
-                            <input type="radio" name="transaksi_tipe" value="0">
+                            <input type="radio" name="transaksi_tipe" id="cash" value="0">
                             <b>Cash</b>
-                            <input type="radio" name="transaksi_tipe" value="1" style="margin-left:20px;">
+                            <input type="radio" name="transaksi_tipe" id="credit" value="1" style="margin-left:20px;">
                             <b>Credit</b>
                             </div>
                         </div>
@@ -68,7 +68,14 @@
                     </div>
                     <div class="form-row" id="wadah">
                     </div>
-                    <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
+                    <div class="row">
+                                        <div class="col-md-2" align="center">
+                                            <button type="button" style="width:140px;" id="add" class="btn btn-outline-success btn-sm">Add</button>
+                                        </div>
+                                        <div class="col-md-2" align="center">
+                                            <button type="button" style="width:140px;" class="btn btn-outline-danger btn-sm" onclick="bersih()">Remove All</button>
+                                        </div>
+                                    </div>
                 </form>
             </div>
         </div>
@@ -210,16 +217,38 @@
                         }
                     })
                 });
-            
+
+                $('#term_until').hide();
+                
     });
 
+    // radio
+    $('#cash').click(function(){
+        var other = document.getElementById('cash').checked
+        console.log(other)
+        if (other == true) {
+            $('#term_until').hide()  
+        }
+    });
+    $('#credit').click(function(){
+        var other = document.getElementById('credit').checked
+        console.log(other)
+        if (other == true) {
+            $('#term_until').show()  
+        }
+    });
 
     $('#add').click(function(e){
         e.preventDefault();
+        var d = new Date();
+        var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + (d.getDate());
         let produk_id = $('#produk_id').val();
         let invoice_id = $('#invoice_id').val();
         let invoice_date = $('#invoice_date').val();
         let transaksi_tipe = $('input[name=transaksi_tipe]:checked').val();
+        if(transaksi_tipe == 0){
+            document.getElementById('term_until').value = strDate;
+        }
         let term_until = $('#term_until').val();
         let id_suplier = $('#id_suplier').val();
         let unit_satuan_price = $('#unit_satuan_price').val();
@@ -279,15 +308,19 @@
                                 toastr.info(data.message)
                             }
                         })
+                        $('#term_until').hide();
             });
 
         
         
     })
 
-    $("#register").on('click', function() {
-        window.open("{{route('register-transaksi-purchase')}}", "_blank");
-        location.reload();
+    $("#register").on('click', function(e) {
+        e.preventDefault();
+        cek = window.open("{{route('register-transaksi-purchase')}}", "_blank");
+        $(cek).on("unload", function(){
+        tables.ajax.reload();
+        });
     });
 
     function deleted(id)

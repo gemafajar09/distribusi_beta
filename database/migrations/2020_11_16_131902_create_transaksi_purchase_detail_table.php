@@ -26,6 +26,7 @@ class CreateTransaksiPurchaseDetailTable extends Migration
             $table->integer('diskon');
             $table->integer('total_price');
             $table->integer('id_cabang');
+            $table->char('status',1);
         });
     }
 

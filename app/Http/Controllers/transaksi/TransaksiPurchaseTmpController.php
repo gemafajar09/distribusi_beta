@@ -153,7 +153,7 @@ class TransaksiPurchaseTmpController extends Controller
 
 
     public function register(){
-        $data = TransaksiPurchaseTmp::all('invoice_id','invoice_date','transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang')->toArray();
+        $data = TransaksiPurchaseTmp::all('invoice_id','invoice_date','transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status')->toArray();
         $data1 = $this->datatable();
         $datatmp =  $this->dataisi;
         $tambahtodetail = TransaksiPurchaseDetail::insert($data);
@@ -166,6 +166,7 @@ class TransaksiPurchaseTmpController extends Controller
             $transaksi_tipe = $d['transaksi_tipe'];
             $term_until = $d['term_until'];
             $id_suplier = $d['id_suplier'];
+            $status = $d['status'];
             
             $tambahutama = new TransaksiPurchase;
             $tambahutama->invoice_id = $invoice_id;
@@ -175,26 +176,13 @@ class TransaksiPurchaseTmpController extends Controller
             $tambahutama->id_suplier = $id_suplier; 
             $tambahutama->produk_id = $id;
             $tambahutama->id_cabang = $id_cabang;
+            $tambahutama->status = $status;
             $tambahutama->save();
-
-            $cek = Stok::where('produk_id',$id)->first();
-            if($cek){
-                $edit = Stok::where('produk_id',$id)
-                        ->increment('jumlah',$jumlah);
-            }else{
-                $stok = new Stok;
-                $stok->produk_id = $id;
-                $stok->jumlah = $jumlah;
-                $stok->id_cabang = $id_cabang;
-                $stok->save();
-            }
         }
         $delete = TransaksiPurchaseTmp::truncate();
         if($delete){
             return view('report.purchase_transaksi',compact('datatmp'));
         }    
      }
-
-    
 
 }

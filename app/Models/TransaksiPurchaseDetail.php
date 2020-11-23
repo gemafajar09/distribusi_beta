@@ -13,6 +13,10 @@ class TransaksiPurchaseDetail extends Model
     protected $primaryKey = 'id_transaksi_purchase_detail';
     // define fillable
     protected $fillable = [
-        'invoice_id', 'invoice_date', 'transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang',
+        'invoice_id', 'invoice_date', 'transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status',
+    ];
+
+    protected $attributes = [
+        'status' => '0', 
     ];
 }

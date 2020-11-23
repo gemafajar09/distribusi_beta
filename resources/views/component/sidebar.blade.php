@@ -9,7 +9,7 @@
                 <ul class="nav child_menu">
                     <li><a href="{{route('produk')}}">Data Produk</a></li>
                     <li><a href="{{route('stok')}}">Data Stok</a></li>
-                    <li><a href="{{ route('cabang') }}">Data Cabang</a></li>
+                    
                     <li><a href="{{ route('satuan') }}">Data Satuan</a></li>
                     <li><a href="{{ route('sales') }}">Data Sales</a></li>
                     <li><a href="{{ route('suplier') }}">Data Suplier</a></li>
@@ -17,7 +17,6 @@
                     <li><a href="{{route('gudang')}}">Data Gudang</a></li>
                     <li><a href="{{route('spesial')}}">Data Harga Kshusus</a></li>
                     <li><a href="{{route('type')}}">Data Type Produk</a></li>
-                    <li><a href="{{route('user')}}">Data User</a></li>
                     <li><a href="{{route('unit')}}">Data Unit</a></li>
                     
                 </ul>
@@ -35,6 +34,8 @@
                         <ul class="nav child_menu">
                             <li><a href="{{ route('purchase_order') }}">Report Transaction</a></li>
                             <li><a href="{{ route('purchase_order') }}">Entry Transaction</a></li>
+                            <li><a href="{{ route('return_purchase_order') }}">Return Transaction</a></li>
+                            
                         </ul>
                     </li>
                      

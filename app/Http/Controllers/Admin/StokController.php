@@ -34,7 +34,8 @@ class StokController extends Controller
         foreach ($data as $d) {
             $id = $d->produk_id;
             $jumlah = $d->jumlah;
-            $harga = $d->produk_harga;
+            $capital_price = $d->capital_price;
+            $harga = $d->capital_price;
             $proses = DB::table('tbl_unit')->where('produk_id',$id)
                         ->join('tbl_satuan','tbl_unit.maximum_unit_name','=','tbl_satuan.id_satuan')
                         ->select('id_unit','nama_satuan as unit','default_value')
@@ -93,8 +94,8 @@ class StokController extends Controller
             }
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
-            $d->harga = ceil($harga * $d->jumlah);
-            $dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"produk_harga"=>$d->produk_harga,"stok_harga"=>$d->harga,"jumlah"=>$d->stok_quantity];
+            $d->total_harga = ceil($harga * $d->jumlah);
+            $dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"stok_harga"=>$d->total_harga,"jumlah"=>$d->stok_quantity];
         }
        
         return datatables()->of($dataisi)->toJson();
