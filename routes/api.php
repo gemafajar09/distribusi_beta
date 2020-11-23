@@ -145,7 +145,12 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('getCustomer', 'TransaksiSalesController@getCustomer');
     Route::post('getProduk', 'TransaksiSalesController@getProduk');
     Route::post('cekstok', 'TransaksiSalesController@cekstok');
+    Route::post('hargakusus', 'TransaksiSalesController@hargakusus');
     Route::post('addkeranjang', 'TransaksiSalesController@addkeranjang');
+
+    Route::get('datatable/{id}', 'TransaksiSalesController@datatable');
+    Route::post('deleteitem', 'TransaksiSalesController@deleteitem');
+    Route::post('rekaptransaksi', 'TransaksiSalesController@rekaptransaksi');
 
     // api Purchase Return
     // Route::get('purchasereturn/datatable', 'TransaksiPurchareturnController@datatable');
@@ -155,4 +160,5 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::delete('purchasereturn/{id}', 'TransaksiPurchaseReturnController@remove');
     Route::get('registerpurchasereturn','TransaksiPurchaseReturnController@register')->name('register-transaksi-purchase-return');
     Route::get('getsuplierproduk/{id}', 'TransaksiPurchaseReturnController@getStok');
+
 });

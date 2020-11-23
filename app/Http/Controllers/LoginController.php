@@ -11,6 +11,8 @@ class LoginController extends Controller
 {
     public function index(Request $request)
     {
+        // $password = Hash::make('fajar123');
+        // dd($password);
         // var_dump($request->session()->has('id'));
         if ($request->session()->has('id')) 
         {
@@ -30,6 +32,7 @@ class LoginController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
         $data = DB::table('tbl_user')->where('username',$username)->first();
+        // dd($data);
         if(empty($data)){
             return '<script type="text/javascript">alert("Username Atau Password Salah!");window.location="/login";</script>';
         }else{
