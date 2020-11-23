@@ -7,6 +7,11 @@
             {{session()->get('level')}} -->
             <li><a href="{{url('/')}}"><i class="fa fa-home"></i> Home</a>
             </li>
+            <li><a><i class="fa fa-cart-plus"></i> Aproval <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ route('aproval_purchase_order') }}">Data Purchase</a></li>
+                </ul>
+            </li>
             <li><a><i class="fa fa-file"></i> Report Cabang <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{{ route('cost') }}">Data Cost</a></li>

@@ -119,4 +119,15 @@ class SuplierController extends Controller
                 ->get();
         return response()->json(['data' => $data, 'status' => 200]);
     }
+
+    public function getSuplierProduk($id){
+        $data = DB::table('transaksi_purchase as t')
+                ->where('t.id_suplier',$id)
+                ->where('t.status','1')
+                ->join('tbl_produk as a','a.produk_id','=','t.produk_id')
+                ->select('a.produk_id as produk_id','produk_nama')
+                ->distinct()
+                ->get();
+        return response()->json(['data' => $data, 'status' => 200]);
+    }
 }

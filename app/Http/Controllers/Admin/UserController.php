@@ -85,6 +85,8 @@ class UserController extends Controller
         $id = $request->input('id_user');
         try{
             $edit = User::findOrFail($id);
+            $password = Hash::make($request->input('password'));
+            $request->merge(['password' => $password]);
             $validator = Validator::make($request->all(),$this->rules,$this->messages);
             if($validator->fails()){
                 return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);

@@ -17,6 +17,7 @@ class CreateTblStokTable extends Migration
             $table->bigIncrements('stok_id');
             $table->integer('produk_id');
             $table->integer('jumlah');
+            $table->integer('capital_price');
             $table->integer('id_cabang');
         });
     }

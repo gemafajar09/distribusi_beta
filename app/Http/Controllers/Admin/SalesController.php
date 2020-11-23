@@ -18,6 +18,7 @@ class SalesController extends Controller
             'nama_sales' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'alamat' => 'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
             'telepon' => 'required|numeric',
+            'target'=>'numeric'
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'
@@ -78,6 +79,7 @@ class SalesController extends Controller
                 $edit->nama_sales = $request->input('nama_sales');
                 $edit->alamat = $request->input('alamat');
                 $edit->telepon = $request->input('telepon');
+                $edit->target = $request->input('target');
                 $edit->save();
                 return response()->json(['message' => 'Data Berhasil Di Edit', 'data' => $edit, 'status' => 200]);
             }

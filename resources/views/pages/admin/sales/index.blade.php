@@ -12,20 +12,33 @@
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-6">
                         <label for="">Nama Sales</label>
                         <input type="text" id="nama_sales" class="form-control rounded">
                     </div>
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-6">
                         <label for="">Telepon</label>
                         <input type="number" id="telepon" class="form-control rounded">
                     </div>
-                    <div class="form-group col-sm-4">
+                    </div>
+                    <div class="form-row">
+                    <div class="form-group col-sm-6">
                     <label for="">Alamat</label>
                     <textarea name="" id="alamat" cols="30" rows="1" class="form-control rounded"></textarea>
                     </div>
+                    <div class="form-group col-sm-6">
+                    <label for="">Target</label>
+                    <input type="number" class="form-control rounded" id="target">
                     </div>
-                    <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
+                    </div>
+                    <div class="row">
+                                        <div class="col-md-2" align="center">
+                                            <button type="button" style="width:140px;" id="add" class="btn btn-outline-success btn-sm">Add</button>
+                                        </div>
+                                        <div class="col-md-2" align="center">
+                                            <button type="button" style="width:140px;" class="btn btn-outline-danger btn-sm" onclick="bersih()">Remove All</button>
+                                        </div>
+                                    </div>
                 </div>
                 </form>
     </div>
@@ -41,6 +54,7 @@
                                 <th>Nama Sales</th>
                                 <th>Alamat</th>
                                 <th>Telepon</th>
+                                <th>Target</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -70,11 +84,15 @@
                 </div>
                 <div class="form-group">
                     <label for="">Alamat</label>
-                    <textarea name="" id="almt" cols="30" rows="10" class="form-control"></textarea>
+                    <textarea name="" id="almt" cols="30" rows="2" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="">Telepon</label>
                     <input type="number" class="form-control" id="tlpn">
+                </div>
+                <div class="form-group">
+                    <label for="">Target</label>
+                    <input type="number" class="form-control rounded" id="target_edit">
                 </div>
             </div>
             <div class="modal-footer">
@@ -109,6 +127,9 @@
             data:'telepon'
           },
           {
+            data:'target'
+          },
+          {
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
@@ -126,11 +147,13 @@
         var nama_sales = $('#nama_sales').val();
         var alamat = $('#alamat').val();
         var telepon = $('#telepon').val();
+        var target = $('#target').val();
 
         axios.post('{{url('/api/sales/')}}',{
             nama_sales: nama_sales,
             alamat: alamat,
-            telepon: telepon
+            telepon: telepon,
+            target:target
         })
         .then(function (res) {
             var data = res.data
@@ -139,6 +162,8 @@
             {
                 bersih()
                 tables.ajax.reload()
+                toastr.info(data.message)
+            }else{
                 toastr.info(data.message)
             }
         })
@@ -164,6 +189,7 @@
             document.getElementById('nm_sales').value=isi.data.nama_sales;
             document.getElementById('almt').value=isi.data.alamat;
             document.getElementById('tlpn').value=isi.data.telepon;
+            document.getElementById('target_edit').value=isi.data.target;
             $('#modal').modal('show');
         })
     }
@@ -174,11 +200,13 @@
         var nama_sales = document.getElementById('nm_sales').value;
         var alamat = document.getElementById('almt').value;
         var telepon = document.getElementById('tlpn').value;
+        var target = document.getElementById('target_edit').value;
         axios.put('{{url('/api/sales')}}',{
             'id_sales':id_sales,
             'nama_sales':nama_sales,
             'alamat':alamat,
             'telepon':telepon,
+            'target':target,
         }).then(function(res){
             var data = res.data
             toastr.info(data.message)
@@ -192,6 +220,7 @@
         $('#nama_sales').val('')
         $('#alamat').val('')
         $('#telepon').val('')
+        $('#target').val('')
     }
 </script>
 @endsection

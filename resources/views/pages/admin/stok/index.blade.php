@@ -109,7 +109,7 @@
             data:'jumlah'
           },
           {
-            data:'produk_harga'
+            data:'capital_price'
           },
           {
             data:'stok_harga'
