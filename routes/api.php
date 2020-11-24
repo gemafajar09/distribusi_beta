@@ -138,7 +138,8 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('purchasetmp', 'TransaksiPurchaseTmpController@add');
     Route::put('purchasetmp', 'TransaksiPurchaseTmpController@edit');
     Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
-    Route::get('registerpurchase','TransaksiPurchaseTmpController@register')->name('register-transaksi-purchase');
+    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}','TransaksiPurchaseTmpController@register');
+    Route::get('calculatetmp','TransaksiPurchaseTmpController@calculateTmp');
 
     // api transaksi sales
     Route::post('getsalestrans', 'TransaksiSalesController@getSales');
@@ -155,4 +156,8 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::delete('purchasereturn/{id}', 'TransaksiPurchaseReturnController@remove');
     Route::get('registerpurchasereturn','TransaksiPurchaseReturnController@register')->name('register-transaksi-purchase-return');
     Route::get('getsuplierproduk/{id}', 'TransaksiPurchaseReturnController@getStok');
+
+    // test inv
+    Route::get('purchaseinv/{id}','TransaksiPurchaseTmpController@generateInvoicePurchase');
+    Route::get('purchasereturninv/{id}','TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
 });

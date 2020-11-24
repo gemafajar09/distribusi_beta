@@ -121,7 +121,7 @@ class SuplierController extends Controller
     }
 
     public function getSuplierProduk($id){
-        $data = DB::table('transaksi_purchase as t')
+        $data = DB::table('transaksi_purchase_detail as t')
                 ->where('t.id_suplier',$id)
                 ->where('t.status','1')
                 ->join('tbl_produk as a','a.produk_id','=','t.produk_id')

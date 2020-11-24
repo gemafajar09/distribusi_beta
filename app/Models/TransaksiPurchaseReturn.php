@@ -13,7 +13,7 @@ class TransaksiPurchaseReturn extends Model
     protected $primaryKey = 'id_transaksi_purchase_return';
     // define fillable
     protected $fillable = [
-        'return_id','return_date','id_suplier','stok_id','note_return','jumlah_return','register','status','price',
+        'return_id','return_date','id_suplier','stok_id','note_return','jumlah_return','register','status','price','id_cabang',
     ];
 
     protected $attributes = [

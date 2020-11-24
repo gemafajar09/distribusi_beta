@@ -88,7 +88,7 @@ class TransaksiPurchaseDetailController extends Controller
             }
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
-            $d->total = round($harga * $d->quantity);
+            $d->total = $harga * $d->quantity;
             $this->dataisi[] = ["produk_id"=>$d->produk_id,"nama_type_produk"=>$d->nama_type_produk,"produk_brand"=>$d->produk_brand,"produk_nama"=>$d->produk_nama,"unit_satuan_price"=>$d->unit_satuan_price,"stok_quantity"=>$d->stok_quantity,"diskon"=>$d->diskon,"total_price"=>$d->total_price,"total"=>$d->total,"id_transaksi_purchase_detail"=>$d->id_transaksi_purchase_detail,"invoice_id"=>$d->invoice_id,"invoice_date"=>$d->invoice_date,"transaksi_tipe"=>$d->transaksi_tipe];   
         }
        
@@ -109,15 +109,12 @@ class TransaksiPurchaseDetailController extends Controller
        $id = $request->input('id');
        $status = $request->input('status');
        $update = TransaksiPurchaseDetail::find($id);
-       $update1 = TransaksiPurchase::find($id);
        $produk_id = $update->produk_id;
        $jumlah = $update->quantity;
        $capital_price = $update->unit_satuan_price;
        $id_cabang = $update->id_cabang;
-       if($status == 1){
-           $update1->status = $status;
+       if($status == 1){     
            $update->status = $status;
-           $update1->save();
            $update->save();
            $cek = Stok::where('produk_id',$produk_id)->first();
            if($cek){
@@ -132,11 +129,9 @@ class TransaksiPurchaseDetailController extends Controller
             $stok->save();
         }
            return response()->json(['message'=>'Data Di Approval','status'=>200]);
-       }else{
-            $update1->status = $status;
+       }else{       
             $update->status = '2';
             $update->save();
-            $update1->save();
            return response()->json(['message'=>'Data Tidak DiApproval','status'=>402]);
        }
 

@@ -22,6 +22,7 @@ class CreateTransaksiPurchaseReturnTable extends Migration
             $table->char('note_return',1);
             $table->integer('jumlah_return');
             $table->integer('price');
+            $table->integer('id_cabang');
             $table->char('register',1);
             $table->char('status',1);
         });
