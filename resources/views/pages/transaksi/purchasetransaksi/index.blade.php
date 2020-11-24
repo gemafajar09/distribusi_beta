@@ -257,7 +257,7 @@
                 });
 
                 $('#term_until').hide();
-                session_cabang = {{session()->get('cabang')}}
+                session_cabang = {{session()->get('cabang')}};
                 generateinv(session_cabang);
                 axios.get('{{url('/api/calculatetmp/')}}/')
                     .then(function(res){

@@ -23,6 +23,7 @@ class CreateTransaksiPurchaseTable extends Migration
             $table->integer('diskon');
             $table->integer('bayar');
             $table->integer('sisa');
+            $table->char('status',1);
             $table->integer('id_cabang');
         });
     }

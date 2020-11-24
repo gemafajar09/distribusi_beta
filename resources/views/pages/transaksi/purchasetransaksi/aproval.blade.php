@@ -14,14 +14,13 @@
             cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th >Type Produk</th>
-                    
-                    <th >Nama Produk</th>
-                    <th >Harga</th>
-                    <th>Quantity</th>
+                    <th >Invoice ID</th>
+                    <th >Invoice Date</th>
+                    <th >Nama Suplier</th>
                     <th>Total</th>
                     <th>Diskon</th>
-                    <th>Total Price</th>
+                    <th>Bayar</th>
+                    <th>Sisa</th>
                     <th>Aproval</th>
                     <th>Aksi</th>
                 </tr>
@@ -43,27 +42,24 @@
 
 <script>
     $(document).ready(function(){
+      {{$cabang = session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/purchasedetail/datatable') }}", 
+          url: '{{ url("/api/purchasedetail/datatable/".$cabang) }}', 
         },
         columns:[
           {
-            data:'nama_type_produk',
+            data:'invoice_id',
             defaultContent:""
           },
           {
-            data:'produk_nama',
+            data:'invoice_date',
             defaultContent:""
           },
           {
-            data:'unit_satuan_price',
-            defaultContent:""
-          },
-          {
-            data:'stok_quantity',
+            data:'nama_suplier',
             defaultContent:""
           },
           {
@@ -75,7 +71,11 @@
             defaultContent:""
           },
           {
-            data:'total_price',
+            data:'bayar',
+            defaultContent:""
+          },
+          {
+            data:'sisa',
             defaultContent:""
           },
           {
@@ -91,7 +91,7 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button'  onclick='aproval(" + data.id_transaksi_purchase_detail + ")' class='btn btn-success btn-sm'>Simpan</button> "+
+                "<button type='button'  onclick='aproval(" + data.id_transaksi_purchase + ")' class='btn btn-success btn-sm'>Simpan</button> "+
             "</div>" ;
             }
           }
@@ -101,9 +101,8 @@
 
 
     function aproval(id){
-        id = id;
         aprove = $('#approval').val();
-        axios.post('{{url('/api/purchasedetail/approval/')}}/',{
+        axios.post('{{url('/api/purchasedetail/approval/')}}',{
             'id':id,
             'status':aprove
         }).then(function(res){
