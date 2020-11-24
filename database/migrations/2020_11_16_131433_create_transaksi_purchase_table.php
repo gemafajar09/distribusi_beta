@@ -17,12 +17,13 @@ class CreateTransaksiPurchaseTable extends Migration
             $table->bigIncrements('id_transaksi_purchase');
             $table->string('invoice_id',100);
             $table->date('invoice_date');
-            $table->string('transaksi_tipe',100);
-            $table->date('term_until');
+            $table->char('transaksi_tipe',2);
             $table->integer('id_suplier');
-            $table->integer('produk_id');
+            $table->integer('total');
+            $table->integer('diskon');
+            $table->integer('bayar');
+            $table->integer('sisa');
             $table->integer('id_cabang');
-            $table->char('status',1);
         });
     }
 

@@ -94,7 +94,7 @@ class StokController extends Controller
             }
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
-            $d->total_harga = ceil($harga * $d->jumlah);
+            $d->total_harga = $harga * $d->jumlah;
             $dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"stok_harga"=>$d->total_harga,"jumlah"=>$d->stok_quantity];
         }
        

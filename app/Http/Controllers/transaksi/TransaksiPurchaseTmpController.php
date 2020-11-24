@@ -100,8 +100,8 @@ class TransaksiPurchaseTmpController extends Controller
             }
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
-            $d->total = round($harga * $d->quantity);
-            $this->dataisi[] = ["produk_id"=>$d->produk_id,"nama_type_produk"=>$d->nama_type_produk,"produk_brand"=>$d->produk_brand,"produk_nama"=>$d->produk_nama,"unit_satuan_price"=>$d->unit_satuan_price,"stok_quantity"=>$d->stok_quantity,"diskon"=>$d->diskon,"total_price"=>$d->total_price,"total"=>$d->total,"id_transaksi_purchase_tmp"=>$d->id_transaksi_purchase_tmp,"invoice_id"=>$d->invoice_id,"invoice_date"=>$d->invoice_date,"transaksi_tipe"=>$d->transaksi_tipe];   
+            $d->total = $harga * $d->quantity;
+            $this->dataisi[] = ["produk_id"=>$d->produk_id,"nama_type_produk"=>$d->nama_type_produk,"produk_brand"=>$d->produk_brand,"produk_nama"=>$d->produk_nama,"unit_satuan_price"=>$d->unit_satuan_price,"stok_quantity"=>$d->stok_quantity,"diskon"=>$d->diskon,"total_price"=>$d->total_price,"total"=>$d->total,"id_transaksi_purchase_tmp"=>$d->id_transaksi_purchase_tmp,"invoice_id"=>$d->invoice_id,"invoice_date"=>$d->invoice_date,"transaksi_tipe"=>$d->transaksi_tipe,"nama_suplier"=>$d->nama_suplier,"term_until"=>$d->term_until];   
         }
        
         return datatables()->of($this->dataisi)->toJson();
@@ -111,7 +111,8 @@ class TransaksiPurchaseTmpController extends Controller
         $data = DB::table('transaksi_purchase_tmp as tmp')
             ->join('tbl_produk as a','a.produk_id','=','tmp.produk_id')
             ->join('tbl_type_produk as b','b.id_type_produk','=','a.id_type_produk')
-            ->select('id_transaksi_purchase_tmp','invoice_id','invoice_date','transaksi_tipe','tmp.produk_id as produk_id','nama_type_produk','produk_brand','produk_nama','unit_satuan_price','quantity','diskon','total_price')
+            ->join('tbl_suplier as c','c.id_suplier','=','tmp.id_suplier')
+            ->select('id_transaksi_purchase_tmp','invoice_id','invoice_date','transaksi_tipe','tmp.produk_id as produk_id','nama_type_produk','produk_brand','produk_nama','unit_satuan_price','quantity','diskon','total_price','nama_suplier','term_until')
             ->get();
             return $data;
     }
@@ -152,37 +153,54 @@ class TransaksiPurchaseTmpController extends Controller
     }
 
 
-    public function register(){
+    public function register($tot,$dis,$down,$deb){
         $data = TransaksiPurchaseTmp::all('invoice_id','invoice_date','transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status')->toArray();
         $data1 = $this->datatable();
         $datatmp =  $this->dataisi;
         $tambahtodetail = TransaksiPurchaseDetail::insert($data);
-        foreach ($data as $d) {
-            $id = $d['produk_id'];
-            $jumlah = $d['quantity'];
+        $d = $data[0];
+        // entry to purchase table
             $id_cabang = $d['id_cabang'];
             $invoice_id = $d['invoice_id'];
             $invoice_date = $d['invoice_date'];
-            $transaksi_tipe = $d['transaksi_tipe'];
-            $term_until = $d['term_until'];
             $id_suplier = $d['id_suplier'];
-            $status = $d['status'];
-            
+            $transaksi_tipe = $d['transaksi_tipe'];
             $tambahutama = new TransaksiPurchase;
             $tambahutama->invoice_id = $invoice_id;
             $tambahutama->invoice_date = $invoice_date;
             $tambahutama->transaksi_tipe = $transaksi_tipe;
-            $tambahutama->term_until = $term_until;
             $tambahutama->id_suplier = $id_suplier; 
-            $tambahutama->produk_id = $id;
             $tambahutama->id_cabang = $id_cabang;
-            $tambahutama->status = $status;
-            $tambahutama->save();
-        }
+            $tambahutama->total = $tot;
+            $tambahutama->diskon = $dis;
+            $tambahutama->bayar = $down;
+            $tambahutama->sisa = $deb;
+            $tambahutama->save();    
+            $calculate = [$tot,$dis,$down,$deb];
         $delete = TransaksiPurchaseTmp::truncate();
         if($delete){
-            return view('report.purchase_transaksi',compact('datatmp'));
+            return view('report.purchase_transaksi',compact(['datatmp','calculate']));
         }    
-     }
+    }
+
+    public function generateInvoicePurchase(Request $request,$id){
+        $cabang = $id;
+        $tanggal = date('ymd');
+        $codeinv = DB::table('transaksi_purchase')->where('id_cabang',$cabang)->orderBy('id_transaksi_purchase','desc')->first();
+        if($codeinv == NULL){
+            $inv= "PO-".$tanggal.'-'.$cabang.'-1';
+        }else{
+            $cekinv = substr($codeinv->invoice_id,12,50);
+            $plus = (int)$cekinv + 1;
+            $inv= "PO-".$tanggal.'-'.$cabang.'-'.$plus;
+        }
+        return response()->json(['invoice'=>$inv]);
+        
+    }
+
+    public function calculateTmp(){
+        $tot_price = DB::table('transaksi_purchase_tmp')->sum('total_price');
+        return response()->json(['tot'=>$tot_price]);
+    }
 
 }

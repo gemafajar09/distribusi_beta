@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 class TransaksiPurchaseController extends Controller
 {
    public function index(){
-       return view('pages.transaksi.purchasetransaksi.index');
+    return view('pages.transaksi.purchasetransaksi.index');
    }
    
 }

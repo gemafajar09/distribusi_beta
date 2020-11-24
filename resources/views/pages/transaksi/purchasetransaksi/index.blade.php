@@ -14,7 +14,7 @@
                     <div class="form-row">
                         <div class="form-group col-sm-3">
                             <label for="">Invoice ID</label>
-                            <input type="text" class="form-control" id="invoice_id" value="1" readonly>
+                            <input type="text" class="form-control" id="invoice_id" readonly>
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="">Invoice Date</label>
@@ -106,9 +106,44 @@
             </tbody>
         </table>
         <!-- <button onclick="register()" class="btn btn-danger btn-sm">Register Transaksi</button> -->
-        <a href="#" class="btn btn-danger btn-sm" id="register">Register Transaksi</a>
+        
     </div>
 </div>
+</div>
+<br>
+<div class="row mb-2 bg-light p-4 justify-content-md-center rounded" style="box-shadow:1px 1px 5px;">
+<div class="col-sm-5 ">
+    <table style="text-align: center;">
+        <tr>
+            <td>Total Purchase : </td>
+            <td><input type="number" class="form-control rounded" id="sub_tot_purchase" value="0" readonly></td>
+        </tr>
+        <tr>
+            <td>Discount : %</td>
+            <td><input type="number" class="form-control rounded" id="convert_discount" value="0"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="number" class="form-control rounded" id="final_discount" value="0" readonly></td>
+        </tr>
+        <tr>
+            <td>Total After Discount : </td>
+            <td><input type="number" class="form-control rounded" id="tot_after_discount" value="0" readonly></td>
+        </tr>
+        <tr>
+            <td>Down Payment : </td>
+            <td><input type="number" class="form-control rounded" id="down_payment" value="0"></td>
+        </tr>
+        <tr>
+            <td>Total Debt Balance : </td>
+            <td><input type="number" class="form-control rounded" id="tot_debt_balance" value="0" readonly></td>
+        </tr>
+    </table>
+</div>
+<div class="col-sm-3 align-self-center">
+<a href="#" class="btn btn-danger btn-sm" id="register">Register Transaksi</a>
+</div>
+
 </div>
 
 <!-- Modal -->
@@ -118,6 +153,9 @@
     $(document).ready(function(){
       tables = $('#tabel').DataTable({
         processing : true,
+        paginate : false,
+        searching:false,
+        ordering:false,
         serverSide : true,
         ajax:{
           url: "{{ url('/api/purchasetmp/datatable') }}", 
@@ -219,7 +257,16 @@
                 });
 
                 $('#term_until').hide();
-                
+                session_cabang = {{session()->get('cabang')}}
+                generateinv(session_cabang);
+                axios.get('{{url('/api/calculatetmp/')}}/')
+                    .then(function(res){
+                        isi = res.data
+                        $('#sub_tot_purchase').val(isi.tot)
+                        $('#tot_after_discount').val(isi.tot)
+                        $('#tot_debt_balance').val(isi.tot)
+                    });
+    
     });
 
     // radio
@@ -256,6 +303,7 @@
         let unit1 = $('#unit1').val();
         let unit2 = $('#unit2').val();
         let unit3 = $('#unit3').val();
+        let id_cabang = {{session()->get('cabang')}}
         axios.get('{{url('/api/getunit/')}}/'+produk_id)
                     .then(function(res){
                         isi = res.data
@@ -276,8 +324,6 @@
                             harga = harga/ isi.data[2].default_value;
                             unit3 = (parseInt(unit2)+parseInt(unit3))* isi.data[2].default_value; 
                         }
-                        
-                        
                         total =  harga * unit3;
                         tmp_harga = (diskon/100) * total;
                         total_price = total - tmp_harga;
@@ -291,36 +337,77 @@
                             'term_until':term_until,
                             'id_suplier':id_suplier,
                             'unit_satuan_price':unit_satuan_price,
-                            'diskon':diskon,
+                            'diskon':tmp_harga,
                             'quantity':unit3,
                             'total_price':total_price,
-                            'id_cabang':1,
+                            'id_cabang':id_cabang,
                         })
                         .then(function (res) {
                             console.log(res)
                             var data = res.data
                             if(data.status == 200)
                             {
-                                bersih()
+                                $('#unit_satuan_price').val('')
+                                $("#produk_id").val([]).selectpicker('refresh')
+                                $('#diskon').val('0')
+                                $('#convert_discount').val('0')
+                                $('#final_discount').val('0')
+                                $('#down_payment').val('0')
+                                $('#wadah').html('')
                                 tables.ajax.reload()
                                 toastr.info(data.message)
+                                axios.get('{{url('/api/calculatetmp/')}}/')
+                                .then(function(res){
+                                    isi = res.data
+                                    $('#sub_tot_purchase').val(isi.tot)
+                                    $('#tot_after_discount').val(isi.tot)
+                                    $('#tot_debt_balance').val(isi.tot)
+                                });
                             }else{
                                 toastr.info(data.message)
                             }
                         })
-                        $('#term_until').hide();
-            });
+                    });
 
-        
+                    
         
     })
 
+    $("#convert_discount").on('keyup',function(){
+        let sub_tot = $('#sub_tot_purchase').val();
+        let convert_discount = $('#convert_discount').val();
+        convert = (convert_discount/100) * sub_tot
+        $('#final_discount').val(convert);
+        let after_discount = sub_tot - convert;
+        $('#down_payment').val('0');
+        $('#tot_after_discount').val(after_discount);
+        $('#tot_debt_balance').val(after_discount);
+    });
+    $("#down_payment").on('keyup',function(){
+        let after = $('#tot_after_discount').val();
+        let down = $('#down_payment').val();
+        let debt_balance = after - down;
+        $('#tot_debt_balance').val(debt_balance);
+    });
     $("#register").on('click', function(e) {
         e.preventDefault();
-        cek = window.open("{{route('register-transaksi-purchase')}}", "_blank");
+        let tot = $('#sub_tot_purchase').val();
+        let dis = $('#final_discount').val();
+        let down = $('#down_payment').val();
+        let deb = $('#tot_debt_balance').val();
+        cek = window.open('{{url('/api/registerpurchase/')}}/'+tot+'/'+dis+'/'+down+'/'+deb+'/', "_blank");
         $(cek).on("unload", function(){
         tables.ajax.reload();
+        session_cabang = {{session()->get('cabang')}}
+        generateinv(session_cabang);
         });
+        $('#sub_tot_purchase').val('');
+        $('#final_discount').val('');
+        $('#tot_after_discount').val('');
+        $('#down_payment').val('');
+        $('#tot_debt_balance').val('');
+        $('#convert_discount').val('');
+        bersih()
     });
 
     function deleted(id)
@@ -346,6 +433,15 @@
         $('#diskon').val('0');
         $('#wadah').html('');
         
+    }
+
+    function generateinv(id){
+        axios.get('{{url('/api/purchaseinv/')}}/'+id)
+        .then(function(res){
+                isi = res.data
+                invoice = isi.invoice
+                $('#invoice_id').val(invoice)
+        })
     }
 </script>
 @endsection

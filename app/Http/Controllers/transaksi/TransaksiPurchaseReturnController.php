@@ -15,12 +15,13 @@ class TransaksiPurchaseReturnController extends Controller
     {
         $this->rules = array(
             'id_transaksi_purchase_return'=>'numeric',
-            'return_id'=>'numeric',
+            'return_id'=>'',
             'return_date'=>'date',
             'id_suplier'=>'numeric',
             'note_return'=>'numeric',
             'jumlah_return'=>'numeric',
             'price'=>'numeric',
+            'id_cabang'=>'numeric',
             'register'=>'numeric',
             'status'=>'numeric'
         );
@@ -198,8 +199,18 @@ class TransaksiPurchaseReturnController extends Controller
             }
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
-            $d->total = round($harga * $d->jumlah_return);
-            $this->datatable[] = ["produk_id"=>$d->produk_id,"produk_nama"=>$d->produk_nama,"stok_quantity"=>$d->stok_quantity,"price"=>$d->total,"id_transaksi_purchase_return"=>$d->id_transaksi_purchase_return,"return_date"=>$d->return_date,"stok_id"=>$d->stok_id,"nama_suplier"=>$d->nama_suplier,"price"=>$d->total,"note_return"=>$d->note_return,"return_id"=>$d->return_id,"jumlah_return"=>$d->jumlah_return];   
+            $d->total = $harga * $d->jumlah_return;
+            // check note_return
+            if($d->note_return == 1){
+                $note = "Broken Product";
+            }else if($d->note_return == 2){
+                $note = "Expired Product";
+            }else if($d->note_return == 3){
+                $note = "Mismatch Order Product";
+            }else if($d->note_return == 4){
+                $note = "Unsold Product";
+            }
+            $this->datatable[] = ["produk_id"=>$d->produk_id,"produk_nama"=>$d->produk_nama,"stok_quantity"=>$d->stok_quantity,"price"=>$d->total,"id_transaksi_purchase_return"=>$d->id_transaksi_purchase_return,"return_date"=>$d->return_date,"stok_id"=>$d->stok_id,"nama_suplier"=>$d->nama_suplier,"price"=>$d->total,"note_return"=>$note,"return_id"=>$d->return_id,"jumlah_return"=>$d->jumlah_return];   
         }
        
         return datatables()->of($this->datatable)->toJson();
@@ -219,6 +230,7 @@ class TransaksiPurchaseReturnController extends Controller
     public function register(){
         $data1 = $this->datatable();
         $datatmp =  $this->datatable;
+        $calculate = DB::table('transaksi_purchase_return')->where('register','0')->sum('price');
         $update = DB::table('transaksi_purchase_return')->update(array('register' => '1'));
         foreach ($datatmp as $d) {
             $stok_id = $d['stok_id'];
@@ -227,7 +239,7 @@ class TransaksiPurchaseReturnController extends Controller
             $data->decrement('jumlah',$jumlah);
             $data->save();
         }
-        return view('report.purchase_transaksi_return',compact('datatmp'));
+        return view('report.purchase_transaksi_return',compact(['datatmp','calculate']));
     }
 
     public function remove(Request $request, $id){
@@ -238,5 +250,19 @@ class TransaksiPurchaseReturnController extends Controller
         }catch (ModelNotFoundException $e) {
             return response()->json(['message'=>'Data Tidak Ditemukan','status'=>404]);
         }
+    }
+
+    public function generateInvoicePurchaseReturn(Request $request,$id){
+        $cabang = $id;
+        $tanggal = date('ymd');
+        $codeinv = DB::table('transaksi_purchase_return')->where('id_cabang',$cabang)->where('register','1')->orderBy('id_transaksi_purchase_return','desc')->first();
+        if($codeinv == NULL){
+            $inv= "RTP-".$tanggal.'-'.$cabang.'-1';
+        }else{
+            $cekinv = substr($codeinv->return_id,13,50);
+            $plus = (int)$cekinv + 1;
+            $inv= "RTP-".$tanggal.'-'.$cabang.'-'.$plus;
+        }
+        return response()->json(['invoice'=>$inv]);
     }
 }

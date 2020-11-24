@@ -16,7 +16,7 @@
                             <div class="form-row">
                                 <div class="form-group col-sm-6">
                                     <label for="">PO Return ID</label>
-                                    <input type="text" id="return_id" class="form-control" readonly value="1">
+                                    <input type="text" id="return_id" class="form-control" readonly>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label for="">Return Date</label>
@@ -168,6 +168,7 @@
             $('#id_suplier').on('change',function(e){
                 var optionSelected = $("option:selected", this); 
                 let id_suplier = this.value;
+                $("#produk_id").html('');
                 axios.get('{{url('/api/getsuplier/produk/')}}/'+id_suplier)
                 .then(function(res){
                     isi = res.data
@@ -241,7 +242,8 @@
                     })
             });
 
-            
+            session_cabang = {{session()->get('cabang')}}
+            generateinvreturn(session_cabang);
             
     });
 
@@ -258,6 +260,7 @@
         let unit1 = $('#unit1').val();
         let unit2 = $('#unit2').val();
         let unit3 = $('#unit3').val();
+        let id_cabang = {{session()->get('cabang')}}
         axios.get('{{url('/api/getunit/')}}/'+produk_id)
                     .then(function(res){
                         isi = res.data
@@ -288,6 +291,7 @@
                             'note_return':note_return,
                             'price':price,
                             'jumlah_return':unit3,
+                            'id_cabang':id_cabang,
                             
                         })
                         .then(function (res) {
@@ -295,7 +299,8 @@
                             var data = res.data
                             if(data.status == 200)
                             {
-                                bersih()
+                                $('#wadah').html('');
+                                $('#wadah1').html('');
                                 tables.ajax.reload()
                                 toastr.info(data.message)
                             }else{
@@ -303,9 +308,6 @@
                             }
                         })
             });
-
-        
-        
     })
 
     $("#register").on('click', function(e) {
@@ -313,9 +315,12 @@
         cek = window.open("{{route('register-transaksi-purchase-return')}}", "_blank");
         $(cek).on("unload", function(){
         tables.ajax.reload();
+        session_cabang = {{session()->get('cabang')}};
+        generateinvreturn(session_cabang);
         });
+        bersih();
     });
-
+    
     function deleted(id)
     {
         
@@ -333,11 +338,19 @@
         $("#produk_id").html('');
         $("#id_suplier").val([]).selectpicker('refresh');
         $("#produk_id").val([]).selectpicker('refresh');
-        
-        
         $('#wadah').html('');
         $('#wadah1').html('');
         
+    }
+
+    function generateinvreturn(id){
+        axios.get('{{url('/api/purchasereturninv/')}}/'+id)
+        .then(function(res){
+                isi = res.data
+                invoice = isi.invoice
+                $('#return_id').val(invoice)
+                
+        })
     }
 </script>
 @endsection
