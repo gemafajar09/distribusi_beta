@@ -47,7 +47,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('cost', 'CostController@get');
     Route::post('cost', 'CostController@add');
     Route::put('cost', 'CostController@edit');
-    Route::delete('cost/{id}', 'CostController@remove');
+    Route::delete('cost/remove/{id}', 'CostController@remove');
 
 
     // api sales
@@ -58,7 +58,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::put('sales', 'SalesController@edit');
 
     Route::delete('sales/{id}', 'SalesController@remove');
-    Route::get('getsales','SalesController@getSales');
+    Route::get('getsales', 'SalesController@getSales');
     Route::delete('sales/remove/{id}', 'SalesController@remove');
 
     // api suplier
@@ -68,8 +68,8 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('suplier', 'SuplierController@add');
     Route::put('suplier', 'SuplierController@edit');
     Route::delete('suplier/remove/{id}', 'SuplierController@remove');
-    Route::get('getsuplier','SuplierController@getSuplier');
-    Route::get('getsuplier/produk/{id}','SuplierController@getSuplierProduk');
+    Route::get('getsuplier', 'SuplierController@getSuplier');
+    Route::get('getsuplier/produk/{id}', 'SuplierController@getSuplierProduk');
 
     // api customer
     Route::get('customer/datatable', 'CustomerController@datatable');
@@ -86,7 +86,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('type', 'TypeController@add');
     Route::put('type', 'TypeController@edit');
     Route::delete('type/{id}', 'TypeController@remove');
-    Route::get('gettype','TypeController@getType');
+    Route::get('gettype', 'TypeController@getType');
 
     // api gudang
     Route::get('gudang/datatable', 'GudangController@datatable');
@@ -130,7 +130,7 @@ Route::group(['namespace' => 'transaksi'], function () {
     // api purchase
     Route::get('purchasedetail/datatable', 'TransaksiPurchaseDetailController@datatable');
     Route::post('purchasedetail/approval', 'TransaksiPurchaseDetailController@approvalPurchase');
-    
+
     // api purchase tmp
     Route::get('purchasetmp/datatable', 'TransaksiPurchaseTmpController@datatable');
     Route::get('purchasetmp/{id}', 'TransaksiPurchaseTmpController@get');
@@ -138,7 +138,7 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('purchasetmp', 'TransaksiPurchaseTmpController@add');
     Route::put('purchasetmp', 'TransaksiPurchaseTmpController@edit');
     Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
-    Route::get('registerpurchase','TransaksiPurchaseTmpController@register')->name('register-transaksi-purchase');
+    Route::get('registerpurchase', 'TransaksiPurchaseTmpController@register')->name('register-transaksi-purchase');
 
     // api transaksi sales
     Route::post('getsalestrans', 'TransaksiSalesController@getSales');
@@ -158,7 +158,6 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::get('returnpurchase/datatable', 'TransaksiPurchaseReturnController@datatable');
     Route::post('purchasereturn', 'TransaksiPurchaseReturnController@add');
     Route::delete('purchasereturn/{id}', 'TransaksiPurchaseReturnController@remove');
-    Route::get('registerpurchasereturn','TransaksiPurchaseReturnController@register')->name('register-transaksi-purchase-return');
+    Route::get('registerpurchasereturn', 'TransaksiPurchaseReturnController@register')->name('register-transaksi-purchase-return');
     Route::get('getsuplierproduk/{id}', 'TransaksiPurchaseReturnController@getStok');
-
 });
