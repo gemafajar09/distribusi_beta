@@ -120,18 +120,40 @@ class TransaksiSalesController extends Controller
             $input->stok_id = $r->produkid;
             $input->qty = 0;
             $input->price = $r->prices;
+            if($r->jumlah1 == NULL)
+                {
+                    $jum1 = '';
+                   
+                }else{
+                    $jum1 = $r->jumlah1.'-'.$r->unit1;
+                    
+                }
+                if($r->jumlah2 == NULL)
+                {
+                    $jum2 = '';
+                }else{
+                    $jum2 = $r->jumlah2.'-'.$r->unit2;
+                }
+                if($r->jumlah3 == NULL)
+                {
+                    $jum3 = '';
+                }else{
+                    $jum3 = $r->jumlah3.'-'.$r->unit3;
+                }
             if($jumlah == 1)
             {
-                $input->unit1 = $r->jumlah1."-".$r->unit1;
+                $input->unit1 = $jum1;
             }else if($jumlah == 2){
-                $input->unit1 = $r->jumlah1."-".$r->unit1;
-                $input->unit2 = $r->jumlah2."-".$r->unit2;
+                
+                $input->unit1 = $jum1;
+                $input->unit2 = $jum2;
             }else if($jumlah == 3){
-                $input->unit1 = $r->jumlah1."-".$r->unit1;
-                $input->unit2 = $r->jumlah2."-".$r->unit2;
-                $input->unit3 = $r->jumlah3."-".$r->unit3;
+                
+                $input->unit1 = $jum1;
+                $input->unit2 = $jum2;
+                $input->unit3 = $jum3;
             }
-            $input->diskon = $r->disc;
+            $input->diskon = $r->amount;
             $input->id_user = $r->id_user;
             $input->save();
             if ($input == TRUE) {
@@ -227,7 +249,7 @@ class TransaksiSalesController extends Controller
                 ->join('tbl_stok','tbl_stok.stok_id','transaksi_sales_tmps.stok_id')
                 ->join('tbl_produk', 'tbl_produk.produk_id','tbl_stok.produk_id')
                 ->join('tbl_type_produk', 'tbl_produk.id_type_produk','tbl_type_produk.id_type_produk')
-                ->select('tbl_produk.produk_id','tbl_produk.produk_brand','tbl_produk.produk_nama','tbl_produk.produk_harga','transaksi_sales_tmps.*','tbl_type_produk.nama_type_produk','tbl_stok.stok_id')
+                ->select('tbl_produk.produk_id','tbl_produk.produk_brand','tbl_produk.produk_nama','tbl_produk.produk_harga','price','transaksi_sales_tmps.*','tbl_type_produk.nama_type_produk','tbl_stok.stok_id')
                 ->where('transaksi_sales_tmps.id_user',$id)
                 ->where('transaksi_sales_tmps.invoice_date',$date)
                 ->get();
@@ -240,7 +262,7 @@ class TransaksiSalesController extends Controller
                 $pecah1 = explode('-',$a->unit1);
                 $jumlah1 = $pecah1[0];
                 $satuan1 = $pecah1[1];
-                $uang1 = ($a->produk_harga - ($a->produk_harga * $a->diskon) / 100 ) * $jumlah1;
+                $uang1 = $a->price;
                 // cek satuan
                 $nilaisisa1 = 0;
                 $nilaikonversi1 = $jumlah1;
@@ -265,7 +287,7 @@ class TransaksiSalesController extends Controller
                         ->first();
                 $nilaisisa2 = $jumlah2 % $unit2->default_value;
                 $nilaikonversi2 = ($jumlah2 - $nilaisisa2) / $unit2->default_value;
-                $uang2 = $a->produk_harga / $unit2->default_value;
+                $uang2 = $a->price / $unit2->default_value;
             }else{
                 $nilaisisa2 = 0;
                 $nilaikonversi2 = 0;
@@ -286,7 +308,7 @@ class TransaksiSalesController extends Controller
                         ->first();
                 $nilaisisa3 = $jumlah3 % $unit3->default_value;
                 $nilaikonversi3 = ($jumlah3 - $nilaisisa2) / $unit3->default_value;
-                $uang3 = $a->produk_harga / $unit3->default_value;
+                $uang3 = $a->price / $unit3->default_value;
             }else{
                 $nilaisisa3 = 0;
                 $nilaikonversi3 = 0;
@@ -307,11 +329,12 @@ class TransaksiSalesController extends Controller
                 'nama_type_produk' => $a->nama_type_produk,
                 'produk_brand' => $a->produk_brand,
                 'produk_nama' => $a->produk_nama,
-                'produk_harga' => number_format($a->produk_harga),
+                'produk_harga' => number_format($a->price),
                 'quantity' => $qty1.$qty2.$qty3,
                 'total' => number_format($total),
-                'diskon' => $a->diskon,
+                'diskon' => number_format($a->diskon * $jumlah1),
                 'tot' => $total,
+                'amount' => $total - ($a->diskon * $jumlah1),
                 'id_transaksi_tmp' => $a->id_transaksi_tmp
             );
         }
@@ -342,6 +365,7 @@ class TransaksiSalesController extends Controller
         $input->note = $r->note;
         $input->totalsales = $r->totalsales;
         $input->diskon = $r->discon;
+        $input->id_user = $r->id_user;
         $input->save();
 
         $id_user = $r->id_user;
@@ -365,9 +389,112 @@ class TransaksiSalesController extends Controller
         }
         if($input == TRUE)
         {
-            return response()->json(['status' => 200]);
+            return response()->json(['status' => 200, 'invoice_id' => $r->invoiceid]);
         }else{
             return response()->json(['message' => 'Data Tidak Ditemukan', 'status' => 404]);
         }
+    }
+
+    public function faktur($id)
+    {
+        $data = DB::table('transaksi_sales_details')
+                ->join('tbl_stok','tbl_stok.stok_id','transaksi_sales_details.stok_id')
+                ->join('tbl_produk', 'tbl_produk.produk_id','tbl_stok.produk_id')
+                ->join('tbl_type_produk', 'tbl_produk.id_type_produk','tbl_type_produk.id_type_produk')
+                ->select('tbl_produk.produk_id','tbl_produk.produk_brand','tbl_produk.produk_nama','tbl_produk.produk_harga','price','transaksi_sales_details.*','tbl_type_produk.nama_type_produk','tbl_stok.stok_id')
+                ->where('transaksi_sales_details.invoice_id',$id)
+                ->get();
+        foreach($data as $a)
+        {
+            // pecah data unit
+            if($a->unit1 != NULL)
+            {
+                $pecah1 = explode('-',$a->unit1);
+                $jumlah1 = $pecah1[0];
+                $satuan1 = $pecah1[1];
+                $uang1 = $a->price;
+                // cek satuan
+                $nilaisisa1 = 0;
+                $nilaikonversi1 = $jumlah1;
+                
+            }else{
+                $nilaisisa1 = 0;
+                $nilaikonversi1 = 0;
+                $satuan1 = '';
+                $uang1 = 0;
+            }
+            // pecah data unit
+            if($a->unit2 != NULL)
+            {
+                $pecah2 = explode('-',$a->unit2);
+                $jumlah2 = $pecah2[0];
+                $satuan2 = $pecah2[1];
+                // cek satuan
+                $unit2 = DB::table('tbl_unit')
+                        ->join('tbl_satuan','tbl_satuan.id_satuan','tbl_unit.minimum_unit_name')    
+                        ->where('tbl_unit.produk_id',$a->produk_id)
+                        ->where('tbl_satuan.nama_satuan',$satuan2)
+                        ->first();
+                $nilaisisa2 = $jumlah2 % $unit2->default_value;
+                $nilaikonversi2 = ($jumlah2 - $nilaisisa2) / $unit2->default_value;
+                $uang2 = $a->price / $unit2->default_value;
+            }else{
+                $nilaisisa2 = 0;
+                $nilaikonversi2 = 0;
+                $satuan2 = '';
+                $uang2 = 0;
+            }
+            // pecah data unit
+            if($a->unit3 != NULL)
+            {
+                $pecah3 = explode('-',$a->unit3);
+                $jumlah3 = $pecah3[0];
+                $satuan3 = $pecah3[1];
+                // cek satuan
+                $unit3 = DB::table('tbl_unit')
+                        ->join('tbl_satuan','tbl_satuan.id_satuan','tbl_unit.minimum_unit_name')    
+                        ->where('tbl_unit.produk_id',$a->produk_id)
+                        ->where('tbl_satuan.nama_satuan',$satuan3)
+                        ->first();
+                $nilaisisa3 = $jumlah3 % $unit3->default_value;
+                $nilaikonversi3 = ($jumlah3 - $nilaisisa2) / $unit3->default_value;
+                $uang3 = $a->price / $unit3->default_value;
+            }else{
+                $nilaisisa3 = 0;
+                $nilaikonversi3 = 0;
+                $satuan3 = '';
+                $uang3 = 0;
+            }
+
+            $quantity1 =  ($nilaikonversi1 + $nilaikonversi2)." ".$satuan1." | ";
+            $quantity2 =  ($nilaisisa1 + $nilaisisa2 + $nilaikonversi3)." ".$satuan2." | ";
+            $quantity3 =  ($nilaisisa3)." ".$satuan3." | ";
+            $total = (($nilaikonversi1 + $nilaikonversi2)*$uang1) + (($nilaisisa1 + $nilaisisa2 + $nilaikonversi3)*$uang2) + (($nilaisisa3)*$uang3);
+            if($quantity1 != 0){ $qty1 = $quantity1; }else{ $qty1 = '';}
+            if($quantity2 != 0){ $qty2 = $quantity2; }else{ $qty2 = '';}
+            if($quantity3 != 0){ $qty3 = $quantity3; }else{ $qty3 = '';}
+            $datas['init'][] = array(
+                'stok_id' => $a->stok_id,
+                'produk_id' => $a->produk_id,
+                'nama_type_produk' => $a->nama_type_produk,
+                'produk_brand' => $a->produk_brand,
+                'produk_nama' => $a->produk_nama,
+                'produk_harga' => number_format($a->price),
+                'quantity' => $qty1.$qty2.$qty3,
+                'total' => number_format($total),
+                'diskon' => number_format($a->diskon * $jumlah1),
+                'tot' => $total,
+                'amount' => $total - ($a->diskon * $jumlah1),
+                'id_transaksi_detail' => $a->id_transaksi_detail
+            );
+        }
+        $datas['sales'] = DB::table('transaksi_sales')
+        ->join('tbl_sales','tbl_sales.id_sales','transaksi_sales.sales_id')
+        ->join('tbl_customer','tbl_customer.id_customer','transaksi_sales.customer_id')
+        ->select('transaksi_sales.*','transaksi_sales.note as catatan','tbl_sales.*','tbl_customer.*')
+        ->where('transaksi_sales.invoice_id',$id)
+        ->first();
+        $datas['inv'] = $id;
+        return view("pages.transaksi.salestransaksi.faktur",$datas);
     }
 } 
