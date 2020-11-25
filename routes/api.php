@@ -129,6 +129,7 @@ Route::group(['namespace' => 'transaksi'], function () {
 
     // api purchase
     Route::get('purchasedetail/datatable/{cabang}', 'TransaksiPurchaseDetailController@all_data');
+    Route::get('purchasedetailproduk/{cabang}/{invoice_id}', 'TransaksiPurchaseDetailController@datatable');
     Route::post('purchasedetail/approval', 'TransaksiPurchaseDetailController@approvalPurchase');
     
     // api purchase tmp
