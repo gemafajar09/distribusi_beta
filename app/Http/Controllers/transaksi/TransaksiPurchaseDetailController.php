@@ -21,9 +21,9 @@ class TransaksiPurchaseDetailController extends Controller
         return view('pages.transaksi.purchasetransaksi.aproval');
     }
 
-    public function datatable(){
+    public function datatable($cabang,$invoice_id){
         // untuk datatables Sistem Join Query Builder
-        $data = $this->join_builder();
+        $data = $this->join_builder($cabang,$invoice_id);
         $format = '%d %s | ';
         $stok = [];
         $this->dataisi = [];
@@ -92,47 +92,75 @@ class TransaksiPurchaseDetailController extends Controller
             $this->dataisi[] = ["produk_id"=>$d->produk_id,"nama_type_produk"=>$d->nama_type_produk,"produk_brand"=>$d->produk_brand,"produk_nama"=>$d->produk_nama,"unit_satuan_price"=>$d->unit_satuan_price,"stok_quantity"=>$d->stok_quantity,"diskon"=>$d->diskon,"total_price"=>$d->total_price,"total"=>$d->total,"id_transaksi_purchase_detail"=>$d->id_transaksi_purchase_detail,"invoice_id"=>$d->invoice_id,"invoice_date"=>$d->invoice_date,"transaksi_tipe"=>$d->transaksi_tipe];   
         }
        
-        return datatables()->of($this->dataisi)->toJson();
+        return response()->json(['data'=>$this->dataisi]);
     }
 
-    public function join_builder($status='0'){
+    public function join_builder($cabang,$id){
+        $data = TransaksiPurchase::find($id);
+        $inv = $data->invoice_id;
+        $status='0';
         $data = DB::table('transaksi_purchase_detail as tmp')
             ->where('status',$status)
+            ->where('id_cabang',$cabang)
+            ->where('invoice_id',$inv)
             ->join('tbl_produk as a','a.produk_id','=','tmp.produk_id')
             ->join('tbl_type_produk as b','b.id_type_produk','=','a.id_type_produk')
             ->select('id_transaksi_purchase_detail','invoice_id','invoice_date','transaksi_tipe','tmp.produk_id as produk_id','nama_type_produk','produk_brand','produk_nama','unit_satuan_price','quantity','diskon','total_price','status')
             ->get();
             return $data;
     }
+    
+    public function all_data($cabang){
+        $status='0';
+        $data = DB::table('transaksi_purchase as t')
+            ->where('status',$status)
+            ->where('id_cabang',$cabang)
+            ->join('tbl_suplier as s','s.id_suplier','=','t.id_suplier')
+            ->select('invoice_id','invoice_date','transaksi_tipe','nama_suplier','total','diskon','bayar','sisa','id_transaksi_purchase')
+            ->get();
+        if(empty($data)){
+            $data = [];
+        }
+        return datatables()->of($data)->toJson();
+    }
+
+
 
     public function approvalPurchase(Request $request){
        $id = $request->input('id');
        $status = $request->input('status');
-       $update = TransaksiPurchaseDetail::find($id);
-       $produk_id = $update->produk_id;
-       $jumlah = $update->quantity;
-       $capital_price = $update->unit_satuan_price;
-       $id_cabang = $update->id_cabang;
-       if($status == 1){     
-           $update->status = $status;
-           $update->save();
-           $cek = Stok::where('produk_id',$produk_id)->first();
-           if($cek){
-            $edit = Stok::where('produk_id',$produk_id)
-                    ->increment('jumlah',$jumlah);
-        }else{
-            $stok = new Stok;
-            $stok->produk_id = $produk_id;
-            $stok->jumlah = $jumlah;
-            $stok->id_cabang = $id_cabang;
-            $stok->capital_price = $capital_price;
-            $stok->save();
-        }
-           return response()->json(['message'=>'Data Di Approval','status'=>200]);
-       }else{       
-            $update->status = '2';
-            $update->save();
-           return response()->json(['message'=>'Data Tidak DiApproval','status'=>402]);
+       $datapurchase = TransaksiPurchase::find($id);
+       $inv = $datapurchase->invoice_id;
+       $update = TransaksiPurchaseDetail::where('invoice_id',$inv)->get();
+        if($status == 1){
+            $datapurchase->status = '1';
+            $datapurchase->save();
+            $updatedetail = TransaksiPurchaseDetail::where('invoice_id',$inv)->update(array('status' => '1'));
+                foreach ($update as $d) {
+                    $produk_id = $d->produk_id;
+                    $jumlah = $d->quantity;
+                    $capital_price = $d->unit_satuan_price;
+                    $id_cabang = $d->id_cabang;
+                    $cek = Stok::where('produk_id',$produk_id)->first();
+                    if($cek){
+                        $edit = Stok::where('produk_id',$produk_id)
+                                ->increment('jumlah',$jumlah);
+                    }else{
+                        $stok = new Stok;
+                        $stok->produk_id = $produk_id;
+                        $stok->jumlah = $jumlah;
+                        $stok->id_cabang = $id_cabang;
+                        $stok->capital_price = $capital_price;
+                        $stok->save();
+                    }
+            } 
+        return response()->json(['message'=>'Data Di Approval','status'=>200]);
+       }
+       else{       
+        $datapurchase->status = '2';
+        $datapurchase->save();
+        $updatedetail = TransaksiPurchaseDetail::where('invoice_id',$inv)->update(array('status' => '2'));
+           return response()->json(['message'=>'Data Tidak Di Approval','status'=>402]);
        }
 
     }

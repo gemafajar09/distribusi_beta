@@ -14,14 +14,14 @@
             cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th >Type Produk</th>
-                    
-                    <th >Nama Produk</th>
-                    <th >Harga</th>
-                    <th>Quantity</th>
+                    <th >Invoice ID</th>
+                    <th >Invoice Date</th>
+                    <th >Nama Suplier</th>
                     <th>Total</th>
                     <th>Diskon</th>
-                    <th>Total Price</th>
+                    <th>Bayar</th>
+                    <th>Sisa</th>
+                    <th>Detail</th>
                     <th>Aproval</th>
                     <th>Aksi</th>
                 </tr>
@@ -39,31 +39,53 @@
 </div>
 
 <!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-minus"></i> Detail Purchase</h5>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <td>Produk Nama</td>
+                      <td>Quantity</td>
+                      <td>Price</td>
+                    </tr>
+                  </thead>
+                  <tbody id="detailinvoice">
 
+                  </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function(){
+      {{$cabang = session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/purchasedetail/datatable') }}", 
+          url: '{{ url("/api/purchasedetail/datatable/".$cabang) }}', 
         },
         columns:[
           {
-            data:'nama_type_produk',
+            data:'invoice_id',
             defaultContent:""
           },
           {
-            data:'produk_nama',
+            data:'invoice_date',
             defaultContent:""
           },
           {
-            data:'unit_satuan_price',
-            defaultContent:""
-          },
-          {
-            data:'stok_quantity',
+            data:'nama_suplier',
             defaultContent:""
           },
           {
@@ -75,8 +97,19 @@
             defaultContent:""
           },
           {
-            data:'total_price',
+            data:'bayar',
             defaultContent:""
+          },
+          {
+            data:'sisa',
+            defaultContent:""
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return "<div><button id='detail' onclick='detail(" + data.id_transaksi_purchase + ")'><i class='fa fa-list-ol'></i></button></div>";
+            }  
           },
           {
             defaultContent:"",
@@ -91,7 +124,7 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button'  onclick='aproval(" + data.id_transaksi_purchase_detail + ")' class='btn btn-success btn-sm'>Simpan</button> "+
+                "<button type='button'  onclick='aproval(" + data.id_transaksi_purchase + ")' class='btn btn-success btn-sm'>Simpan</button> "+
             "</div>" ;
             }
           }
@@ -101,9 +134,8 @@
 
 
     function aproval(id){
-        id = id;
         aprove = $('#approval').val();
-        axios.post('{{url('/api/purchasedetail/approval/')}}/',{
+        axios.post('{{url('/api/purchasedetail/approval/')}}',{
             'id':id,
             'status':aprove
         }).then(function(res){
@@ -115,6 +147,28 @@
 
     function refresh(){
       tables.ajax.reload()
+    }
+
+    function detail(invoice_id){
+      $('#detailinvoice').html('');
+      cabang = {{session()->get('cabang')}};
+      axios.get('{{url('/api/purchasedetailproduk/')}}/'+cabang+'/'+invoice_id)
+        .then(function(res){
+          isi = res.data;
+          result = isi.data;
+          console.log(result);
+          for (let index = 0; index < result.length; index++) {
+            // console.log(result[index]['produk_nama']);
+            $('#detailinvoice').append(`
+              <tr>
+                  <td>${result[index]['produk_nama']}</td>
+                  <td>${result[index]['stok_quantity']}</td>
+                  <td>${result[index]['total_price']}</td>
+              </tr>
+            `);
+          }
+          $('#modal').modal('show');
+        });
     }
 
 </script>

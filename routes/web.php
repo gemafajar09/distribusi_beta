@@ -63,10 +63,15 @@ Route::group(['namespace' => 'Admin'], function () {
 Route::group(['namespace' => 'Transaksi'], function() {
     Route::group(['prefix' => 'sales_transaksi'], function () {
         Route::get('/sales_transaction', 'TransaksiSalesController@index')->name('sales_transaction');
+
+    });
+    Route::group(['prefix' => 'purchase_transaksi'], function () {
+
         Route::get('/datatablessales','TransaksiSalesController@datatablessales')->name('datatablessales');
         Route::get('/fakturs/{id}','TransaksiSalesController@faktur');
        
         // Purchase
+
         Route::get('/purchase_order','TransaksiPurchaseController@index')->name('purchase_order');
 
         Route::get('/purchase_aproval','TransaksiPurchaseDetailController@index')->name('aproval_purchase_order');
