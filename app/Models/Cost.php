@@ -13,6 +13,6 @@ class Cost extends Model
     protected $primaryKey = 'cost_id';
     // define fillable
     protected $fillable = [
-        'id_sales', 'tanggal', 'cost_nama','nominal','note',
+        'id_sales', 'tanggal', 'cost_nama', 'nominal', 'note', 'id_cabang', 'inv_cost', 'type',
     ];
 }

@@ -19,6 +19,9 @@ class CreateTblCostTable extends Migration
             $table->date('tanggal');
             $table->string('cost_nama');
             $table->integer('nominal');
+            $table->integer('type');
+            $table->string('inv_cost');
+            $table->integer('id_cabang');
             $table->text('note');
         });
     }
