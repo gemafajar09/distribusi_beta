@@ -229,7 +229,7 @@ class TransaksiSalesController extends Controller
         $id = $r->produk_id;
         $data = DB::table('tbl_unit')
                 ->where('tbl_unit.produk_id',$id)
-                ->join('tbl_satuan','tbl_unit.minimum_unit_name','=','tbl_satuan.id_satuan')
+                ->join('tbl_satuan','tbl_unit.maximum_unit_name','=','tbl_satuan.id_satuan')
                 ->select('tbl_unit.id_unit','tbl_satuan.nama_satuan as unit','tbl_unit.default_value')
                 ->orderBy('tbl_unit.id_unit','ASC')
                 ->get();
@@ -366,6 +366,12 @@ class TransaksiSalesController extends Controller
         $input->totalsales = $r->totalsales;
         $input->diskon = $r->discon;
         $input->id_user = $r->id_user;
+        if($r->radiocash == 'Credit')
+        {
+            $input->status = 'UNPAID';
+        }else{
+            $input->status = '';
+        }
         $input->save();
 
         $id_user = $r->id_user;

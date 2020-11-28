@@ -231,6 +231,7 @@
                                                 <td colspan="3"><input type="text" id="creditbalance" class="form-control"></td>
                                             </tr>
                                         </table>
+                                        <input type="hidden" id="metode">
                                     </div>
                                 </div>
                             </div>
@@ -264,15 +265,15 @@
         var salestype = $('#salesType').val()   
         var invoiceid = $('#invoiceid').val()   
         var invoicedate = $('#invoiceDate').val()   
-        var radiocash = $('#radiocash').val()   
+        var radiocash = $('#metode').val()   
         var term_util = $('#term_util').val()   
         var salesmanid = $('#salesmanId').val()   
         var customerid = $('#customerid').val()   
         var note = $('#note').val()   
         var discon = $('#discon').val()   
         var totalsales = convertToAngka($('#totalsales').val())   
-        var id_user = '{{Session()->get('id')}}'
-        axios.post('{{url('/api/rekaptransaksi')}}',{
+        var id_user = "{{Session()->get('id')}}"
+        axios.post("{{url('/api/rekaptransaksi')}}",{
             'salestype':salestype,
             'invoiceid':invoiceid,
             'invoicedate':invoicedate,
@@ -291,9 +292,12 @@
                 if(check == true)
                 {
                     window.open("{{url('/sales_transaksi/fakturs')}}/"+data.invoice_id, '_blank');
+                    window.location.href("{{url('/')}}")
+                }else{
+                    window.location.href("{{url('/')}}")
                 }
-                window.location("{{url('/')}}")
             }
+            
         })
     }
     
@@ -490,6 +494,7 @@
         if(radio == true)
         {
             $('#termutil').show()
+            $('#metode').val('Credit')
         }else{
             $('#termutil').hide()
         }
@@ -500,6 +505,7 @@
         if(radio == true)
         {
             $('#termutil').hide()
+            $('#metode').val('Cash')
         }else{
             $('#termutil').show()
         }
