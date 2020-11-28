@@ -26,6 +26,7 @@ class CreateTransaksiSalesTable extends Migration
             $table->integer('totalsales');
             $table->double('diskon');
             $table->integer('id_user');
+            $table->string('status',20)->nullable();
             $table->timestamps();
         });
     }

@@ -69,6 +69,8 @@ Route::group(['namespace' => 'Transaksi'], function() {
 
         Route::get('/datatablessales','TransaksiSalesController@datatablessales')->name('datatablessales');
         Route::get('/fakturs/{id}','TransaksiSalesController@faktur');
+        // get payment
+        Route::get('/getpayment', 'GetpaymentController@index')->name('getpayment');
        
         // Purchase
 
