@@ -17,7 +17,7 @@
             <td>{{$b['quantity']}}</td>
             <td>{{$b['produk_harga']}}</td>
             <td>{{$b['diskon']}}</td>
-            <td>{{$b['amount']}}</td>
+            <td>Rp.{{number_format($b['amount'])}}</td>
         </tr>
         @endforeach
     </tbody>
