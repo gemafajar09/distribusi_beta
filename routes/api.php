@@ -140,8 +140,12 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('purchasetmp', 'TransaksiPurchaseTmpController@add');
     Route::put('purchasetmp', 'TransaksiPurchaseTmpController@edit');
     Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
-    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}','TransaksiPurchaseTmpController@register');
-    Route::get('calculatetmp','TransaksiPurchaseTmpController@calculateTmp');
+
+    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}', 'TransaksiPurchaseTmpController@register');
+    Route::get('calculatetmp', 'TransaksiPurchaseTmpController@calculateTmp');
+
+    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}', 'TransaksiPurchaseTmpController@register');
+    Route::get('calculatetmp', 'TransaksiPurchaseTmpController@calculateTmp');
 
     // api transaksi sales
     Route::post('getsalestrans', 'TransaksiSalesController@getSales');
@@ -155,10 +159,10 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('rekaptransaksi', 'TransaksiSalesController@rekaptransaksi');
 
     // api get payment
-    Route::post('paymentcustomer','GetpaymentController@caricustomer');
-    Route::post('detailtrans','GetpaymentController@detailtrans');
-    Route::post('getcredit','GetpaymentController@getcredit');
-    Route::post('addpayment','GetpaymentController@addpayment');
+    Route::post('paymentcustomer', 'GetpaymentController@caricustomer');
+    Route::post('detailtrans', 'GetpaymentController@detailtrans');
+    Route::post('getcredit', 'GetpaymentController@getcredit');
+    Route::post('addpayment', 'GetpaymentController@addpayment');
     // api Purchase Return
     // Route::get('purchasereturn/datatable', 'TransaksiPurchareturnController@datatable');
     Route::get('purchasereturn/{id}', 'TransaksiPurchaseReturnController@get');
@@ -170,6 +174,10 @@ Route::group(['namespace' => 'transaksi'], function () {
 
 
     // test inv
-    Route::get('purchaseinv/{id}','TransaksiPurchaseTmpController@generateInvoicePurchase');
-    Route::get('purchasereturninv/{id}','TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
+    Route::get('purchaseinv/{id}', 'TransaksiPurchaseTmpController@generateInvoicePurchase');
+    Route::get('purchasereturninv/{id}', 'TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
+
+    // broken and exp movement
+    Route::get('ambildatastok/{id}', 'BrokenExpMovementController@ambildatastok');
+    Route::post('cekdatastok/', 'BrokenExpMovementController@cekdatastok');
 });
