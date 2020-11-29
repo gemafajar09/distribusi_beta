@@ -207,7 +207,7 @@ class GetpaymentController extends Controller
         if($data->totalsales == $r->payment)
         {
             $input = TransaksiSales::findOrFail($data->id_transaksi_sales);
-            $input->status = 'Success';
+            $input->status = 'PAID';
             $input->save();
         }
         $simpan = new Getpayment();
