@@ -171,4 +171,9 @@ Route::group(['namespace' => 'transaksi'], function () {
     // test inv
     Route::get('purchaseinv/{id}','TransaksiPurchaseTmpController@generateInvoicePurchase');
     Route::get('purchasereturninv/{id}','TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
+
+    // opname
+    Route::get('stok_opname/{fisik}/{stok_id}','OpnameController@cekbalance');
+    Route::post('stok_opname','OpnameController@add');
+    Route::get('reportopname','OpnameController@print_faktur');
 });

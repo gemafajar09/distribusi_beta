@@ -38,6 +38,7 @@
 
                         </ul>
                     </li>
+                    <li><a href="{{ route('opname') }}">Data Opname</a></li>
                 </ul>
             </li>
             <li><a><i class="fa fa-file"></i> Report <span class="fa fa-chevron-down"></span></a>
