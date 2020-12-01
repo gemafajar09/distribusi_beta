@@ -92,6 +92,15 @@ Route::group(['namespace' => 'Report'], function() {
         Route::get('/report_stok','StokReportController@report');
         Route::get('/report_stok/{id_warehouse}','StokReportController@report');
     });
+    Route::group(['prefix' => 'purchase'], function () {
+        Route::get('/report','PurchaseReportController@index')->name('purchase-report');
+        Route::get('/report_purchase','PurchaseReportController@report_all');
+        Route::get('/report_purchase_today','PurchaseReportController@report_today');
+        Route::get('/report_purchase_month/{month}/{year}','PurchaseReportController@report_month');
+        Route::get('/report_purchase_year/{year}','PurchaseReportController@report_year');
+        Route::get('/report_purchase_range/{awal}/{akhir}','PurchaseReportController@report_range');
+        
+    });
 });
 
     Route::get('/login', 'LoginController@index')->name('login');

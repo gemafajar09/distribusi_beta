@@ -28,7 +28,7 @@
         </table>
     </div>
 </div>
-<div class="col border p-3">
+<div class="col border p-3 bg-white rounded">
     <h6>View : </h6>
     <input type="radio" name="view" id="all"> All Stock <br>
     <input type="radio" name="view" id="warehouse"> Based On Warehouse  <br>
@@ -38,6 +38,7 @@
     <button class="btn btn-success btn-sm" onclick="location.reload()">Refresh Report</button>
     <button class="btn btn-danger btn-sm" onclick="print_report()">Generate Report</button>
     </div>
+
 </div>
 </div>
 

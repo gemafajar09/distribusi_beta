@@ -46,6 +46,7 @@
                     <li><a href="{{ route('cost') }}">Data Cost</a></li>
                     <li><a href="{{ route('sales_transaction') }}">Sales Transaction</a></li>
                     <li><a href="{{ route('stok-report') }}">Stok Inventory</a></li>
+                    <li><a href="{{ route('purchase-report') }}">Purchase</a></li>
                 </ul>
             </li>
 

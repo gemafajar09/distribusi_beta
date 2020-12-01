@@ -68,7 +68,8 @@
     })
 
     function loadinput(id, urut, capital_price) {
-        axios.get('{{url('/api/getunit/')}}/' + id)
+        cabang = {{session()->get('cabang')}}
+        axios.get('{{url('/api/getunitopname/')}}/' + id+'/'+cabang)
             .then(function(res) {
                 isi = res.data
                 panjang = isi.data.length
@@ -92,6 +93,7 @@
     }
 
     function doalert(checkboxElem, stok_id, produk_id) {
+        cabang = {{session()->get('cabang')}}
         unit1 = $('#' + stok_id).find('#unit1').val();
         unit2 = $('#' + stok_id).find('#unit2').val();
         unit3 = $('#' + stok_id).find('#unit3').val();
@@ -100,7 +102,7 @@
                 .then(function(res) {
                     isi = res.data;
                     jumlah_system = isi.data['jumlah']
-                    axios.get('{{url('/api/getunit/')}}/' + produk_id)
+                    axios.get('{{url('/api/getunitopname/')}}/' + produk_id+'/'+cabang)
                         .then(function(res) {
                             unit3 = conversi(res);
                             if (unit3 == jumlah_system) {
@@ -157,6 +159,7 @@
 
     function cekbalance(stok_id, produk_id, unit_satuan_price) {
         delay(function() {
+            cabang = {{session()->get('cabang')}}
             unit1 = $('#' + stok_id).find('#unit1').val();
             unit2 = $('#' + stok_id).find('#unit2').val();
             unit3 = $('#' + stok_id).find('#unit3').val();
@@ -165,7 +168,7 @@
             let nextd1 = nextd.next();
             nextd.html('');
             nextd1.html('');
-            axios.get('{{url('/api/getunit/')}}/' + produk_id)
+            axios.get('{{url('/api/getunitopname/')}}/' + produk_id+'/'+cabang)
                 .then(function(res) {
                     unit3 = conversi(res)
                     axios.get('{{url('/api/stok_opname/')}}/' + unit3 + '/' + stok_id)
