@@ -86,6 +86,14 @@ Route::group(['namespace' => 'Transaksi'], function() {
     });
 });
 
+Route::group(['namespace' => 'Report'], function() {
+    Route::group(['prefix' => 'inventory'], function () {
+        Route::get('/report','StokReportController@index')->name('stok-report');
+        Route::get('/report_stok','StokReportController@report');
+        Route::get('/report_stok/{id_warehouse}','StokReportController@report');
+    });
+});
+
     Route::get('/login', 'LoginController@index')->name('login');
     Route::post('/login', 'LoginController@postLogin')->name('postLogin');
     Route::get('/logout', 'LoginController@postLogout')->name('postLogout');

@@ -1,6 +1,6 @@
 <!-- javascript dulu -->
 <a href="#" class="btn btn-success btn-sm" onclick="print_faktur()">Export</a>
-<table id="example2" class="table table-striped table-bordered" style="width:100%; font-size:11px">
+<table id="example2" class="table table-bordered" style="width:100%; font-size:11px">
     <thead>
         <tr style="text-align: center; font-size:10px">
             <th rowspan="2" style="vertical-align : middle;text-align:center;">Nama Produk</th>  
@@ -10,14 +10,14 @@
             <th rowspan="2" align="center" style="vertical-align : middle;text-align:center;">Loss</th>
             <th rowspan="2" class="bg-info"  align="center" style="vertical-align : middle;text-align:center;color:white;width:70px;">Status</th>
             <th rowspan="2" class="bg-info"  align="center" style="vertical-align : middle;text-align:center;color:white;width:60px;">Tanggal</th>
-            <th rowspan="2" class="bg-info"  align="center" style="vertical-align : middle;text-align:center;width:70px;color:white;">Last Cek</th>
+            <th rowspan="2" class="bg-info"  align="center" style="vertical-align : middle;text-align:center;width:70px;color:white;">Selisih Terakhir</th>
             <th rowspan="2" align="center" style="vertical-align : middle;text-align:center;">Adjust</th>
 
         </tr>
         <tr>
-            <th>Quantity</th>
+            <th align="center">Quantity</th>
             <th style="width: 200px;">Quantity</th>
-            <th>Quantity</th>
+            <th align="center">Quantity</th>
         </tr>
     </thead>
     <tbody>
@@ -53,7 +53,7 @@
                 @else
                 {{$d['selisih']}}
                 @endif</td>
-            <td><input type="checkbox" onchange="doalert(this,`{{$d['stok_id']}}`,`{{$d['produk_id']}}`)"></td>
+            <td><input type="checkbox" onchange="doalert(this,`{{$d['stok_id']}}`,`{{$d['produk_id']}}`)"> Cek</td>
         </tr>
         @endforeach
     </tbody>

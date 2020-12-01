@@ -177,3 +177,11 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('stok_opname','OpnameController@add');
     Route::get('reportopname','OpnameController@print_faktur');
 });
+
+
+Route::group(['namespace' => 'report'], function () {
+    Route::group(['prefix' => 'inventory'], function () {
+        Route::get('datatable','StokReportController@datatable');
+        Route::get('datatable/{id}','StokReportController@datatable');
+});
+});
