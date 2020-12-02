@@ -22,11 +22,12 @@ class CreateTransaksiSalesTable extends Migration
             $table->date('term_until');
             $table->integer('sales_id');
             $table->integer('customer_id');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->integer('totalsales');
-            $table->double('diskon');
+            $table->double('diskon')->nullable();
             $table->integer('id_user');
             $table->string('status',20)->nullable();
+            $table->integer('approve',20)->nullable();
             $table->timestamps();
         });
     }

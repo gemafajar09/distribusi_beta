@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     if (Session()->has('id')) {
         return view('home');
@@ -60,26 +62,56 @@ Route::group(['namespace' => 'Admin'], function () {
 Route::group(['namespace' => 'Transaksi'], function () {
     Route::group(['prefix' => 'sales_transaksi'], function () {
         Route::get('/sales_transaction', 'TransaksiSalesController@index')->name('sales_transaction');
-    });
-    Route::group(['prefix' => 'purchase_transaksi'], function () {
-
         Route::get('/datatablessales', 'TransaksiSalesController@datatablessales')->name('datatablessales');
         Route::get('/fakturs/{id}', 'TransaksiSalesController@faktur');
         // get payment
         Route::get('/getpayment', 'GetpaymentController@index')->name('getpayment');
-
+        // approve
+        Route::get('/approvesales', 'ApprovesalesController@index')->name('approvesales');
+    });
+    Route::group(['prefix' => 'purchase_transaksi'], function () {
         // Purchase
-
         Route::get('/purchase_order', 'TransaksiPurchaseController@index')->name('purchase_order');
-
         Route::get('/datatablessales', 'TransaksiSalesController@datatablessales')->name('datatablessales');
         Route::get('/purchase_order', 'TransaksiPurchaseController@index')->name('purchase_order');
-
         Route::get('/purchase_aproval', 'TransaksiPurchaseDetailController@index')->name('aproval_purchase_order');
         Route::get('/purchase_return', 'TransaksiPurchaseReturnController@index')->name('return_purchase_order');
 
+        // broken exp movement
         Route::get('/broken_exp', 'BrokenExpMovementController@index')->name('broken_exp');
         Route::get('/datatablesbem', 'BrokenExpMovementController@datatablesbem')->name('datatablesbem');
+    });
+    Route::group(['prefix' => 'opname'], function () {
+
+        Route::get('/stok_opname','OpnameController@index')->name('opname');
+        Route::get('/datatablesopname','OpnameController@datatablesopname')->name('datatablesopname');
+
+    });
+});
+
+Route::group(['namespace' => 'Report'], function() {
+    Route::group(['prefix' => 'inventory'], function () {
+        Route::get('/report','StokReportController@index')->name('stok-report');
+        Route::get('/report_stok','StokReportController@report');
+        Route::get('/report_stok/{id_warehouse}','StokReportController@report');
+    });
+    Route::group(['prefix' => 'purchase'], function () {
+        Route::get('/report','PurchaseReportController@index')->name('purchase-report');
+        Route::get('/report_purchase','PurchaseReportController@report_all');
+        Route::get('/report_purchase_today','PurchaseReportController@report_today');
+        Route::get('/report_purchase_month/{month}/{year}','PurchaseReportController@report_month');
+        Route::get('/report_purchase_year/{year}','PurchaseReportController@report_year');
+        Route::get('/report_purchase_range/{awal}/{akhir}','PurchaseReportController@report_range');
+        
+    });
+    Route::group(['prefix' => 'purchase_return'], function () {
+        Route::get('/report','PurchaseReturnReportController@index')->name('purchase-return-report');
+        Route::get('/report_purchase_return','PurchaseReturnReportController@report_all');
+        Route::get('/report_purchase_return_today','PurchaseReturnReportController@report_today');
+        Route::get('/report_purchase_return_month/{month}/{year}','PurchaseReturnReportController@report_month');
+        Route::get('/report_purchase_return_year/{year}','PurchaseReturnReportController@report_year');
+        Route::get('/report_purchase_return_range/{awal}/{akhir}','PurchaseReturnReportController@report_range');
+        
     });
 });
 

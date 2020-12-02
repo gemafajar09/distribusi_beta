@@ -43,7 +43,8 @@ class UnitController extends Controller
             ->join('tbl_satuan as a','t.maximum_unit_name','=','a.id_satuan')
             ->join('tbl_satuan as b','t.minimum_unit_name','=','b.id_satuan')
             ->join('tbl_produk as c','t.produk_id','=','c.produk_id')
-            ->select('id_unit','produk_nama','a.nama_satuan as maximum_unit_name','b.nama_satuan as minimum_unit_name','default_value')
+            
+            ->select('id_unit','produk_nama','a.nama_satuan as maximum_unit_name','b.nama_satuan as minimum_unit_name','default_value','c.produk_id as produk_id')
             ->get();
         return $data;
         }else{
@@ -52,11 +53,29 @@ class UnitController extends Controller
             ->join('tbl_satuan as a','t.maximum_unit_name','=','a.id_satuan')
             ->join('tbl_satuan as b','t.minimum_unit_name','=','b.id_satuan')
             ->join('tbl_produk as c','t.produk_id','=','c.produk_id')
-            ->select('id_unit','produk_nama','a.nama_satuan as maximum_unit_name','b.nama_satuan as minimum_unit_name','default_value')
+            
+            ->select('id_unit','produk_nama','a.nama_satuan as maximum_unit_name','b.nama_satuan as minimum_unit_name','default_value','c.produk_id as produk_id')
             ->orderBy('id_unit', 'desc')
             ->get();
         return $data;
         }
+    }
+
+    // bantuan untuk unit opname
+    public function get_unit_opname($id,$cabang){
+        
+                $data = DB::table('tbl_unit as t')
+                ->where('t.produk_id',$id)
+                ->join('tbl_satuan as a','t.maximum_unit_name','=','a.id_satuan')
+                ->join('tbl_satuan as b','t.minimum_unit_name','=','b.id_satuan')
+                ->join('tbl_produk as c','t.produk_id','=','c.produk_id')
+                ->leftjoin('tbl_stok as d','d.produk_id','=','c.produk_id')
+                ->where('id_cabang',$cabang)
+                ->select('id_unit','produk_nama','a.nama_satuan as maximum_unit_name','b.nama_satuan as minimum_unit_name','default_value','d.stok_id as stok_id','d.produk_id as produk_id')
+                ->orderBy('id_unit', 'desc')
+                ->get();
+                return response()->json(['data'=>$data]);
+        
     }
 
     public function get(Request $request,$id=null)

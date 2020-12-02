@@ -135,7 +135,7 @@ class TransaksiPurchaseReturnController extends Controller
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_data_return();
-        $format = '%d %s | ';
+        $format = '%d %s ';
         $stok = [];
         $this->datatable= [];
         foreach ($data as $d) {
@@ -210,7 +210,7 @@ class TransaksiPurchaseReturnController extends Controller
             }else if($d->note_return == 4){
                 $note = "Unsold Product";
             }
-            $this->datatable[] = ["produk_id"=>$d->produk_id,"produk_nama"=>$d->produk_nama,"stok_quantity"=>$d->stok_quantity,"price"=>$d->total,"id_transaksi_purchase_return"=>$d->id_transaksi_purchase_return,"return_date"=>$d->return_date,"stok_id"=>$d->stok_id,"nama_suplier"=>$d->nama_suplier,"price"=>$d->total,"note_return"=>$note,"return_id"=>$d->return_id,"jumlah_return"=>$d->jumlah_return];   
+            $this->datatable[] = ["produk_id"=>$d->produk_id,"produk_nama"=>$d->produk_nama,"stok_quantity"=>$d->stok_quantity,"price"=>$d->total,"id_transaksi_purchase_return"=>$d->id_transaksi_purchase_return,"return_date"=>$d->return_date,"stok_id"=>$d->stok_id,"nama_suplier"=>$d->nama_suplier,"price"=>number_format($d->total,2,'.',''),"note_return"=>$note,"return_id"=>$d->return_id,"jumlah_return"=>$d->jumlah_return];   
         }
        
         return datatables()->of($this->datatable)->toJson();

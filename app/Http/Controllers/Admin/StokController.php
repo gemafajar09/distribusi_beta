@@ -9,7 +9,7 @@ use App\Models\Stok;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
-
+ 
 class StokController extends Controller
 {
     public function __construct()
@@ -31,7 +31,7 @@ class StokController extends Controller
     {
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_builder();
-        $format = '%d %s | ';
+        $format = '%d %s  ';
         $stok = [];
         $dataisi = [];
         foreach ($data as $d) {
@@ -98,7 +98,14 @@ class StokController extends Controller
             $jumlah_stok = implode(" ", $stokquantity);
             $d->stok_quantity = $jumlah_stok;
             $d->total_harga = $harga * $d->jumlah;
-            $dataisi[] = ["produk_id" => $d->produk_id, "id_unit" => $id, "produk_nama" => $d->produk_nama, "capital_price" => $capital_price, "stok_harga" => $d->total_harga, "jumlah" => $d->stok_quantity];
+            $dataisi[] = [
+                "produk_id" => $d->produk_id, 
+                "id_unit" => $id, 
+                "produk_nama" => $d->produk_nama, 
+                "capital_price" => $capital_price, 
+                "stok_harga" => $d->total_harga, 
+                "jumlah" => $d->stok_quantity
+            ];
         }
 
         return datatables()->of($dataisi)->toJson();

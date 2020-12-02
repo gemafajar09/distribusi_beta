@@ -62,7 +62,7 @@
             <td>{{$a['nama_customer']}}</td>
             <td>{{$a['nama_sales']}}</td>
             <td>Rp.{{number_format($a['totalsales'])}}</td>
-            <td>{{$a['payment']}}</td>
+            <td>Rp.{{number_format($a['payment'])}}</td>
             <td>{{$a['remaining']}}</td>
             <td>{{$a['term_until']}}</td>
             <td>{{$a['status']}}</td>
@@ -143,6 +143,7 @@
             'status':status
         }).then(function(res){
             var data = res.data
+            location.reload()
         })
     })
 
