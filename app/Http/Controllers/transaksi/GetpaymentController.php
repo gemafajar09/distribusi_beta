@@ -46,6 +46,8 @@ class GetpaymentController extends Controller
             ->join('tbl_customer', 'tbl_customer.id_customer', 'transaksi_sales.customer_id')
             ->join('tbl_sales', 'tbl_sales.id_sales', 'transaksi_sales.sales_id')
             ->where('transaksi_sales.transaksi_tipe', 'Credit')
+            ->where('transaksi_sales.status', 'UNPAID')
+            ->where('transaksi_sales.approve', '1')
             ->where('tbl_customer.nama_customer','Like','%'.$r->nama.'%')
             ->get();
             // dd($datas);
@@ -104,82 +106,46 @@ class GetpaymentController extends Controller
             ->select('tbl_produk.produk_id', 'tbl_produk.produk_brand', 'tbl_produk.produk_nama', 'tbl_produk.produk_harga', 'price', 'transaksi_sales_details.*', 'tbl_type_produk.nama_type_produk', 'tbl_stok.stok_id')
             ->where('transaksi_sales_details.invoice_id', $invoices)
             ->get();
+        
         $detail = [];
+        $format = '%d %s |';
+        $stok = [];
         foreach ($data as $a) {
-            // pecah data unit
-            if ($a->unit1 != NULL) {
-                $pecah1 = explode('-', $a->unit1);
-                $jumlah1 = $pecah1[0];
-                $satuan1 = $pecah1[1];
-                $uang1 = $a->price;
-                // cek satuan
-                $nilaisisa1 = 0;
-                $nilaikonversi1 = $jumlah1;
-            } else {
-                $nilaisisa1 = 0;
-                $nilaikonversi1 = 0;
-                $satuan1 = '';
-                $uang1 = 0;
-            }
-            // pecah data unit
-            if ($a->unit2 != NULL) {
-                $pecah2 = explode('-', $a->unit2);
-                $jumlah2 = $pecah2[0];
-                $satuan2 = $pecah2[1];
-                // cek satuan
-                $unit2 = DB::table('tbl_unit')
-                    ->join('tbl_satuan', 'tbl_satuan.id_satuan', 'tbl_unit.minimum_unit_name')
-                    ->where('tbl_unit.produk_id', $a->produk_id)
-                    ->where('tbl_satuan.nama_satuan', $satuan2)
-                    ->first();
-                $nilaisisa2 = $jumlah2 % $unit2->default_value;
-                $nilaikonversi2 = ($jumlah2 - $nilaisisa2) / $unit2->default_value;
-                $uang2 = $a->price / $unit2->default_value;
-            } else {
-                $nilaisisa2 = 0;
-                $nilaikonversi2 = 0;
-                $satuan2 = '';
-                $uang2 = 0;
-            }
-            // pecah data unit
-            if ($a->unit3 != NULL) {
-                $pecah3 = explode('-', $a->unit3);
-                $jumlah3 = $pecah3[0];
-                $satuan3 = $pecah3[1];
-                // cek satuan
-                $unit3 = DB::table('tbl_unit')
-                    ->join('tbl_satuan', 'tbl_satuan.id_satuan', 'tbl_unit.minimum_unit_name')
-                    ->where('tbl_unit.produk_id', $a->produk_id)
-                    ->where('tbl_satuan.nama_satuan', $satuan3)
-                    ->first();
-                $nilaisisa3 = $jumlah3 % $unit3->default_value;
-                $nilaikonversi3 = ($jumlah3 - $nilaisisa2) / $unit3->default_value;
-                $uang3 = $a->price / $unit3->default_value;
-            } else {
-                $nilaisisa3 = 0;
-                $nilaikonversi3 = 0;
-                $satuan3 = '';
-                $uang3 = 0;
-            }
-
-            $quantity1 =  ($nilaikonversi1 + $nilaikonversi2) . " " . $satuan1 . " | ";
-            $quantity2 =  ($nilaisisa1 + $nilaisisa2 + $nilaikonversi3) . " " . $satuan2 . " | ";
-            $quantity3 =  ($nilaisisa3) . " " . $satuan3 . " | ";
-            $total = (($nilaikonversi1 + $nilaikonversi2) * $uang1) + (($nilaisisa1 + $nilaisisa2 + $nilaikonversi3) * $uang2) + (($nilaisisa3) * $uang3);
-            if ($quantity1 != 0) {
-                $qty1 = $quantity1;
-            } else {
-                $qty1 = '';
-            }
-            if ($quantity2 != 0) {
-                $qty2 = $quantity2;
-            } else {
-                $qty2 = '';
-            }
-            if ($quantity3 != 0) {
-                $qty3 = $quantity3;
-            } else {
-                $qty3 = '';
+            $proses = DB::table('tbl_unit')->where('produk_id', $a->produk_id)
+                ->join('tbl_satuan', 'tbl_unit.maximum_unit_name', '=', 'tbl_satuan.id_satuan')
+                ->select('id_unit', 'nama_satuan as unit', 'default_value')
+                ->orderBy('id_unit', 'ASC')
+                ->get();
+            $hasilbagi = 0;
+            foreach ($proses as $index => $list) {
+                $banyak =  sizeof($proses);
+                $sisa = $a->quantity % $list->default_value;
+                $hasilbagi = ($a->quantity - $sisa) / $list->default_value;
+                $satuan[$index] = $list->unit;
+                $value_default[$index] = $list->default_value;
+                $lebih[$index] = $sisa;
+                if ($index == 0) {
+                    if ($sisa > 0) {
+                        $stok[$index] = sprintf($format, $sisa, $list->unit);
+                    }
+                    if ($banyak == $index + 1) {
+                        $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                    }
+                } else if ($index == 1) {
+                    if ($sisa > 0) {
+                        $stok[$index - 1] = sprintf($format, $sisa + $lebih[$index - 1], $satuan[$index - 1]);
+                    }
+                    if ($banyak == $index + 1) {
+                        $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                    }
+                } else if ($index == 2) {
+                    if ($sisa > 0) {
+                        $stok[$index - 1] = sprintf($format, $sisa,  $satuan[$index - 1]);
+                    }
+                    if ($banyak == $index + 1) {
+                        $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                    }
+                }
             }
             $detail[] = array(
                 'stok_id' => $a->stok_id,
@@ -188,15 +154,14 @@ class GetpaymentController extends Controller
                 'produk_brand' => $a->produk_brand,
                 'produk_nama' => $a->produk_nama,
                 'produk_harga' => number_format($a->price),
-                'quantity' => $qty1 . $qty2 . $qty3,
-                'total' => number_format($total),
-                'diskon' => number_format($a->diskon * $jumlah1),
-                'tot' => $total,
-                'amount' => $total - ($a->diskon * $jumlah1),
-                'id_transaksi_detail' => $a->id_transaksi_detail
+                'total' => number_format($a->quantity * $a->harga_satuan),
+                'diskon' => number_format($a->diskon),
+                'tot' => 0,
+                'amount' => ($a->quantity * $a->harga_satuan) - $a->diskon,
+                'id_transaksi_tmp' => $a->id_transaksi_detail,
+                'quantity' => implode(" ", $stok)
             );
         }
-
         return view('pages.transaksi.getpayment.tabeldetail', compact('detail'));
     }
 
@@ -206,9 +171,7 @@ class GetpaymentController extends Controller
         $data = DB::table('transaksi_sales')->where('invoice_id',$invoice)->first();
         if($data->totalsales == $r->payment)
         {
-            $input = TransaksiSales::findOrFail($data->id_transaksi_sales);
-            $input->status = 'PAID';
-            $input->save();
+            DB::table('transaksi_sales')->where('id_transaksi_sales',$data->id_transaksi_sales)->update(['status' => 'PAID']);
         }
         $simpan = new Getpayment();
         $simpan->payment_id = $r->payment_id;
