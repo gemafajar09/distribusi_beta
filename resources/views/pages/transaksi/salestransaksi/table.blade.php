@@ -55,7 +55,7 @@
             var data = res.data
             if(data.status == 200)
             {
-                $('#isibody').load('{{ route('datatablessales')}}')
+                $('#isibody').load("{{ route('datatablessales')}}")
             }
         })
     }

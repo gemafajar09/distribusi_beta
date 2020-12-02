@@ -25,11 +25,12 @@
                 <ul class="nav child_menu">
                     <li><a><i class=""></i>Sales Transaction <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="{{ route('sales_transaction') }}">Report Transaction</a></li>
+                            <!-- <li><a href="{{ route('sales_transaction') }}">Report Transaction</a></li> -->
+                            <li><a href="{{ route('getpayment')}}">Get Payment</a></li>
                             <li><a href="{{ route('sales_transaction') }}">Entry Transaction</a></li>
+                            <li><a href="">Return Transaction</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ route('cost') }}">Data Cost</a></li>
                     <li><a><i class=""></i>Purchase Transaction <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="{{ route('purchase_order') }}">Report Transaction</a></li>
@@ -39,6 +40,9 @@
                         </ul>
                     </li>
                     <li><a href="{{ route('opname') }}">Data Opname</a></li>
+                    <li><a href="{{ route('cost') }}">Data Cost</a></li>
+                    <li><a href="{{ route('broken_exp') }}">Broken & Exp Movement</a></li>
+
                 </ul>
             </li>
             <li><a><i class="fa fa-file"></i> Report <span class="fa fa-chevron-down"></span></a>
@@ -48,6 +52,8 @@
                     <li><a href="{{ route('stok-report') }}">Stok Inventory</a></li>
                     <li><a href="{{ route('purchase-report') }}">Purchase</a></li>
                     <li><a href="{{ route('purchase-return-report') }}">Purchase Return</a></li>
+                    <li><a href="">Data Cost</a></li>
+                    <li><a href="">Sales Transaction</a></li>
                 </ul>
             </li>
 

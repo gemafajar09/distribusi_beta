@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -141,12 +142,10 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('purchasetmp', 'TransaksiPurchaseTmpController@add');
     Route::put('purchasetmp', 'TransaksiPurchaseTmpController@edit');
     Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
-
-    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}','TransaksiPurchaseTmpController@register');
-    Route::get('calculatetmp','TransaksiPurchaseTmpController@calculateTmp');
-
-    //Route::get('registerpurchase', 'TransaksiPurchaseTmpController@register')->name('register-transaksi-purchase');
-
+    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}', 'TransaksiPurchaseTmpController@register');
+    Route::get('calculatetmp', 'TransaksiPurchaseTmpController@calculateTmp');
+    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}', 'TransaksiPurchaseTmpController@register');
+    Route::get('calculatetmp', 'TransaksiPurchaseTmpController@calculateTmp');
 
     // api transaksi sales
     Route::post('getsalestrans', 'TransaksiSalesController@getSales');
@@ -155,11 +154,16 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::post('cekstok', 'TransaksiSalesController@cekstok');
     Route::post('hargakusus', 'TransaksiSalesController@hargakusus');
     Route::post('addkeranjang', 'TransaksiSalesController@addkeranjang');
-
     Route::get('datatable/{id}', 'TransaksiSalesController@datatable');
     Route::post('deleteitem', 'TransaksiSalesController@deleteitem');
     Route::post('rekaptransaksi', 'TransaksiSalesController@rekaptransaksi');
 
+    // api get payment
+    Route::post('paymentcustomer', 'GetpaymentController@caricustomer');
+    Route::post('detailtrans', 'GetpaymentController@detailtrans');
+    Route::post('getcredit', 'GetpaymentController@getcredit');
+    Route::post('addpayment', 'GetpaymentController@addpayment');
+    Route::post('approval', 'ApprovesalesController@approve');
     // api Purchase Return
     // Route::get('purchasereturn/datatable', 'TransaksiPurchareturnController@datatable');
     Route::get('purchasereturn/{id}', 'TransaksiPurchaseReturnController@get');
@@ -201,4 +205,11 @@ Route::group(['namespace' => 'report'], function () {
         Route::get('year_datatable/{year}','PurchaseReturnReportController@year_datatable');
         Route::get('range_datatable/{awal}/{akhir}','PurchaseReturnReportController@range_datatable');
     });
+//     Route::get('purchaseinv/{id}', 'TransaksiPurchaseTmpController@generateInvoicePurchase');
+    Route::get('purchasereturninv/{id}', 'TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
+
+    // broken and exp movement
+    Route::get('ambildatastok/{id}', 'BrokenExpMovementController@ambildatastok');
+    Route::post('cekdatastok/', 'BrokenExpMovementController@cekdatastok');
+
 });
