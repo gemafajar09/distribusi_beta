@@ -36,7 +36,7 @@ class TransaksiPurchaseTmpController extends Controller
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_builder();
-        $format = '%d %s | ';
+        $format = '%d %s ';
         $stok = [];
         $this->dataisi = [];
         foreach ($data as $d) {
@@ -100,8 +100,8 @@ class TransaksiPurchaseTmpController extends Controller
             }
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
-            $d->total = $harga * $d->quantity;
-            $this->dataisi[] = ["produk_id"=>$d->produk_id,"nama_type_produk"=>$d->nama_type_produk,"produk_brand"=>$d->produk_brand,"produk_nama"=>$d->produk_nama,"unit_satuan_price"=>$d->unit_satuan_price,"stok_quantity"=>$d->stok_quantity,"diskon"=>$d->diskon,"total_price"=>$d->total_price,"total"=>$d->total,"id_transaksi_purchase_tmp"=>$d->id_transaksi_purchase_tmp,"invoice_id"=>$d->invoice_id,"invoice_date"=>$d->invoice_date,"transaksi_tipe"=>$d->transaksi_tipe,"nama_suplier"=>$d->nama_suplier,"term_until"=>$d->term_until];   
+            $d->total = number_format($harga * $d->quantity,2,'.','');
+            $this->dataisi[] = ["produk_id"=>$d->produk_id,"nama_type_produk"=>$d->nama_type_produk,"produk_brand"=>$d->produk_brand,"produk_nama"=>$d->produk_nama,"unit_satuan_price"=>number_format($d->unit_satuan_price,2,'.',''),"stok_quantity"=>$d->stok_quantity,"diskon"=>$d->diskon,"total_price"=>number_format($d->total_price,2,'.',''),"total"=>$d->total,"id_transaksi_purchase_tmp"=>$d->id_transaksi_purchase_tmp,"invoice_id"=>$d->invoice_id,"invoice_date"=>$d->invoice_date,"transaksi_tipe"=>$d->transaksi_tipe,"nama_suplier"=>$d->nama_suplier,"term_until"=>$d->term_until];   
         }
        
         return datatables()->of($this->dataisi)->toJson();

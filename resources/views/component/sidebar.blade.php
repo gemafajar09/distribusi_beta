@@ -47,6 +47,7 @@
                     <li><a href="{{ route('sales_transaction') }}">Sales Transaction</a></li>
                     <li><a href="{{ route('stok-report') }}">Stok Inventory</a></li>
                     <li><a href="{{ route('purchase-report') }}">Purchase</a></li>
+                    <li><a href="{{ route('purchase-return-report') }}">Purchase Return</a></li>
                 </ul>
             </li>
 

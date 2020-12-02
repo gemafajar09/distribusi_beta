@@ -287,14 +287,12 @@
 
     $('#add').click(function(e){
         e.preventDefault();
-        var d = new Date();
-        var strDate = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + (d.getDate());
         let produk_id = $('#produk_id').val();
         let invoice_id = $('#invoice_id').val();
         let invoice_date = $('#invoice_date').val();
         let transaksi_tipe = $('input[name=transaksi_tipe]:checked').val();
         if(transaksi_tipe == 0){
-            document.getElementById('term_until').value = strDate;
+            document.getElementById('term_until').value = invoice_date;
         }
         let term_until = $('#term_until').val();
         let id_suplier = $('#id_suplier').val();

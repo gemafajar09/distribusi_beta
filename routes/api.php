@@ -194,4 +194,11 @@ Route::group(['namespace' => 'report'], function () {
         Route::get('year_datatable/{year}','PurchaseReportController@year_datatable');
         Route::get('range_datatable/{awal}/{akhir}','PurchaseReportController@range_datatable');
     });
+    Route::group(['prefix' => 'report_purchase_return'], function () {
+        Route::get('datatable','PurchaseReturnReportController@all_datatable');
+        Route::get('today_datatable','PurchaseReturnReportController@today_datatable');
+        Route::get('month_datatable/{month}/{year}','PurchaseReturnReportController@month_datatable');
+        Route::get('year_datatable/{year}','PurchaseReturnReportController@year_datatable');
+        Route::get('range_datatable/{awal}/{akhir}','PurchaseReturnReportController@range_datatable');
+    });
 });

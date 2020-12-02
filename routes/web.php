@@ -101,6 +101,15 @@ Route::group(['namespace' => 'Report'], function() {
         Route::get('/report_purchase_range/{awal}/{akhir}','PurchaseReportController@report_range');
         
     });
+    Route::group(['prefix' => 'purchase_return'], function () {
+        Route::get('/report','PurchaseReturnReportController@index')->name('purchase-return-report');
+        Route::get('/report_purchase_return','PurchaseReturnReportController@report_all');
+        Route::get('/report_purchase_return_today','PurchaseReturnReportController@report_today');
+        Route::get('/report_purchase_return_month/{month}/{year}','PurchaseReturnReportController@report_month');
+        Route::get('/report_purchase_return_year/{year}','PurchaseReturnReportController@report_year');
+        Route::get('/report_purchase_return_range/{awal}/{akhir}','PurchaseReturnReportController@report_range');
+        
+    });
 });
 
     Route::get('/login', 'LoginController@index')->name('login');

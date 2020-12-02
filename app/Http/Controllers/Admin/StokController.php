@@ -28,7 +28,7 @@ class StokController extends Controller
     public function datatable(){
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_builder();
-        $format = '%d %s | ';
+        $format = '%d %s  ';
         $stok = [];
         $dataisi = [];
         foreach ($data as $d) {
