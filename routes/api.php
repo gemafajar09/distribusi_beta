@@ -181,3 +181,7 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::get('ambildatastok/{id}', 'BrokenExpMovementController@ambildatastok');
     Route::post('cekdatastok/', 'BrokenExpMovementController@cekdatastok');
 });
+
+Route::group(['namespace' => 'report'], function () {
+    Route::get('tablereport/{search}', 'BrokenExpReport@tablereport');
+});

@@ -78,9 +78,18 @@ Route::group(['namespace' => 'Transaksi'], function () {
         Route::get('/purchase_aproval', 'TransaksiPurchaseDetailController@index')->name('aproval_purchase_order');
         Route::get('/purchase_return', 'TransaksiPurchaseReturnController@index')->name('return_purchase_order');
 
-        // broken exp movement
         Route::get('/broken_exp', 'BrokenExpMovementController@index')->name('broken_exp');
         Route::get('/datatablesbem', 'BrokenExpMovementController@datatablesbem')->name('datatablesbem');
+    });
+});
+
+Route::group(['namespace' => 'report'], function () {
+    Route::group(['prefix' => 'broken'], function () {
+        // broken exp movement
+        Route::get('/report', 'BrokenExpReport@index')->name('broken_exp_report');
+        Route::get('/print', 'BrokenExpReport@reportprint')->name('printbroken');
+        Route::get('/printproduct/{search?}', 'BrokenExpReport@reportprint')->name('printproduct');
+        Route::get('/tablereport/{search?}', 'BrokenExpReport@tablereport')->name('tablereport');
     });
 });
 
