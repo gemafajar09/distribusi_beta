@@ -299,7 +299,9 @@
                             var data = res.data
                             if(data.status == 200)
                             {
-                                $('#wadah').html('');
+                                $("#produk_id").val([]).selectpicker('refresh');
+                                $('#stok_id').html('');
+                                $('#hiden').html('');
                                 $('#wadah1').html('');
                                 tables.ajax.reload()
                                 toastr.info(data.message)

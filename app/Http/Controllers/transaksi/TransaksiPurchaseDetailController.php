@@ -24,7 +24,7 @@ class TransaksiPurchaseDetailController extends Controller
     public function datatable($cabang,$invoice_id){
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_builder($cabang,$invoice_id);
-        $format = '%d %s | ';
+        $format = '%d %s ';
         $stok = [];
         $this->dataisi = [];
         foreach ($data as $d) {
