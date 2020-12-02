@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     if (Session()->has('id')) {
         return view('home');
@@ -60,24 +62,20 @@ Route::group(['namespace' => 'Admin'], function () {
 Route::group(['namespace' => 'Transaksi'], function () {
     Route::group(['prefix' => 'sales_transaksi'], function () {
         Route::get('/sales_transaction', 'TransaksiSalesController@index')->name('sales_transaction');
-    });
-    Route::group(['prefix' => 'purchase_transaksi'], function () {
-
         Route::get('/datatablessales', 'TransaksiSalesController@datatablessales')->name('datatablessales');
         Route::get('/fakturs/{id}', 'TransaksiSalesController@faktur');
         // get payment
         Route::get('/getpayment', 'GetpaymentController@index')->name('getpayment');
-
+        // approve
+        Route::get('/approvesales', 'ApprovesalesController@index')->name('approvesales');
+    });
+    Route::group(['prefix' => 'purchase_transaksi'], function () {
         // Purchase
-
         Route::get('/purchase_order', 'TransaksiPurchaseController@index')->name('purchase_order');
-
         Route::get('/datatablessales', 'TransaksiSalesController@datatablessales')->name('datatablessales');
         Route::get('/purchase_order', 'TransaksiPurchaseController@index')->name('purchase_order');
-
         Route::get('/purchase_aproval', 'TransaksiPurchaseDetailController@index')->name('aproval_purchase_order');
         Route::get('/purchase_return', 'TransaksiPurchaseReturnController@index')->name('return_purchase_order');
-
         // broken exp movement
         Route::get('/broken_exp', 'BrokenExpMovementController@index')->name('broken_exp');
         Route::get('/datatablesbem', 'BrokenExpMovementController@datatablesbem')->name('datatablesbem');
