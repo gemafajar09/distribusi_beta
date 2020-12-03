@@ -114,7 +114,7 @@ class TransaksiPurchaseDetailController extends Controller
         $status='0';
         $data = DB::table('transaksi_purchase as t')
             ->where('status',$status)
-            ->where('id_cabang',$cabang)
+            ->where('t.id_cabang',$cabang)
             ->join('tbl_suplier as s','s.id_suplier','=','t.id_suplier')
             ->select('invoice_id','invoice_date','transaksi_tipe','nama_suplier','total','diskon','bayar','sisa','id_transaksi_purchase')
             ->get();
@@ -141,16 +141,31 @@ class TransaksiPurchaseDetailController extends Controller
                     $jumlah = $d->quantity;
                     $capital_price = $d->unit_satuan_price;
                     $id_cabang = $d->id_cabang;
-                    $cek = Stok::where('produk_id',$produk_id)->first();
+                    $id_gudang = $d->id_gudang;
+                    $id_suplier = $d->id_suplier;
+                    $cek = Stok::where('produk_id',$produk_id)->where('capital_price',$capital_price)->where('id_cabang',$id_cabang)->where('id_gudang',$id_gudang)->first();
                     if($cek){
-                        $edit = Stok::where('produk_id',$produk_id)
+                        if($cek->capital_price <> $capital_price){
+                            $stok = new Stok;
+                            $stok->produk_id = $produk_id;
+                            $stok->jumlah = $jumlah;
+                            $stok->id_cabang = $id_cabang;
+                            $stok->capital_price = $capital_price;
+                            $stok->id_gudang = $id_gudang;
+                            $stok->id_suplier = $id_suplier;
+                            $stok->save();
+                        }else{
+                            $edit = Stok::where('produk_id',$produk_id)->where('id_cabang',$id_cabang)
                                 ->increment('jumlah',$jumlah);
+                            }
                     }else{
                         $stok = new Stok;
                         $stok->produk_id = $produk_id;
                         $stok->jumlah = $jumlah;
                         $stok->id_cabang = $id_cabang;
                         $stok->capital_price = $capital_price;
+                        $stok->id_gudang = $id_gudang;
+                        $stok->id_suplier = $id_suplier;
                         $stok->save();
                     }
             } 

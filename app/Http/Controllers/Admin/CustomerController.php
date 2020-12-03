@@ -25,6 +25,7 @@ class CustomerController extends Controller
             'fax'=>'required|numeric',
             'id_sales'=>'required|numeric',
             'note'=>'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
+            'id_cabang'=>'numeric'
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'
@@ -37,16 +38,17 @@ class CustomerController extends Controller
         return view("pages.admin.customer.index");
     }
 
-    public function datatable(){
+    public function datatable($id_cabang){
         // untuk datatables Sistem Join Query Builder
-        $data = $this->join_builder();
+        $data = $this->join_builder($id_cabang);
         return datatables()->of($data)->toJson();
         
     }
 
-    public function join_builder($id=null){
+    public function join_builder($id_cabang){
         // tempat join hanya menselect beberapa field
         $data = DB::table('tbl_customer')
+                ->where('tbl_customer.id_cabang',$id_cabang)
                 ->join('tbl_sales','tbl_sales.id_sales','=','tbl_customer.id_sales')
                 ->select('id_customer','nama_customer','nama_perusahaan','credit_plafond','tbl_customer.alamat as alamat','negara','kota','tbl_customer.telepon','kartu_kredit','fax','tbl_customer.id_sales as id_sales','nama_sales','note')
                 ->get();

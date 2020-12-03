@@ -14,11 +14,11 @@
                     <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="">Nama Satuan</label>
-                        <input type="text" class="form-control rounded" id="nama_satuan">
+                        <input type="text" class="form-control rounded" id="nama_satuan" placeholder="Nama Satuan">
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="">Keterangan Satuan</label>
-                        <input type="text" class="form-control rounded" id="keterangan_satuan">
+                        <input type="text" class="form-control rounded" id="keterangan_satuan" placeholder="Keterangan Satuan" >
                     </div>
                     </div>
                     <div class="row">
@@ -107,8 +107,8 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_satuan + ")' class='btn btn-danger'>Hapus</button> | " +
-                "<button type='button' onclick='ambilData(" + data.id_satuan + ")' class='btn btn-success'>Edit</button>" +
+                "<button type='button' onclick='deleted(" + data.id_satuan + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
+                "<button type='button' onclick='ambilData(" + data.id_satuan + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }
           }

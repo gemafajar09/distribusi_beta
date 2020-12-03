@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\Opname;
+use App\Models\AprovalOpname;
+use App\Models\Stok;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 class OpnameController extends Controller
@@ -32,7 +34,7 @@ class OpnameController extends Controller
     public function datatablesopname(){
         // untuk datatables Sistem Join Query Builder
         $data = $this->join_builder();
-        
+        $dataisi = [];
         foreach ($data as $d) {
             $id = $d->produk_id;
             $jumlah = $d->jumlah;
@@ -48,7 +50,7 @@ class OpnameController extends Controller
             $jumlah_stok = implode(" ",$stokquantity);
             $selisihquantity = $this->convert($proses,$selisih);
             $selisih_stok = implode(" ",$selisihquantity);
-            $dataisi[] = ["produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"jumlah"=>$jumlah_stok,"produk_id"=>$d->produk_id,"stok_id"=>$d->stok_id,"balance"=>$d->balance,"update_opname"=>$d->update_opname,"selisih"=>$selisih_stok];
+            $dataisi[] = ["produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"jumlah"=>$jumlah_stok,"produk_id"=>$d->produk_id,"stok_id"=>$d->stok_id,"balance"=>$d->balance,"update_opname"=>$d->update_opname,"selisih"=>$selisih_stok,'id_opname'=>$d->id_opname];
         }
         return view('pages.transaksi.opname.table',compact('dataisi'));
         
@@ -118,7 +120,7 @@ class OpnameController extends Controller
                 ->join('tbl_produk','tbl_produk.produk_id','=','tbl_stok.produk_id')
                 ->leftjoin('tbl_opname as o','o.stok_id','=','tbl_stok.stok_id')
                 ->where('id_cabang',$cabang)
-                ->select('tbl_stok.produk_id as produk_id','produk_nama','jumlah','capital_price','tbl_stok.stok_id as stok_id','balance','update_opname','jumlah_fisik')
+                ->select('tbl_stok.produk_id as produk_id','produk_nama','jumlah','capital_price','tbl_stok.stok_id as stok_id','balance','update_opname','jumlah_fisik','id_opname')
                 ->get();
          return $data;
         
@@ -250,6 +252,83 @@ class OpnameController extends Controller
         }
 
         return view('report.reportopname',compact(['dataisi']));
+    }
+
+
+    public function adjust($id_opname){
+        $data = Opname::find($id_opname)->select('id_opname','stok_id','jumlah_fisik','update_opname as date_adjust','balance as status')->get()->toArray();
+        $pindah = AprovalOpname::insert($data);
+        $update = Opname::find($id_opname);
+        $update->balance = '2';
+        $update->save();
+        if($update){
+        return response()->json(['data'=>"Berhasil"]);
+        }else{
+            return response()->json(['data'=>"Gagal"]);  
+        }
+    }
+
+    public function list_aproval(){
+        return view('pages.transaksi.opname.aproval');
+    }
+
+    public function datatablesaprovalopname($id_cabang){
+        // untuk datatables Sistem Join Query Builder
+        $data = DB::table('tbl_aproval_opname as op')
+                ->join('tbl_stok as stk','stk.stok_id','=','op.stok_id')
+                ->join('tbl_produk as prdk','prdk.produk_id','=','stk.produk_id')
+                ->where('stk.id_cabang',$id_cabang)
+                ->where('status','0')
+                ->get();
+        $dataisi = [];
+        foreach ($data as $d) {
+            $id = $d->produk_id;
+            $jumlah = $d->jumlah;
+            $selisih = abs($d->jumlah_fisik - $d->jumlah);
+            $capital_price = $d->capital_price;
+            $proses = DB::table('tbl_unit')->where('produk_id',$id)
+                        ->join('tbl_satuan','tbl_unit.maximum_unit_name','=','tbl_satuan.id_satuan')
+                        ->select('id_unit','nama_satuan as unit','default_value')
+                        ->orderBy('id_unit','ASC')
+                        ->get();
+            
+            $stokquantity = $this->convert($proses,$jumlah);
+            $jumlah_stok = implode(" ",$stokquantity);
+            $fisikquantity = $this->convert($proses,$d->jumlah_fisik);
+            $jumlah_fisik = implode(" ",$fisikquantity);
+            $selisihquantity = $this->convert($proses,$selisih);
+            $selisih_stok = implode(" ",$selisihquantity);
+            $dataisi[] = ["produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"jumlah"=>$jumlah_stok,"produk_id"=>$d->produk_id,"stok_id"=>$d->stok_id,"date_adjust"=>$d->date_adjust,"selisih"=>$selisih_stok,'id_opname'=>$d->id_opname,"id_aproval_opname"=>$d->id_aproval_opname,'id_opname'=>$d->id_opname,"jumlah_fisik"=>$jumlah_fisik];
+        }
+        return datatables()->of($dataisi)->toJson();
+        
+    }
+
+    public function opname_aproval(Request $request){
+        $id = $request->input('id');
+        $status = $request->input('status');
+        $update = AprovalOpname::find($id);
+        $id_opname = $update->id_opname;
+        $stok_id = $update->stok_id;
+        $jumlah_fisik = $update->jumlah_fisik;
+        $update1 = Opname::find($id_opname);
+        if($status == '1'){
+            $update1->balance='1';
+            $update1->save();
+            $update->status='1';
+            $update->save();
+            $update2 = Stok::find($stok_id);
+            $update2->jumlah = $jumlah_fisik;
+            $update2->save();
+            return response()->json(['message'=>"Data Berhasil Di Adjust",'status'=>200]);
+        }else{
+            $update1->balance='3';
+            $update1->save();
+            $update->status='2';
+            $update->save();
+            return response()->json(['message'=>"Data Gagal Di Adjust",'status'=>404]);
+        }
+        
     }
     
 

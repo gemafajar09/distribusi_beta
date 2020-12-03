@@ -13,7 +13,7 @@ class TransaksiPurchaseTmp extends Model
     protected $primaryKey = 'id_transaksi_purchase_tmp';
     // define fillable
     protected $fillable = [
-        'invoice_id', 'invoice_date', 'transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status'
+        'invoice_id', 'invoice_date', 'transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status','id_gudang'
     ];
     protected $attributes = [
         'status' => '0',

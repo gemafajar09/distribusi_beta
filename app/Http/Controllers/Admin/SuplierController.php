@@ -26,6 +26,7 @@ class SuplierController extends Controller
             'no_akun' => 'required|numeric',
             'nama_akun' => 'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
             'note' => 'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
+            'id_cabang'=>'numeric'
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'
@@ -38,10 +39,10 @@ class SuplierController extends Controller
         return view("pages.admin.suplier.index");
     }
 
-    public function datatable()
+    public function datatable($id_cabang)
     {
         // untuk datatables Sistem Join Query Builder
-        return datatables()->of(Suplier::all())->toJson();
+        return datatables()->of(Suplier::where('id_cabang',$id_cabang)->get())->toJson();
     }
 
     public function join_builder($id = null)
@@ -113,20 +114,20 @@ class SuplierController extends Controller
         }
     }
 
-    public function getSuplier(){
+    public function getSuplier($id_cabang){
         $data = DB::table('tbl_suplier')
+                ->where('id_cabang',$id_cabang)
                 ->select('id_suplier','nama_suplier')
                 ->get();
         return response()->json(['data' => $data, 'status' => 200]);
     }
 
-    public function getSuplierProduk($id){
-        $data = DB::table('transaksi_purchase_detail as t')
-                ->where('t.id_suplier',$id)
-                ->where('t.status','1')
-                ->join('tbl_produk as a','a.produk_id','=','t.produk_id')
-                ->select('a.produk_id as produk_id','produk_nama')
-                ->distinct()
+    public function getSuplierProduk($id,$id_cabang){
+        $data = DB::table('tbl_stok as stk')
+                ->join('tbl_produk as prdk','prdk.produk_id','=','stk.produk_id')
+                ->where('stk.id_suplier',$id)
+                ->where('stk.id_cabang',$id_cabang)
+                ->select('prdk.produk_id as produk_id','produk_nama','capital_price','stk.stok_id as stok_id')
                 ->get();
         return response()->json(['data' => $data, 'status' => 200]);
     }

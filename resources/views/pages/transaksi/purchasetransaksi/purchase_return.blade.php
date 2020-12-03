@@ -30,8 +30,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-4">
-                                <label for="">Pilih Produk</label>
-                                    <select name="produk_id" id="produk_id" class="selectpicker form-control" data-live-search="true" title="Pilih Produk" autocomplete="off">
+                                <label for="">Stock To Return</label>
+                                    <select name="stok_id" id="stok_id" class="selectpicker form-control" data-live-search="true" title="Pilih Produk" autocomplete="off">
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-4">
@@ -107,6 +107,7 @@
 
 <script>
     $(document).ready(function(){
+        id_cabang = {{session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
@@ -154,7 +155,7 @@
         ]
       });
             
-            axios.get('{{url('/api/getsuplier/')}}')
+            axios.get('{{url('/api/getsuplier/')}}/'+id_cabang)
                 .then(function (res) {
                 // handle success
                 isi = res.data
@@ -168,19 +169,18 @@
             $('#id_suplier').on('change',function(e){
                 var optionSelected = $("option:selected", this); 
                 let id_suplier = this.value;
-                $("#produk_id").html('');
-                axios.get('{{url('/api/getsuplier/produk/')}}/'+id_suplier)
+                $("#stok_id").html('');
+                axios.get('{{url('/api/getsuplier/produk/')}}/'+id_suplier+'/'+id_cabang)
                 .then(function(res){
                     isi = res.data
-                    
                     $.each(isi.data, function (i, item) {
-                        $('#produk_id').append("<option value="+item.produk_id+">"+item.produk_nama+"</option>");
+                        $('#stok_id').append("<option value="+item.stok_id+">"+item.produk_nama+' '+'Rp. '+item.capital_price+"</option>");
                     });
                     $('.selectpicker').selectpicker('refresh');
                     })
             });
 
-            $('#produk_id').on('change', function (e) {
+            $('#stok_id').on('change', function (e) {
                 var optionSelected = $("option:selected", this); 
                 let id = this.value;
                 // untuk nampilkan stok
@@ -190,7 +190,8 @@
                         data = isi[0];
                         stok_id = data.stok_id;
                         satuan_price = data.satuan_price;
-                        $('#hiden').append(`<input type='hidden' value='${stok_id}' class='form-control' id='stok_id' readonly><input type='hidden' value='${satuan_price}' class='form-control' id='satuan_price' readonly>`) 
+                        produk_id = data.produk_id;
+                        $('#hiden').append(`<input type='hidden' value='${produk_id}' class='form-control' id='produk_id' readonly><input type='hidden' value='${satuan_price}' class='form-control' id='satuan_price' readonly>`) 
                         stok = data.stok.reverse();
                         panjang = data.stok.length;
                         $('#wadah').html('');
@@ -214,11 +215,9 @@
                                 $('#wadah').append(`<div class="form-group col-sm-12"><label>${data_tmp[1]}</label> <input type='number' value='${data_tmp[0]}' class='form-control' readonly></div> `)  
                                 }
                             }
-                        })
-                
                 
                 // untuk inputan wadah1
-                axios.get('{{url('/api/getunit/')}}/'+id)
+                axios.get('{{url('/api/getunit/')}}/'+produk_id)
                     .then(function(res){
                         isi = res.data
                         panjang = isi.data.length
@@ -240,6 +239,7 @@
                             }
                         }
                     })
+                })
             });
 
             session_cabang = {{session()->get('cabang')}}
@@ -283,7 +283,7 @@
                         }   
                         price =  harga * unit3;
                         axios.post('{{url('/api/purchasereturn/')}}',{
-                            'produk_id':produk_id,
+                            'stok_id':stok_id,
                             'return_id':return_id,
                             'return_date':return_date,
                             'id_suplier':id_suplier,
@@ -299,9 +299,10 @@
                             var data = res.data
                             if(data.status == 200)
                             {
-                                $("#produk_id").val([]).selectpicker('refresh');
-                                $('#stok_id').html('');
+                                $("#stok_id").val([]).selectpicker('refresh');
+                                $('#produk_id').html('');
                                 $('#hiden').html('');
+                                $('#wadah').html('');
                                 $('#wadah1').html('');
                                 tables.ajax.reload()
                                 toastr.info(data.message)
@@ -337,9 +338,9 @@
     function bersih()
     {
         document.getElementById("return_date").value=null;
-        $("#produk_id").html('');
+        $("#stok_id").html('');
         $("#id_suplier").val([]).selectpicker('refresh');
-        $("#produk_id").val([]).selectpicker('refresh');
+        $("#stok_id").val([]).selectpicker('refresh');
         $('#wadah').html('');
         $('#wadah1').html('');
         

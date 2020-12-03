@@ -13,6 +13,6 @@ class Gudang extends Model
     protected $primaryKey = 'id_gudang';
     // define fillable
     protected $fillable = [
-        'nama_gudang','alamat_gudang','telepon_gudang',
+        'nama_gudang','alamat_gudang','telepon_gudang','id_cabang'
     ];
 }

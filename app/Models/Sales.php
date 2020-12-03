@@ -14,7 +14,7 @@ class Sales extends Model
     protected $primaryKey = 'id_sales';
     // define fillable
     protected $fillable = [
-        'nama_sales', 'alamat','telepon','target',
+        'nama_sales', 'alamat','telepon','target','id_cabang'
     ];
 
     public static function getAll()

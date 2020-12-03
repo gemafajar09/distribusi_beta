@@ -96,6 +96,7 @@
 
 <script>
     $(document).ready(function(){
+        id_cabang = {{session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
@@ -126,15 +127,15 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_harga_khusus + ")' class='btn btn-danger'>Hapus</button> | " +
-                "<button type='button' onclick='ambilData(" + data.id_harga_khusus + ")' class='btn btn-success'>Edit</button>" +
+                "<button type='button' onclick='deleted(" + data.id_harga_khusus + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
+                "<button type='button' onclick='ambilData(" + data.id_harga_khusus + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }
           }
         ]
       });
             // get Customer
-            axios.get('{{url('/api/getcustomer')}}')
+            axios.get('{{url('/api/getcustomer/')}}/'+id_cabang)
                 .then(function (res) {
                 // handle success
                 let isi = res.data

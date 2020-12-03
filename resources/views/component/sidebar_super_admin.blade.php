@@ -10,6 +10,7 @@
             <li><a><i class="fa fa-cart-plus"></i> Aproval <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{{ route('aproval_purchase_order') }}">Data Purchase</a></li>
+                    <li><a href="{{ route('aprovalopname') }}">Data Opname</a></li>
                 </ul>
             </li>
             <li><a><i class="fa fa-file"></i> Report Cabang <span class="fa fa-chevron-down"></span></a>

@@ -23,6 +23,7 @@ class CustomerSeeder extends Seeder
             'fax'=>'1111',
             'id_sales'=>1,
             'note'=>'customer setia',
+            'id_cabang'=>1
             ]);
     }
 }

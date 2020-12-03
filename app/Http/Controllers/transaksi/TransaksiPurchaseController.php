@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Validator;
 class TransaksiPurchaseController extends Controller
 {
    public function index(){
-    return view('pages.transaksi.purchasetransaksi.index');
+      $id_cabang = session()->get('cabang');
+      $gudang = DB::table('tbl_gudang')->where('id_cabang',$id_cabang)->get();
+    return view('pages.transaksi.purchasetransaksi.index',compact('gudang'));
    }
    
 }

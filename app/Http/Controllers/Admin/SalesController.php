@@ -18,7 +18,8 @@ class SalesController extends Controller
             'nama_sales' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'alamat' => 'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
             'telepon' => 'required|numeric',
-            'target'=>'numeric'
+            'target'=>'numeric',
+            'id_cabang'=>'numeric'
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'
@@ -31,16 +32,12 @@ class SalesController extends Controller
         return view("pages.admin.sales.index");
     }
 
-    public function datatable()
+    public function datatable($id_cabang)
     {
         // untuk datatables Sistem Join Query Builder
-        return datatables()->of(Sales::all())->toJson();
+        return datatables()->of(Sales::where('id_cabang',$id_cabang)->get())->toJson();
     }
 
-    public function join_builder($id = null)
-    {
-        // tempat join hanya menselect beberapa field
-    }
 
     public function get(Request $request, $id = null)
     {
@@ -99,8 +96,8 @@ class SalesController extends Controller
         }
     }
 
-    public function getSales(){
-            $data = Sales::all('id_sales','nama_sales');
+    public function getSales($id_cabang){
+            $data = Sales::where('id_cabang',$id_cabang)->select('id_sales','nama_sales')->get();
             return response()->json(['data' => $data, 'status' => 200]);
     }
 }

@@ -12,17 +12,27 @@
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-6">
                         <label for="">Nama Gudang</label>
                         <input type="text" class="form-control rounded" id="nama_gudang">
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-6">
                         <label for="">Telepon Gudang</label>
                         <input type="text" class="form-control rounded" id="telepon_gudang">
                     </div>
-                    <div class="form-group col-sm-5">
+                    </div>
+                    <div class="form-row">
+                    <div class="form-group col-sm-6">
                         <label for="">Alamat Gudang</label>
                         <textarea name="" id="alamat_gudang" cols="30" rows="1" class="form-control rounded"></textarea>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="">Cabang</label>
+                        <select name="id_cabang" id="id_cabang" class="form-control rounded" title="Pilih Cabang">
+                            @foreach ($cabang as $c)
+                            <option value="{{$c->id_cabang}}">{{$c->nama_cabang}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     </div>
                     <div class="row">
@@ -48,6 +58,7 @@
                     <th style="width: 25%">Nama Gudang</th>
                     <th style="width: 25%">Telepon Gudang</th>
                     <th style="width: 50%">Alamat Gudang</th>
+                    <th style="width: 25%">Nama Cabang</th>
                     <th style="width: 20%">Aksi</th>
                 </tr>
             </thead>
@@ -84,6 +95,14 @@
                     <label for="">Alamat Gudang</label>
                     <textarea name="" class="form-control" id="alamat_gudang_edit" cols="50" rows="5"></textarea>
                 </div>
+                <div class="form-group">
+                        <label for="">Cabang</label>
+                        <select name="id_cabang_edit" id="id_cabang_edit" class="form-control rounded" title="Pilih Cabang">
+                            @foreach ($cabang as $c)
+                            <option value="{{$c->id_cabang}}">{{$c->nama_cabang}}</option>
+                            @endforeach
+                        </select>
+                </div>
                 <button class="btn btn-success" onclick="editData()" type="button">Edit Data</button>
             </div>
         </div>
@@ -114,6 +133,9 @@
             data:'alamat_gudang'
           },
           {
+            data:'nama_cabang'
+          },
+          {
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
@@ -141,11 +163,12 @@
         var nama_gudang = $('#nama_gudang').val();
         var alamat_gudang = $('#alamat_gudang').val();
         var telepon_gudang = $('#telepon_gudang').val();
-
+        var id_cabang = $('#id_cabang').val();
         axios.post('{{url('/api/gudang/')}}',{
             nama_gudang: nama_gudang,
             alamat_gudang: alamat_gudang,
-            telepon_gudang:telepon_gudang
+            telepon_gudang:telepon_gudang,
+            id_cabang:id_cabang
         })
         .then(function (res) {
             var data = res.data
@@ -169,6 +192,7 @@
             document.getElementById('nama_gudang_edit').value=isi.data.nama_gudang;
             document.getElementById('alamat_gudang_edit').value=isi.data.alamat_gudang;
             document.getElementById('telepon_gudang_edit').value=isi.data.telepon_gudang;
+            document.getElementById('id_cabang_edit').value=isi.data.id_cabang;
             $('#modal').modal('show');
         })
     }
@@ -179,11 +203,13 @@
         var nama_gudang = document.getElementById('nama_gudang_edit').value;
         var alamat_gudang = document.getElementById('alamat_gudang_edit').value;
         var telepon_gudang = document.getElementById('telepon_gudang_edit').value;
+        var id_cabang = document.getElementById('id_cabang_edit').value;
         axios.put('{{url('/api/gudang')}}',{
             'id_gudang':id_gudang,
             'nama_gudang':nama_gudang,
             'alamat_gudang':alamat_gudang,
-            'telepon_gudang':telepon_gudang
+            'telepon_gudang':telepon_gudang,
+            'id_cabang':id_cabang
         }).then(function(res){
             var data = res.data
             toastr.info(data.message)

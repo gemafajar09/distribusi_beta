@@ -18,7 +18,8 @@ Route::group(['namespace' => 'Admin'], function () {
 
 
     // api stok
-    Route::get('stok/datatable', 'StokController@datatable');
+    Route::get('stok/datatable/{id_cabang}', 'StokController@datatable');
+    Route::get('stok/datatablegudang/{id_gudang}', 'StokController@datatablegudang');
     Route::get('stok/{id}', 'StokController@get');
     Route::get('stok', 'StokController@get');
     Route::post('stok', 'StokController@add');
@@ -51,28 +52,28 @@ Route::group(['namespace' => 'Admin'], function () {
 
 
     // api sales
-    Route::get('sales/datatable', 'SalesController@datatable');
+    Route::get('sales/datatable/{id_cabang}', 'SalesController@datatable');
     Route::get('sales/{id}', 'SalesController@get');
     Route::get('sales', 'SalesController@get');
     Route::post('sales', 'SalesController@add');
     Route::put('sales', 'SalesController@edit');
 
     Route::delete('sales/{id}', 'SalesController@remove');
-    Route::get('getsales', 'SalesController@getSales');
+    Route::get('getsales/{id_cabang}', 'SalesController@getSales');
     Route::delete('sales/remove/{id}', 'SalesController@remove');
 
     // api suplier
-    Route::get('suplier/datatable', 'SuplierController@datatable');
+    Route::get('suplier/datatable/{id_cabang}', 'SuplierController@datatable');
     Route::get('suplier/{id}', 'SuplierController@get');
     Route::get('suplier', 'SuplierController@get');
     Route::post('suplier', 'SuplierController@add');
     Route::put('suplier', 'SuplierController@edit');
     Route::delete('suplier/remove/{id}', 'SuplierController@remove');
-    Route::get('getsuplier', 'SuplierController@getSuplier');
-    Route::get('getsuplier/produk/{id}', 'SuplierController@getSuplierProduk');
+    Route::get('getsuplier/{id_cabang}', 'SuplierController@getSuplier');
+    Route::get('getsuplier/produk/{id}/{id_cabang}', 'SuplierController@getSuplierProduk');
 
     // api customer
-    Route::get('customer/datatable', 'CustomerController@datatable');
+    Route::get('customer/datatable/{id_cabang}', 'CustomerController@datatable');
     Route::get('customer/{id}', 'CustomerController@get');
     Route::get('customer', 'CustomerController@get');
     Route::post('customer', 'CustomerController@add');
@@ -123,7 +124,7 @@ Route::group(['namespace' => 'Admin'], function () {
     // untuk opname
     Route::get('getunitopname/{id}/{cabang}','UnitController@get_unit_opname');
 
-    Route::get('getcustomer', 'SpesialHargaController@getCustomer');
+    Route::get('getcustomer/{id_cabang}', 'SpesialHargaController@getCustomer');
     Route::get('getproduk', 'SpesialHargaController@getProduk');
 });
 
@@ -178,6 +179,9 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::get('stok_opname/{fisik}/{stok_id}','OpnameController@cekbalance');
     Route::post('stok_opname','OpnameController@add');
     Route::get('reportopname','OpnameController@print_faktur');
+    Route::get('makeadjust/{stok_id}','OpnameController@adjust');
+    Route::get('aprovalopname/datatable/{id_cabang}','OpnameController@datatablesaprovalopname');
+    Route::post('opname/approval','OpnameController@opname_aproval');
     
 });
 

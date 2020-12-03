@@ -15,10 +15,12 @@ class CreateTblStokTable extends Migration
     {
         Schema::create('tbl_stok', function (Blueprint $table) {
             $table->bigIncrements('stok_id');
+            $table->integer('id_suplier');
             $table->integer('produk_id');
             $table->integer('jumlah');
             $table->integer('capital_price');
             $table->integer('id_cabang');
+            $table->integer('id_gudang');
         });
     }
 

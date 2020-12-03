@@ -25,6 +25,7 @@ class CreateTransaksiPurchaseTable extends Migration
             $table->integer('sisa');
             $table->char('status',1);
             $table->integer('id_cabang');
+            $table->integer('id_gudang');
         });
     }
 

@@ -22,7 +22,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="">Credit Plafond</label>
-                        <input type="text" name="credit_plafond" id="credit_plafond" class="form-control rounded">
+                        <input type="text" name="credit_plafond" id="credit_plafond" class="form-control rounded" placeholder="Masukan Credit Plafond">
                     </div>
                     </div>
                     <div class="form-row">
@@ -42,15 +42,15 @@
                     <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="">Telepon</label>
-                        <input type="text" name="telepon" id="telepon" class="form-control rounded" placeholder="Ex : 08..">
+                        <input type="number" name="telepon" id="telepon" class="form-control rounded" placeholder="Ex : 08..">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Kartu Kredit</label>
-                        <input type="text" name="kartu_kredit" id="kartu_kredit" class="form-control rounded" placeholder="Ex : 4156..">
+                        <input type="number" name="kartu_kredit" id="kartu_kredit" class="form-control rounded" placeholder="Ex : 4156..">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="">Fax</label>
-                        <input type="text" name="fax" id="fax" class="form-control rounded" placeholder="Ex : 9982..">
+                        <input type="number" name="fax" id="fax" class="form-control rounded" placeholder="Ex : 9982..">
                     </div>
                     </div>
                     <div class="form-row">
@@ -177,11 +177,12 @@
 
 <script>
     $(document).ready(function(){
+        id_cabang = {{session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/customer/datatable') }}",
+          url: "{{ url('/api/customer/datatable/') }}/"+id_cabang,
         },
         columns:[
         
@@ -208,7 +209,7 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_customer + ")' class='btn btn-danger btn-sm'>Hapus</button> | " +
+                "<button type='button' onclick='deleted(" + data.id_customer + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
                 "<button type='button' onclick='ambilData(" + data.id_customer + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }
@@ -216,8 +217,8 @@
         ]
       });
 
-      // get Customer
-      axios.get('{{url('/api/getsales')}}')
+      // get sales
+      axios.get('{{url('/api/getsales/')}}/'+id_cabang)
                 .then(function (res) {
                 // handle success
                 let isi = res.data
@@ -268,7 +269,8 @@
             kartu_kredit: kartu_kredit,
             fax: fax,
             id_sales: id_sales,
-            note:note
+            note:note,
+            id_cabang:id_cabang
             
         })
         .then(function (res) {

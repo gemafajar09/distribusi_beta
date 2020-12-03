@@ -16,6 +16,7 @@ class SalesSeeder extends Seeder
             'alamat'=>'ulak karang',
             'telepon'=>'0751764764',
             'target'=>1000000,
+            'id_cabang'=>1
             ]);
     }
 }
