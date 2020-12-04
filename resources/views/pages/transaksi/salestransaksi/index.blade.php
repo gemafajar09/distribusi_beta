@@ -17,7 +17,9 @@
                                         <label for="">Sales Type</label>
                                         <select name="salesType" id="salesType" class="select2" style="width:100%">
                                             <option value="">SALES TYPE</option>
-                                            <option value="Taking Order">Taking Order</option>
+                                            <option value="CUSTOMER">CUSTOMER</option>
+                                            <option value="TAKING ORDER">TAKING ORDER</option>
+                                            <option value="CANVASING">CANVASING</option>
                                         </select>
                                     </div>
                                 </div>
@@ -51,7 +53,18 @@
                         </div>
                         <div class="col-md-3 col-sm-6 col-lg-6 col-xl-2">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="warehouse" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="">Warehouse ID</label>
+                                        <select name="warehouse" id="warehouse" class="select2" style="width:100%">
+                                            <option value="">Warehouse ID</option>
+                                            @foreach($salesid as $i => $sales):
+                                                <option value="{{$sales->id_sales}}">{{$sales->id_sales}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" id="tampilsales">
                                     <div class="form-group">
                                         <label for="">Salesman ID</label>
                                         <select name="salesmanId" id="salesmanId" class="select2" style="width:100%">
@@ -62,7 +75,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="tampilsales1">
                                     <div class="form-group">
                                         <label for="">Salesman Nama</label>
                                         <input type="text" readonly style="border-radius:3px" class="form-control" name="namaSales" id="namasales">
@@ -254,6 +267,28 @@
         
     })
 
+    $('#salesType').change(function(){
+        var body = $(this).val()
+        if(body == 'CUSTOMER')
+        {
+            $('#tampilsales').hide()
+            $('#tampilsales1').hide()
+            $('#warehouse').hide()
+        }
+        else if(body == 'TAKING ORDER')
+        {
+            $('#tampilsales').show()
+            $('#tampilsales1').show()
+        }
+        else if(body == 'CANVASING')
+        {
+            $('#tampilsales').show()
+            $('#tampilsales1').show()
+            $('#warehouse').show()
+
+        }
+    })
+
     function register()
     {
         var salestype = $('#salesType').val()   
@@ -261,6 +296,7 @@
         var invoicedate = $('#invoiceDate').val()   
         var radiocash = $('#metode').val()   
         var term_util = $('#term_util').val()   
+        var warehouse = $('#warehouse').val()   
         var salesmanid = $('#salesmanId').val()   
         var customerid = $('#customerid').val()   
         var note = $('#note').val()   
@@ -275,6 +311,7 @@
             'term_util':term_util,
             'salesmanid':salesmanid,
             'customerid':customerid,
+            'warehouse':warehouse,
             'note':note,
             'totalsales':totalsales,
             'discon':discon,
