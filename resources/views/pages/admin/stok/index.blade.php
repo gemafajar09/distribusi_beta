@@ -8,19 +8,15 @@
 <div class="mt-2">
     <div class="x_content">
         <div class="row">
-            <div class="col-sm-12">
-                <!-- <form action="" method="POST">
-                    @csrf
-                    <div class="form-row">
-                    <div class="form-group col-sm-4">
-                       <label for="">Nama Produk</label>
-                        <select name="produk_id" id="produk_id" class="selectpicker form-control" data-live-search="true" title="Masukan nama Produk" autocomplete="off">
-                        </select>
-                    </div>
-                    <div  id="wadah"></div>
-                    </div>
-                    <button type="button" class="btn btn-success btn-round" id="add"><i class="fa fa-plus"></i></button>
-                </form> -->
+            <div class="col-sm-3">
+               <div class="form-group">
+                   <label for="">Warehouse</label>
+                   <select name="id_gudang" id="id_gudang" class="form-control rounded" title="Pilih Gudang">
+                            @foreach ($gudang as $c)
+                            <option value="{{$c->id_gudang}}">{{$c->nama_gudang}}</option>
+                            @endforeach
+                    </select>
+               </div>
             </div>
         </div>
     </div>
@@ -95,11 +91,15 @@
 
 <script>
     $(document).ready(function(){
-      tables = $('#tabel').DataTable({
+        id_cabang = {{session()->get('cabang')}}
+        load_all(id_cabang)
+
+        function load_all(id_cabang){
+        tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/stok/datatable') }}",
+          url: "{{ url('/api/stok/datatable/') }}/"+id_cabang,
         },
         columns:[
           {
@@ -116,9 +116,42 @@
           }
         ]
       });
+    }
+    function load_gudang(id_gudang){
+        tables = $('#tabel').DataTable({
+        processing : true,
+        serverSide : true,
+        ajax:{
+          url: "{{ url('/api/stok/datatablegudang/') }}/"+id_gudang,
+        },
+        columns:[
+          {
+            data:'produk_nama'
+          },
+          {
+            data:'jumlah'
+          },
+          {
+            data:'capital_price'
+          },
+          {
+            data:'stok_harga'
+          }
+        ]
+      });
+    }
+
+    //   data inventory per gudang
+    $('#id_gudang').change(function(){
+        id_gudang = $('#id_gudang').val();
+        if ( $.fn.DataTable.isDataTable('#tabel') ) {
+              $('#tabel').DataTable().destroy();
+            }
+        load_gudang(id_gudang)
+    });
 
       // get Produk
-      axios.get('{{url('/api/getproduk')}}')
+      axios.get('{{url('/api/getproduk/')}}')
                 .then(function (res) {
                 // handle success
                 isi = res.data

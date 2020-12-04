@@ -14,21 +14,21 @@
                     <div class="form-row">
                     <div class="form-group col-sm-6">
                         <label for="">Nama Sales</label>
-                        <input type="text" id="nama_sales" class="form-control rounded">
+                        <input type="text" id="nama_sales" class="form-control rounded" placeholder="Nama Sales">
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="">Telepon</label>
-                        <input type="number" id="telepon" class="form-control rounded">
+                        <input type="number" id="telepon" class="form-control rounded" placeholder="Telepon">
                     </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-sm-6">
                     <label for="">Alamat</label>
-                    <textarea name="" id="alamat" cols="30" rows="1" class="form-control rounded"></textarea>
+                    <textarea name="" id="alamat" cols="30" rows="1" class="form-control rounded"placeholder="Alamat"></textarea>
                     </div>
                     <div class="form-group col-sm-6">
                     <label for="">Target</label>
-                    <input type="number" class="form-control rounded" id="target">
+                    <input type="number" class="form-control rounded" id="target" placeholder="Target">
                     </div>
                     </div>
                     <div class="row">
@@ -104,11 +104,12 @@
 </div>
 <script>
     $(document).ready(function(){
+        id_cabang = {{session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/sales/datatable') }}",
+          url: "{{ url('/api/sales/datatable/') }}/"+id_cabang,
         },
         columns:[
         {
@@ -133,8 +134,8 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_sales + ")' class='btn btn-danger'>Hapus</button> | " +
-                "<button type='button' onclick='ambilData(" + data.id_sales + ")' class='btn btn-success'>Edit</button>" +
+                "<button type='button' onclick='deleted(" + data.id_sales + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
+                "<button type='button' onclick='ambilData(" + data.id_sales + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }
           }
@@ -153,7 +154,8 @@
             nama_sales: nama_sales,
             alamat: alamat,
             telepon: telepon,
-            target:target
+            target:target,
+            id_cabang:id_cabang
         })
         .then(function (res) {
             var data = res.data

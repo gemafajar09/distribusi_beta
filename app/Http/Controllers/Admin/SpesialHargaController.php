@@ -61,10 +61,10 @@ class SpesialHargaController extends Controller
         }
     }
 
-    public function getCustomer(Request $request, $id = null)
+    public function getCustomer($id_cabang)
     {
        
-            $data = Customer::all('id_customer','nama_customer');
+            $data = Customer::where('id_cabang',$id_cabang)->select('id_customer','nama_customer')->get();
             return response()->json(['data' => $data, 'status' => 200]);
         
     }

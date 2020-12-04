@@ -12,7 +12,7 @@
                 <form action="" method="POST">
                     @csrf
                     <div class="form-row">
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-2">
                             <label for="">Invoice ID</label>
                             <input type="text" class="form-control" id="invoice_id" readonly>
                         </div>
@@ -20,7 +20,15 @@
                             <label for="">Invoice Date</label>
                             <input type="date" id="invoice_date" class="form-control">
                         </div>
-                        <div class="form-group col-sm-3">
+                        <div class="form-group col-sm-2">
+                        <label for="">Gudang</label>
+                        <select name="id_gudang" id="id_gudang" class="form-control rounded" title="Pilih Gudang">
+                            @foreach ($gudang as $c)
+                            <option value="{{$c->id_gudang}}">{{$c->nama_gudang}}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="form-group col-sm-2">
                             <label for="">Transaction Type</label><br>
                             <div style="margin-top:10px;">
                             <input type="radio" name="transaksi_tipe" id="cash" value="0">
@@ -51,7 +59,7 @@
                                         <div class="input-group-prepend">
                                                 <div class="input-group-text">Rp</div>
                                             </div>
-                                            <input  type="number" class="form-control" id="unit_satuan_price">
+                                            <input  type="number" class="form-control" id="unit_satuan_price" value="0">
                                             
                                         </div>
                         </div>
@@ -151,6 +159,7 @@
 
 <script>
     $(document).ready(function(){
+        id_cabang = {{session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         paginate : false,
@@ -216,7 +225,7 @@
                  });
                  $('.selectpicker').selectpicker('refresh');
             });
-            axios.get('{{url('/api/getsuplier/')}}')
+            axios.get('{{url('/api/getsuplier/')}}/'+id_cabang)
                 .then(function (res) {
                 // handle success
                 isi = res.data
@@ -289,6 +298,7 @@
         e.preventDefault();
         let produk_id = $('#produk_id').val();
         let invoice_id = $('#invoice_id').val();
+        let id_gudang = $('#id_gudang').val();
         let invoice_date = $('#invoice_date').val();
         let transaksi_tipe = $('input[name=transaksi_tipe]:checked').val();
         if(transaksi_tipe == 0){
@@ -339,6 +349,7 @@
                             'quantity':unit3,
                             'total_price':total_price,
                             'id_cabang':id_cabang,
+                            'id_gudang':id_gudang
                         })
                         .then(function (res) {
                             console.log(res)

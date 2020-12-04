@@ -13,6 +13,6 @@ class Suplier extends Model
     protected $primaryKey = 'id_suplier';
     // define fillable
     protected $fillable = [
-        'nama_suplier', 'nama_perusahaan', 'alamat','kota','negara','telepon','fax','bank','no_akun','nama_akun','note',
+        'nama_suplier', 'nama_perusahaan', 'alamat','kota','negara','telepon','fax','bank','no_akun','nama_akun','note','id_cabang'
     ];
 }

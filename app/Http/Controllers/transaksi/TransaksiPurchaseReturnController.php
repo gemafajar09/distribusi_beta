@@ -100,7 +100,7 @@ class TransaksiPurchaseReturnController extends Controller
                 }    
             }
             
-            $this->dataisi[] = ["stok"=>$stokquantity,"stok_id"=>$stok_id,"satuan_price"=>$harga];
+            $this->dataisi[] = ["stok"=>$stokquantity,"stok_id"=>$stok_id,"satuan_price"=>$harga,"produk_id"=>$id];
         }
        
         // return datatables()->of($this->dataisi)->toJson();
@@ -108,7 +108,7 @@ class TransaksiPurchaseReturnController extends Controller
 
     public function join_builder($id){
         $data = DB::table('tbl_stok as tmp')
-            ->where('produk_id',$id)
+            ->where('stok_id',$id)
             ->select('jumlah','produk_id','capital_price','stok_id')
             ->get();
             return $data;

@@ -28,6 +28,7 @@ class TransaksiPurchaseTmpController extends Controller
             'diskon'=>'numeric',
             'total_price'=>'numeric',
             'id_cabang'=>'numeric',
+            'id_gudang'=>'numeric'
         );
 
         $this->dataisi = [];
@@ -154,7 +155,7 @@ class TransaksiPurchaseTmpController extends Controller
 
 
     public function register($tot,$dis,$down,$deb){
-        $data = TransaksiPurchaseTmp::all('invoice_id','invoice_date','transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status')->toArray();
+        $data = TransaksiPurchaseTmp::all('invoice_id','invoice_date','transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status','id_gudang')->toArray();
         $data1 = $this->datatable();
         $datatmp =  $this->dataisi;
         $tambahtodetail = TransaksiPurchaseDetail::insert($data);
@@ -165,6 +166,7 @@ class TransaksiPurchaseTmpController extends Controller
             $invoice_date = $d['invoice_date'];
             $id_suplier = $d['id_suplier'];
             $transaksi_tipe = $d['transaksi_tipe'];
+            $id_gudang = $d['id_gudang'];
             $tambahutama = new TransaksiPurchase;
             $tambahutama->invoice_id = $invoice_id;
             $tambahutama->invoice_date = $invoice_date;
@@ -175,6 +177,7 @@ class TransaksiPurchaseTmpController extends Controller
             $tambahutama->diskon = $dis;
             $tambahutama->bayar = $down;
             $tambahutama->sisa = $deb;
+            $tambahutama->id_gudang = $id_gudang;
             $tambahutama->save();    
             $calculate = [$tot,$dis,$down,$deb];
         $delete = TransaksiPurchaseTmp::truncate();

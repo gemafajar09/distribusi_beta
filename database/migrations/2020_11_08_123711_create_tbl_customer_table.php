@@ -26,6 +26,7 @@ class CreateTblCustomerTable extends Migration
             $table->string('fax');
             $table->integer('id_sales');
             $table->text('note');
+            $table->integer('id_cabang');
         });
     }
 

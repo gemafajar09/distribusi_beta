@@ -37,6 +37,7 @@ note
             $table->string('no_akun');
             $table->string('nama_akun');
             $table->text('note');
+            $table->integer('id_cabang');
         });
     }
 

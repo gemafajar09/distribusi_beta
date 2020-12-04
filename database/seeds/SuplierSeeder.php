@@ -23,6 +23,7 @@ class SuplierSeeder extends Seeder
             'no_akun'=>'08273',
             'nama_akun'=>'heru',
             'note'=>'Suplier Royal',
+            'id_cabang'=>1
             ]);
     }
 }

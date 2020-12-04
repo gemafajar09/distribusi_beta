@@ -8,10 +8,10 @@
             <th>Fisik Stok</th>
             <th>Unbalance</th>
             <th rowspan="2" align="center" style="vertical-align : middle;text-align:center;">Loss</th>
-            <th rowspan="2" class="bg-info"  align="center" style="vertical-align : middle;text-align:center;color:white;width:70px;">Status</th>
-            <th rowspan="2" class="bg-info"  align="center" style="vertical-align : middle;text-align:center;color:white;width:60px;">Tanggal</th>
-            <th rowspan="2" class="bg-info"  align="center" style="vertical-align : middle;text-align:center;width:70px;color:white;">Selisih Terakhir</th>
-            <th rowspan="2" align="center" style="vertical-align : middle;text-align:center;">Adjust</th>
+            <th rowspan="2" class="bg-success"  align="center" style="vertical-align : middle;text-align:center;color:white;width:60px;">Tanggal</th>
+            <th rowspan="2" class="bg-success"  align="center" style="vertical-align : middle;text-align:center;width:70px;color:white;">Selisih Terakhir</th>
+            <th rowspan="2" class="bg-success"  align="center" style="vertical-align : middle;text-align:center;color:white;width:70px;">Adjust</th>
+            <th rowspan="2" class="bg-success" align="center" style="vertical-align : middle;text-align:center;color:white;">Simpan</th>
 
         </tr>
         <tr>
@@ -33,14 +33,6 @@
             <td id="{{$d['stok_id']}}"></td>
             <td></td>
             <td></td>
-            <td>@if($d['balance']=='0')
-                {{"Not Balance"}}
-                @elseif($d['balance']=='1')
-                {{"Balance"}}
-                @else
-                {{"Not Cek"}}
-                @endif
-            </td>
             <td>
                 @if(empty($d['update_opname']))
                 {{"Not Update"}}
@@ -53,6 +45,18 @@
                 @else
                 {{$d['selisih']}}
                 @endif</td>
+            <td>@if($d['balance']=='0')
+                <button class="btn btn-danger btn-sm" onclick="adjustment(`{{$d['id_opname']}}`)">Adjust</button>
+                @elseif($d['balance']=='1')
+                {{"Balance"}}
+                @elseif($d['balance']=='2')
+                {{"Waiting Adjust"}}
+                @elseif($d['balance']=='3')
+                {{"Adjust Reject"}}
+                @else
+                {{"Not Cek"}}
+                @endif
+            </td>
             <td><input type="checkbox" onchange="doalert(this,`{{$d['stok_id']}}`,`{{$d['produk_id']}}`)"> Cek</td>
         </tr>
         @endforeach
@@ -63,13 +67,13 @@
         var data = <?=json_encode($nilai)?>;
         
         for (var i = 0; i < data.length; i++) {
-            loadinput(data[i].produk_id, data[i].stok_id, data[i].capital_price)
+            loadinput(data[i].stok_id, data[i].capital_price)
         }
     })
 
-    function loadinput(id, urut, capital_price) {
+    function loadinput(urut, capital_price) {
         cabang = {{session()->get('cabang')}}
-        axios.get('{{url('/api/getunitopname/')}}/' + id+'/'+cabang)
+        axios.get('{{url('/api/getunitopname/')}}/' + urut+'/'+cabang)
             .then(function(res) {
                 isi = res.data
                 panjang = isi.data.length
@@ -183,6 +187,13 @@
 
 
 
+    }
+
+    function adjustment(id_opname){
+        axios.get('{{url('/api/makeadjust/')}}/' + id_opname)
+        .then(function(res){
+            location.reload();
+        })
     }
 
     function print_faktur(){

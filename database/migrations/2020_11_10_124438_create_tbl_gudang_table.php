@@ -18,6 +18,7 @@ class CreateTblGudangTable extends Migration
             $table->string('nama_gudang');
             $table->text('alamat_gudang');
             $table->string('telepon_gudang');
+            $table->integer('id_cabang');
         });
     }
 

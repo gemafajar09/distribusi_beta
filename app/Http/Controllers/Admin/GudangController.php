@@ -14,9 +14,10 @@ class GudangController extends Controller
     {
         $this->rules = array(
             'id_gudang' => 'numeric',
-            'nama_gudang' => 'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
+            'nama_gudang' => 'required',
             'alamat_gudang' => 'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
             'telepon_gudang' => 'required|regex:/(^[0-9]+$)+/',
+            'id_cabang' => 'numeric',
         );
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed',
@@ -25,12 +26,19 @@ class GudangController extends Controller
 
     public function index()
     {
-        return view("pages.admin.gudang.index");
+        $cabang = DB::table('tbl_cabang')
+                ->select('id_cabang','nama_cabang')
+                ->get();
+        return view("pages.admin.gudang.index",compact('cabang'));
     }
 
     public function datatable()
     {
-        return datatables()->of(Gudang::all())->toJson();
+        $data = DB::table('tbl_gudang')
+                ->join('tbl_cabang','tbl_cabang.id_cabang','=','tbl_gudang.id_cabang')
+                ->select('*')
+                ->get();
+        return datatables()->of($data)->toJson();
     }
 
     public function get(Request $request, $id = null)
@@ -71,6 +79,7 @@ class GudangController extends Controller
                 $edit->nama_gudang = $request->input('nama_gudang');
                 $edit->alamat_gudang = $request->input('alamat_gudang');
                 $edit->telepon_gudang = $request->input('telepon_gudang');
+                $edit->id_cabang = $request->input('id_cabang');
                 $edit->save();
                 return response()->json(['message' => 'Data Berhasil Di Edit', 'data' => $edit, 'status' => 200]);
             }

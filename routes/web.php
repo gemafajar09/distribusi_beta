@@ -83,8 +83,10 @@ Route::group(['namespace' => 'Transaksi'], function () {
     });
     Route::group(['prefix' => 'opname'], function () {
 
-        Route::get('/stok_opname', 'OpnameController@index')->name('opname');
-        Route::get('/datatablesopname', 'OpnameController@datatablesopname')->name('datatablesopname');
+        Route::get('/stok_opname','OpnameController@index')->name('opname');
+        Route::get('/datatablesopname','OpnameController@datatablesopname')->name('datatablesopname');
+        Route::get('/list_aproval_opname','OpnameController@list_aproval')->name('aprovalopname');
+
     });
 });
 

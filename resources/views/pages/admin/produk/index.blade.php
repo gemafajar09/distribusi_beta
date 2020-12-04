@@ -19,13 +19,13 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="">Produk Brand</label>
-                        <input type="text" class="form-control rounded" name="produk_brand" id="produk_brand">
+                        <input type="text" class="form-control rounded" name="produk_brand" id="produk_brand" placeholder="Produk Brand">
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-sm-6">
                             <label for="">Produk Nama</label>
-                            <input type="text" name="produk_nama" id="produk_nama" class="form-control rounded">
+                            <input type="text" name="produk_nama" id="produk_nama" class="form-control rounded" placeholder="Produk Nama">
 
                         </div>
                         <div class="form-group col-sm-3">
@@ -35,7 +35,7 @@
                                 <div class="input-group-text">Rp</div>
                                 </div>
 
-                            <input type="number" name="produk_harga" id="produk_harga" class="form-control rounded">
+                            <input type="number" name="produk_harga" id="produk_harga" class="form-control rounded" value="0">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
@@ -44,7 +44,7 @@
                                 <div class="input-group-prepend">
                                 <div class="input-group-text">Pcs</div>
                                 </div>
-                            <input type="number" name="stok" id="stok" class="form-control rounded">
+                            <input type="number" name="stok" id="stok" class="form-control rounded" value="0">
                         </div>
                     </div>
                     </div>
@@ -176,7 +176,7 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.produk_id + ")' class='btn btn-danger btn-sm'>Hapus</button> | " +
+                "<button type='button' onclick='deleted(" + data.produk_id + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
                 "<button type='button' onclick='ambilData(" + data.produk_id + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }

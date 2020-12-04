@@ -148,7 +148,7 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_unit + ")' class='btn btn-danger btn-sm'>Hapus</button> | " +
+                "<button type='button' onclick='deleted(" + data.id_unit + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
                 "<button type='button' onclick='ambilData(" + data.id_unit + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }

@@ -19,6 +19,7 @@ class CreateTblSalesTable extends Migration
             $table->string('alamat');
             $table->string('telepon');
             $table->integer('target');
+            $table->integer('id_cabang');
         });
     }
 

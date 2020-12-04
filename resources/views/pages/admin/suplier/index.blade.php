@@ -12,51 +12,51 @@
                 <div class="form-row">
                 <div class="form-group col-sm-4">
                     <label for="">Nama Suplier</label>
-                    <input type="text" class="form-control rounded" id="nama_suplier">
+                    <input type="text" class="form-control rounded" id="nama_suplier" placeholder="Nama Suplier">
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="">Nama Perusahaan</label>
-                    <input type="text" class="form-control rounded" id="nama_perusahaan">
+                    <input type="text" class="form-control rounded" id="nama_perusahaan" placeholder="Nama Perusahaan">
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="">Alamat</label>
-                    <textarea name="" id="alamat" cols="30" rows="1" class="form-control rounded"></textarea>
+                    <textarea name="" id="alamat" cols="30" rows="1" class="form-control rounded" placeholder="Alamat"></textarea>
                 </div>
                 </div>
                 <div class="form-row">
                 <div class="form-group col-sm-3">
                     <label for="">Kota</label>
-                    <input type="text" id="kota" class="form-control rounded">
+                    <input type="text" id="kota" class="form-control rounded" placeholder="Kota">
                 </div>
                 <div class="form-group col-sm-3">
                     <label for="">Negara</label>
-                    <input type="text" id="negara" class="form-control rounded">
+                    <input type="text" id="negara" class="form-control rounded" placeholder="Negara">
                 </div>
                 <div class="form-group col-sm-3">
                     <label for="">Telepon</label>
-                    <input type="number" id="telepon" class="form-control rounded">
+                    <input type="number" id="telepon" class="form-control rounded" placeholder="Telepon">
                 </div>
                 <div class="form-group col-sm-3">
                     <label for="">Fax</label>
-                    <input type="number" id="fax" class="form-control rounded">
+                    <input type="number" id="fax" class="form-control rounded" placeholder="Fax">
                 </div>
                 </div>
                 <div class="form-row">
                 <div class="form-group col-sm-3">
                     <label for="">Bank</label>
-                    <input type="text" id="bank" class="form-control rounded">
+                    <input type="text" id="bank" class="form-control rounded" placeholder="Nama Bank">
                 </div>
                 <div class="form-group col-sm-3">
                     <label for="">Nama Akun</label>
-                    <input type="text" id="nama_akun" class="form-control rounded">
+                    <input type="text" id="nama_akun" class="form-control rounded" placeholder="Atas Nama">
                 </div>
                 <div class="form-group col-sm-3">
                     <label for="">No. Akun</label>
-                    <input type="number" id="no_akun" class="form-control rounded">
+                    <input type="number" id="no_akun" class="form-control rounded" placeholder="No Rekening">
                 </div>
                 <div class="form-group col-sm-3">
                     <label for="">Note</label>
-                    <textarea name="" id="note" cols="30" rows="1" class="form-control rounded"></textarea>
+                    <textarea name="" id="note" cols="30" rows="1" class="form-control rounded" placeholder="Catatan"></textarea>
                 </div>
                 </div>
                 </div>
@@ -170,11 +170,12 @@
 
 <script>
     $(document).ready(function(){
+        id_cabang = {{session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/suplier/datatable') }}",
+          url: "{{ url('/api/suplier/datatable/') }}/"+id_cabang,
         },
         columns:[
         {
@@ -220,8 +221,8 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_suplier + ")' class='btn btn-danger'>Hapus</button> | " +
-                "<button type='button' onclick='ambilData(" + data.id_suplier + ")' class='btn btn-success'>Edit</button>" +
+                "<button type='button' onclick='deleted(" + data.id_suplier + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
+                "<button type='button' onclick='ambilData(" + data.id_suplier + ")' class='btn btn-success btn-sm'>Edit</button>" +
             "</div>" ;
             }
           }
@@ -254,7 +255,8 @@
             bank: bank,
             no_akun: no_akun,
             nama_akun: nama_akun,
-            note: note
+            note: note,
+            id_cabang:id_cabang
         })
         .then(function (res) {
             var data = res.data
