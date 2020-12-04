@@ -310,6 +310,7 @@ class TransaksiSalesController extends Controller
         $input->totalsales = $r->totalsales;
         $input->diskon = $r->discon;
         $input->id_user = $r->id_user;
+        $input->id_warehouse = $r->warehouse;
         if ($r->radiocash == 'Credit') {
             $input->status = 'UNPAID';
         } else {

@@ -70,7 +70,7 @@
                             <td>TERM</td>
                         </tr>
                         <tr>
-                            <td>2020-11-30</td>
+                            <td>{{$sales->invoice_date}}</td>
                         </tr>
                     </table>
                 </div>
@@ -92,14 +92,16 @@
         </tr>
     </thead>
     <tbody>
+        <?php $tot = 0; ?>
         @foreach($init as $d)
+        <?php $tot += $d['amount'] ?>
         <tr>
             <td>{{$d['produk_nama']}}</td>
             <td>{{$d['quantity']}}</td>
             <td>{{$d['produk_harga']}}</td>
             <td>{{$d['total']}}</td>
             <td>{{$d['diskon']}}</td>
-            <td>{{$d['amount']}}</td>
+            <td>{{number_format($d['amount'])}}</td>
         </tr>
         @endforeach
     </tbody>
@@ -132,15 +134,15 @@
             <table  border="2" style="width: 100%;">
                 <tr>
                     <td style="border-bottom: none;">Total Purchase :</td>
-                    <td>0</td>
+                    <td>{{number_format($tot)}}</td>
                 </tr>
                 <tr>
                     <td>Final Discount :</td>
-                    <td>0</td>
+                    <td>{{number_format($tot * $sales->diskon / 100)}}</td>
                 </tr>
                 <tr>
                     <td>Total After Discount :</td>
-                    <td>0</td>
+                    <td>{{number_format($tot - ($tot * $sales->diskon / 100))}}</td>
                 </tr>
                 <tr>
                     <td>Down Payment :</td>
@@ -148,7 +150,7 @@
                 </tr>
                 <tr>
                     <td>Total Debt Balance :</td>
-                    <td>0</td>
+                    <td>{{number_format($tot - ($tot * $sales->diskon / 100))}}</td>
                 </tr>
             </table>
         </div>

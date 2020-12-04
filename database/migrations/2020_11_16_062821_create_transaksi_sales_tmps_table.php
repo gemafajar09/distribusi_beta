@@ -19,11 +19,10 @@ class CreateTransaksiSalesTmpsTable extends Migration
             $table->date('invoice_date');
             $table->integer('stok_id');
             $table->integer('price');
-            $table->integer('quantity',25)->nullable();
+            $table->integer('quantity')->nullable();
             $table->double('diskon');
             $table->integer('id_user')->nullable();
             $table->integer('harga_satuan')->nullable();
-            $table->timestamps();
         });
     }
 
