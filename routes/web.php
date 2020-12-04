@@ -83,35 +83,40 @@ Route::group(['namespace' => 'Transaksi'], function () {
     });
     Route::group(['prefix' => 'opname'], function () {
 
-        Route::get('/stok_opname','OpnameController@index')->name('opname');
-        Route::get('/datatablesopname','OpnameController@datatablesopname')->name('datatablesopname');
-
+        Route::get('/stok_opname', 'OpnameController@index')->name('opname');
+        Route::get('/datatablesopname', 'OpnameController@datatablesopname')->name('datatablesopname');
     });
 });
 
-Route::group(['namespace' => 'Report'], function() {
+Route::group(['namespace' => 'Report'], function () {
     Route::group(['prefix' => 'inventory'], function () {
-        Route::get('/report','StokReportController@index')->name('stok-report');
-        Route::get('/report_stok','StokReportController@report');
-        Route::get('/report_stok/{id_warehouse}','StokReportController@report');
+        Route::get('/report', 'StokReportController@index')->name('stok-report');
+        Route::get('/report_stok', 'StokReportController@report');
+        Route::get('/report_stok/{id_warehouse}', 'StokReportController@report');
     });
     Route::group(['prefix' => 'purchase'], function () {
-        Route::get('/report','PurchaseReportController@index')->name('purchase-report');
-        Route::get('/report_purchase','PurchaseReportController@report_all');
-        Route::get('/report_purchase_today','PurchaseReportController@report_today');
-        Route::get('/report_purchase_month/{month}/{year}','PurchaseReportController@report_month');
-        Route::get('/report_purchase_year/{year}','PurchaseReportController@report_year');
-        Route::get('/report_purchase_range/{awal}/{akhir}','PurchaseReportController@report_range');
-        
+        Route::get('/report', 'PurchaseReportController@index')->name('purchase-report');
+        Route::get('/report_purchase', 'PurchaseReportController@report_all');
+        Route::get('/report_purchase_today', 'PurchaseReportController@report_today');
+        Route::get('/report_purchase_month/{month}/{year}', 'PurchaseReportController@report_month');
+        Route::get('/report_purchase_year/{year}', 'PurchaseReportController@report_year');
+        Route::get('/report_purchase_range/{awal}/{akhir}', 'PurchaseReportController@report_range');
     });
     Route::group(['prefix' => 'purchase_return'], function () {
-        Route::get('/report','PurchaseReturnReportController@index')->name('purchase-return-report');
-        Route::get('/report_purchase_return','PurchaseReturnReportController@report_all');
-        Route::get('/report_purchase_return_today','PurchaseReturnReportController@report_today');
-        Route::get('/report_purchase_return_month/{month}/{year}','PurchaseReturnReportController@report_month');
-        Route::get('/report_purchase_return_year/{year}','PurchaseReturnReportController@report_year');
-        Route::get('/report_purchase_return_range/{awal}/{akhir}','PurchaseReturnReportController@report_range');
-        
+        Route::get('/report', 'PurchaseReturnReportController@index')->name('purchase-return-report');
+        Route::get('/report_purchase_return', 'PurchaseReturnReportController@report_all');
+        Route::get('/report_purchase_return_today', 'PurchaseReturnReportController@report_today');
+        Route::get('/report_purchase_return_month/{month}/{year}', 'PurchaseReturnReportController@report_month');
+        Route::get('/report_purchase_return_year/{year}', 'PurchaseReturnReportController@report_year');
+        Route::get('/report_purchase_return_range/{awal}/{akhir}', 'PurchaseReturnReportController@report_range');
+    });
+    Route::group(['prefix' => 'cost_report'], function () {
+        Route::get('/report', 'CostReport@index')->name('cost_report');
+        Route::get('/report_cost', 'CostReport@report');
+        Route::get('/report_cost_today', 'CostReport@report_today');
+        Route::get('/report_cost_month/{month}/{year}', 'CostReport@report_month');
+        Route::get('/report_cost_year/{year}', 'CostReport@report_year');
+        Route::get('/report_cost_range/{awal}/{akhir}', 'CostReport@report_range');
     });
 });
 
