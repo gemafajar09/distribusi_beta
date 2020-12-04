@@ -47,13 +47,12 @@
             </li>
             <li><a><i class="fa fa-file"></i> Report <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="{{ route('cost') }}">Data Cost</a></li>
+                    <li><a href="{{ route('cost_report') }}">Cost</a></li>
                     <li><a href="{{ route('sales_transaction') }}">Sales Transaction</a></li>
                     <li><a href="{{ route('broken_exp_report') }}">Broken & Exp Movement</a></li>
                     <li><a href="{{ route('stok-report') }}">Stok Inventory</a></li>
                     <li><a href="{{ route('purchase-report') }}">Purchase</a></li>
                     <li><a href="{{ route('purchase-return-report') }}">Purchase Return</a></li>
-                    <li><a href="">Data Cost</a></li>
                     <li><a href="">Sales Transaction</a></li>
                 </ul>
             </li>
