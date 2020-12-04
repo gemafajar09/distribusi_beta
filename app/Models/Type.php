@@ -15,4 +15,9 @@ class Type extends Model
     protected $fillable = [
         'nama_type_produk',
     ];
+
+    public function produk()
+    {
+        return $this->belongsTo("App\Models\Produk", "id_type_produk", "id_type_produk");
+    }
 }

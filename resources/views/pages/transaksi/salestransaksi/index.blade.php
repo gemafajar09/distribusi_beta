@@ -17,7 +17,9 @@
                                         <label for="">Sales Type</label>
                                         <select name="salesType" id="salesType" class="select2" style="width:100%">
                                             <option value="">SALES TYPE</option>
-                                            <option value="Taking Order">Taking Order</option>
+                                            <option value="CUSTOMER">CUSTOMER</option>
+                                            <option value="TAKING ORDER">TAKING ORDER</option>
+                                            <option value="CANVASING">CANVASING</option>
                                         </select>
                                     </div>
                                 </div>
@@ -51,7 +53,18 @@
                         </div>
                         <div class="col-md-3 col-sm-6 col-lg-6 col-xl-2">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="warehouse" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="">Warehouse ID</label>
+                                        <select name="warehouse" id="warehouse" class="select2" style="width:100%">
+                                            <option value="">Warehouse ID</option>
+                                            @foreach($salesid as $i => $sales):
+                                                <option value="{{$sales->id_sales}}">{{$sales->id_sales}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" id="tampilsales">
                                     <div class="form-group">
                                         <label for="">Salesman ID</label>
                                         <select name="salesmanId" id="salesmanId" class="select2" style="width:100%">
@@ -62,7 +75,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12" id="tampilsales1">
                                     <div class="form-group">
                                         <label for="">Salesman Nama</label>
                                         <input type="text" readonly style="border-radius:3px" class="form-control" name="namaSales" id="namasales">
@@ -141,11 +154,6 @@
                                                 <div id="isi1"></div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div id="isi2"></div>
-                                            </div>
-                                        </div>
                                         
                                         <div class="col-md-12">
                                             <div class="input-group">
@@ -172,14 +180,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" id="count">
                             <div class="card my-5">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6" align="center">
-                                            <button type="button" style="width:140px;" id="add" class="btn btn-outline-success">Add</button>
+                                        <div class="col-md-6" style="text-align: center;">
+                                            <button type="button" style="width:140px;" onclick="add()" class="btn btn-outline-success">Add</button>
                                         </div>
-                                        <div class="col-md-6" align="center">
+                                        <div class="col-md-6" style="text-align: center;">
                                             <button type="button" style="width:140px;" class="btn btn-outline-danger">Remove All</button>
                                         </div>
                                     </div>
@@ -231,6 +238,7 @@
                                                 <td colspan="3"><input type="text" id="creditbalance" class="form-control"></td>
                                             </tr>
                                         </table>
+                                        <input type="hidden" id="metode">
                                     </div>
                                 </div>
                             </div>
@@ -255,8 +263,30 @@
 <script>
     $(document).ready(function(){
         
-        $('#isibody').load('{{ route('datatablessales')}}')
+        $('#isibody').load("{{ route('datatablessales')}}")
         
+    })
+
+    $('#salesType').change(function(){
+        var body = $(this).val()
+        if(body == 'CUSTOMER')
+        {
+            $('#tampilsales').hide()
+            $('#tampilsales1').hide()
+            $('#warehouse').hide()
+        }
+        else if(body == 'TAKING ORDER')
+        {
+            $('#tampilsales').show()
+            $('#tampilsales1').show()
+        }
+        else if(body == 'CANVASING')
+        {
+            $('#tampilsales').show()
+            $('#tampilsales1').show()
+            $('#warehouse').show()
+
+        }
     })
 
     function register()
@@ -264,15 +294,16 @@
         var salestype = $('#salesType').val()   
         var invoiceid = $('#invoiceid').val()   
         var invoicedate = $('#invoiceDate').val()   
-        var radiocash = $('#radiocash').val()   
+        var radiocash = $('#metode').val()   
         var term_util = $('#term_util').val()   
+        var warehouse = $('#warehouse').val()   
         var salesmanid = $('#salesmanId').val()   
         var customerid = $('#customerid').val()   
         var note = $('#note').val()   
         var discon = $('#discon').val()   
         var totalsales = convertToAngka($('#totalsales').val())   
-        var id_user = '{{Session()->get('id')}}'
-        axios.post('{{url('/api/rekaptransaksi')}}',{
+        var id_user = "{{Session()->get('id')}}"
+        axios.post("{{url('/api/rekaptransaksi')}}",{
             'salestype':salestype,
             'invoiceid':invoiceid,
             'invoicedate':invoicedate,
@@ -280,6 +311,7 @@
             'term_util':term_util,
             'salesmanid':salesmanid,
             'customerid':customerid,
+            'warehouse':warehouse,
             'note':note,
             'totalsales':totalsales,
             'discon':discon,
@@ -291,9 +323,12 @@
                 if(check == true)
                 {
                     window.open("{{url('/sales_transaksi/fakturs')}}/"+data.invoice_id, '_blank');
+                    window.location.reload()
+                }else{
+                    window.location.reload()
                 }
-                window.location("{{url('/')}}")
             }
+            
         })
     }
     
@@ -328,7 +363,7 @@
 
     function hargakhusus(stokid, customer, harga)
     {
-        axios.post('{{url('/api/hargakusus')}}',{
+        axios.post("{{url('/api/hargakusus')}}",{
             'id_stok':stokid,
             'customer':customer
         }).then(function(res){
@@ -344,127 +379,11 @@
 
     function stok(id, jumlah)
     {
-        axios.post('{{url('/api/cekstok')}}',{
+        axios.post("{{url('/api/cekstok')}}",{
             'produk_id':id
         }).then(function(res){
-            var data = res.data.data
-            var total = data.length
-            if(total == 1)
-            {
-                var isi = "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input readonly type='text' value='"+parseInt(jumlah) * parseInt(data[0].default_value) +"' class='form-control' id='stok1'>"+
-                        "<input readonly type='hidden' value='"+data[0].unit+"' class='form-control' id='unit1'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[0].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"
-                var isi1 = "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input type='text' class='form-control' id='jumlah1'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[0].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"
-                
-            }
-            else if(total == 2)
-            {
-                var isi = "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input readonly type='text' value='"+parseInt(jumlah) * parseInt(data[0].default_value)+"' class='form-control' id='stok1'>"+
-                        "<input readonly type='hidden' value='"+data[0].unit+"' class='form-control' id='unit1'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[0].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"+
-                "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input readonly type='text' value='"+parseInt(jumlah) * parseInt(data[1].default_value)+"' class='form-control' id='stok2'>"+
-                        "<input readonly type='hidden' value='"+data[1].unit+"' class='form-control' id='unit2'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[1].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"
-                var isi1 = "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input type='text' class='form-control' id='jumlah1'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[0].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"+
-                "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input type='text' class='form-control' id='jumlah2'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[1].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"
-            }
-            else if(total == 3)
-            {
-                var isi = "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input readonly type='text' value='"+parseInt(jumlah) * parseInt(data[0].default_value)+"' class='form-control' id='stok1'>"+
-                        "<input readonly type='hidden' value='"+data[0].unit+"' class='form-control' id='unit1'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[0].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"+
-                "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input readonly type='text' value='"+parseInt(jumlah) * parseInt(data[1].default_value)+"' class='form-control' id='stok2'>"+
-                        "<input readonly type='hidden' value='"+data[1].unit+"' class='form-control' id='unit2'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[1].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"+
-                "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input readonly type='text' value='"+parseInt(jumlah) * parseInt(data[2].default_value)+"' class='form-control' id='stok3'>"+
-                        "<input readonly type='hidden' value='"+data[2].unit+"' class='form-control' id='unit3'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[2].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"
-                var isi1 = "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input type='text' class='form-control' id='jumlah1'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[0].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"+
-                "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input type='text' class='form-control' id='jumlah2'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[1].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"+
-                "<div class='col-md-4'>"+
-                    "<div class='input-group'>"+
-                        "<input type='text' class='form-control' id='jumlah3'>"+
-                        "<div class='input-group-prepend'>"+
-                            "<div class='input-group-text'>"+data[2].unit+"</div>"+
-                        "</div>"+
-                    "</div>"+
-                "</div>"
-            }
-            $('#count').val(total)
-            $('#isi1').html(isi)
-            $('#isi2').html(isi1)
-
+            var data = res.data
+            $('#isi1').html(data)
         }).catch(function(err){
             console.log(err)
         })
@@ -480,7 +399,7 @@
         $('#prices').val('')
         $('#discount').val('')
         $('#amount').val('')
-        $('#count').val('')
+        $('#total').val('')
         $('#isi1').html('')
         $('#isi2').html('')
     }
@@ -490,6 +409,7 @@
         if(radio == true)
         {
             $('#termutil').show()
+            $('#metode').val('Credit')
         }else{
             $('#termutil').hide()
         }
@@ -500,19 +420,29 @@
         if(radio == true)
         {
             $('#termutil').hide()
+            $('#metode').val('Cash')
         }else{
             $('#termutil').show()
         }
     })
 
-    $('#add').click(function()
+    function add()
     {
         
-        var id_user = '{{Session()->get('id')}}'
+        var id_user = "{{Session()->get('id')}}"
         var invoiceid = $('#invoiceid').val()
         var stockId = $('#stockId').val()
         var produkid = $('#produkid').val()
         var prices = convertToAngka($('#prices').val())
+        var arrays = []
+        var count = $('#totals').val()
+        for(var i = 0; i < count; i++)
+        {
+            var no = i+1
+            arrays.push(parseInt($('#pecah'+no).val()))
+        }
+        var tertinggi = Math.max.apply(Math, arrays)
+        var hargasatuan = prices /tertinggi
         // cek diskon kosong atau tidak
         var discount = $('#discount').val()
         if(discount == '')
@@ -530,62 +460,72 @@
             var amount = amou
         }
         // hitung jumlah
-        var count = $('#count').val()
+        
         if(count == 1)
         {
             var jumlah1 = $('#jumlah1').val()
-            var uni1 = $('#unit1').val()
-            var jumlah2 = 0
-            var uni2 = '-'
-            var jumlah3 = 0
-            var uni3 = '-'
+            var uni1 = $('#pecah1').val()
+            var total = parseInt(jumlah1 * uni1)
         }
         else if(count == 2)
         {
-            var jumlah1 = $('#jumlah1').val()
-            var uni1 = $('#unit1').val()
+            if($('#jumlah1').val() == '0')
+            {
+                var jumlah1 = '0'
+                var uni1 = '0'
+            }else{
+                var jumlah1 = $('#jumlah1').val()
+                var uni1 = $('#pecah1').val()
+            }
             var jumlah2 = $('#jumlah2').val()
-            var uni2 = $('#unit2').val()
-            var jumlah3 = 0
-            var uni3 = '-'
+            var uni2 = $('#pecah2').val()
+            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2)
         }
         else if(count == 3)
         {
-            var jumlah1 = $('#jumlah1').val()
-            var uni1 = $('#unit1').val()
-            var jumlah2 = $('#jumlah2').val()
-            var uni2 = $('#unit2').val()
+            if($('#jumlah1').val() == '0')
+            {
+                var jumlah1 = '0'
+                var uni1 = '0'
+            }else{
+                var jumlah1 = $('#jumlah1').val()
+                var uni1 = $('#pecah1').val()
+            }
+            if($('#jumlah2').val() == '0')
+            {
+                var jumlah2 = '0'
+                var uni2 = '0'
+            }else{
+                var jumlah2 = $('#jumlah2').val()
+                var uni2 = $('#pecah2').val()
+            }
             var jumlah3 = $('#jumlah3').val()
-            var uni3 = $('#unit3').val()
+            var uni3 = $('#pecah3').val()
+            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
         }
-        axios.post('{{url('/api/addkeranjang')}}',{
+        axios.post("{{url('/api/addkeranjang')}}",{
             'invoiceid':invoiceid,
             'stockId':stockId,
             'produkid':produkid,
             'prices':prices,
             'disc':disc,
-            'count':count,
             'amount':amount,
-            'jumlah1':jumlah1,
-            'jumlah2':jumlah2,
-            'jumlah3':jumlah3,
-            'unit1':uni1,
-            'unit2':uni2,
-            'unit3':uni3,
-            'id_user':id_user
+            'quantity':total,
+            'id_user':id_user,
+            'satuan':hargasatuan,
         }).then(function(res){
             data = res.data
             if(data.status == 200){
-                $('#isibody').load('{{ route('datatablessales')}}')
+                $('#isibody').load("{{ route('datatablessales')}}")
                 kosong()
             }
         })
-    })
+    }
 
     $('#salesmanId').change(function(){
         var salesid = $(this).val()
 
-        axios.post('{{url('/api/getsalestrans')}}',{
+        axios.post("{{url('/api/getsalestrans')}}",{
             'sales_id': salesid
         }).then(function(res){
             var data = res.data.data
@@ -599,7 +539,7 @@
     $('#customerid').change(function(){
         var customerid = $(this).val()
 
-        axios.post('{{url('/api/getCustomer')}}',{
+        axios.post("{{url('/api/getCustomer')}}",{
             'customer_id': customerid
         }).then(function(res){
             var data = res.data.data
@@ -612,9 +552,9 @@
     $('#stockId').change(function(){
         var stokid = $(this).val()
         var customer = $('#customerid').val()
-        axios.post('{{url('/api/getProduk')}}',{
+        axios.post("{{url('/api/getProduk')}}",{
             'produk_id': stokid,
-            'cabang': '{{session()->get('cabang')}}'
+            'cabang': "{{session()->get('cabang')}}"
         }).then(function(res){
             var data = res.data.data
             stok(data.produk_id,data.jumlah)

@@ -20,13 +20,15 @@ class CreateTransaksiSalesTable extends Migration
             $table->date('invoice_date');
             $table->string('transaksi_tipe',100);
             $table->date('term_until');
-            $table->integer('sales_id');
+            $table->integer('sales_id')->nullable();
             $table->integer('customer_id');
-            $table->text('note');
-            $table->integer('totalsales');
-            $table->double('diskon');
+            $table->text('note')->nullable();
+            $table->integer('totalsales')->nullable();
+            $table->double('diskon')->nullable();
             $table->integer('id_user');
-            $table->timestamps();
+            $table->integer('id_warehouse');
+            $table->string('status',20)->nullable();
+            $table->integer('approve')->nullable();
         });
     }
 

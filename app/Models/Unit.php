@@ -13,6 +13,16 @@ class Unit extends Model
     protected $primaryKey = 'id_unit';
     // define fillable
     protected $fillable = [
-        'produk_id','maximum_unit_name','minimum_unit_name','default_value','note',
+        'produk_id', 'maximum_unit_name', 'minimum_unit_name', 'default_value', 'note',
     ];
+
+    public function maximum_unit_name()
+    {
+        return $this->hasOne("App\Models\Satuan", "id_satuan", "maximum_unit_name");
+    }
+
+    public function minimum_unit_name()
+    {
+        return $this->hasOne("App\Models\Satuan", "id_satuan", "minimum_unit_name");
+    }
 }
