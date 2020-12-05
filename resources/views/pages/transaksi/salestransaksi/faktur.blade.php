@@ -11,9 +11,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="mt-2 mb-2">
-<button id="close" class="btn btn-danger btn-sm">Close</button> <button id="print" class="btn btn-dark btn-sm">Print</button>
-        </div>
         <div class="row">
             <div class="col-sm-8">
         <div class="text-left">
@@ -22,7 +19,7 @@
             <h6>BUKITTINGGI, INDONESIA</h6>
             <H6>PHONE : 085375715757 FAX : (0752) 8810863</H6>
             <br>
-            <p>Suplier : {{$sales->nama_sales}}</p>
+            <p>Sales : {{$sales['nama_sales']}}</p>
         </div>
         </div>
         
@@ -70,7 +67,7 @@
                             <td>TERM</td>
                         </tr>
                         <tr>
-                            <td>{{$sales->invoice_date}}</td>
+                            <td>{{$sales['invoice_date']}}</td>
                         </tr>
                     </table>
                 </div>
@@ -109,7 +106,7 @@
     <br>
     <div class="row">
         <div class="col-sm-7">
-            <p>Note :</p>
+            <p>Note : {{$sales['note']}}</p>
             <hr style="border-top: 5px solid black;">
             <div class="row mb-5">
                 <div class="col-sm-8">
@@ -138,11 +135,11 @@
                 </tr>
                 <tr>
                     <td>Final Discount :</td>
-                    <td>{{number_format($tot * $sales->diskon / 100)}}</td>
+                    <td>{{number_format($tot * $sales['diskon'] / 100)}}</td>
                 </tr>
                 <tr>
                     <td>Total After Discount :</td>
-                    <td>{{number_format($tot - ($tot * $sales->diskon / 100))}}</td>
+                    <td>{{number_format($tot - ($tot * $sales['diskon'] / 100))}}</td>
                 </tr>
                 <tr>
                     <td>Down Payment :</td>
@@ -150,7 +147,7 @@
                 </tr>
                 <tr>
                     <td>Total Debt Balance :</td>
-                    <td>{{number_format($tot - ($tot * $sales->diskon / 100))}}</td>
+                    <td>{{number_format($tot - ($tot * $sales['diskon'] / 100))}}</td>
                 </tr>
             </table>
         </div>
@@ -163,18 +160,7 @@
 <script src="{{asset('/assets/vendors/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
 <script>
         $( document ).ready(function() {
-            $('#print').on('click',function(){
-                $("#print").hide();
-                $("#close").hide();
-                window.print();
-                $("#print").show();
-                $("#close").show();
-            });
-            $('#close').on('click',function(){
-        
-                window.close();
-                
-            });
+            window.print()
     });
     </script>
 </body>

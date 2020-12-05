@@ -26,7 +26,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Invoice ID</label>
-                                        <input type="text" style="border-radius:3px; font-size:12px" id="invoiceid" name="invoiceid" value="{{$invoice}}" readonly class="form-control">
+                                        <input type="text" style="border-radius:3px; font-size:12px" id="invoiceid" name="invoiceid" value="" readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -58,8 +58,8 @@
                                         <label for="">Warehouse ID</label>
                                         <select name="warehouse" id="warehouse" class="select2" style="width:100%">
                                             <option value="">Warehouse ID</option>
-                                            @foreach($salesid as $i => $sales):
-                                                <option value="{{$sales->id_sales}}">{{$sales->id_sales}}</option>
+                                            @foreach($warehouse as $i => $gud):
+                                                <option value="{{$gud->id_gudang}}">{{$gud->nama_gudang}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -269,23 +269,44 @@
 
     $('#salesType').change(function(){
         var body = $(this).val()
+        var user = "{{Session()->get('id')}}"
         if(body == 'CUSTOMER')
         {
-            $('#tampilsales').hide()
-            $('#tampilsales1').hide()
-            $('#warehouse').hide()
+            axios.post("{{url('/api/invoice')}}",{
+                'type':body,
+                'user':user
+            }).then(function(res){
+                var data = res.data
+                $('#invoiceid').val(data.inv)
+                $('#tampilsales').hide()
+                $('#tampilsales1').hide()
+                $('#warehouse').hide()
+            })
         }
         else if(body == 'TAKING ORDER')
         {
-            $('#tampilsales').show()
-            $('#tampilsales1').show()
+            axios.post("{{url('/api/invoice')}}",{
+                'type':body,
+                'user':user
+            }).then(function(res){
+                var data = res.data
+                $('#invoiceid').val(data.inv)
+                $('#tampilsales').show()
+                $('#tampilsales1').show()
+            })
         }
         else if(body == 'CANVASING')
         {
-            $('#tampilsales').show()
-            $('#tampilsales1').show()
-            $('#warehouse').show()
-
+            axios.post("{{url('/api/invoice')}}",{
+                'type':body,
+                'user':user
+            }).then(function(res){
+                var data = res.data
+                $('#invoiceid').val(data.inv)
+                $('#tampilsales').show()
+                $('#tampilsales1').show()
+                $('#warehouse').show()
+            })
         }
     })
 
@@ -322,7 +343,7 @@
                 var check = document.getElementById('print').checked;
                 if(check == true)
                 {
-                    window.open("{{url('/sales_transaksi/fakturs')}}/"+data.invoice_id, '_blank');
+                    window.open("{{url('/sales_transaksi/fakturs')}}/"+data.invoice_id+"/"+salestype, '_blank');
                     window.location.reload()
                 }else{
                     window.location.reload()

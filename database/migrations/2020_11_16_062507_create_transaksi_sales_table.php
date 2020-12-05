@@ -26,7 +26,7 @@ class CreateTransaksiSalesTable extends Migration
             $table->integer('totalsales')->nullable();
             $table->double('diskon')->nullable();
             $table->integer('id_user');
-            $table->integer('id_warehouse');
+            $table->integer('id_warehouse')->nullable();
             $table->string('status',20)->nullable();
             $table->integer('approve')->nullable();
         });
