@@ -158,6 +158,7 @@ Route::group(['namespace' => 'transaksi'], function () {
     Route::get('datatable/{id}', 'TransaksiSalesController@datatable');
     Route::post('deleteitem', 'TransaksiSalesController@deleteitem');
     Route::post('rekaptransaksi', 'TransaksiSalesController@rekaptransaksi');
+    Route::post('invoice', 'TransaksiSalesController@invoice');
 
     // api get payment
     Route::post('paymentcustomer', 'GetpaymentController@caricustomer');

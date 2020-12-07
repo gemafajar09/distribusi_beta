@@ -43,23 +43,6 @@ class TransaksiSalesController extends Controller
     public function index()
     {
         $cabang = session()->get('cabang');
-        $id = strlen(session()->get('id'));
-        $inv = DB::table('transaksi_sales')->orderBy('id_transaksi_sales', 'desc')->first();
-        if ($id == 1) {
-            $user = '00' . session()->get('id');
-        } else if ($id == 2) {
-            $user = '0' . session()->get('id');
-        } else if ($id == 3) {
-            $user = session()->get('id');
-        }
-        if ($inv == NULL) {
-            $invoice = 'TOVS-' . date('Ym') . "-" . $user . '-1';
-        } else {
-            $cekinv = substr($inv->invoice_id, 16, 50);
-            $plus = (int)$cekinv + 1;
-            $invoice = 'TOVS-' . date('Ym') . "-" . $user . '-' . $plus;
-        }
-        $data['invoice'] = $invoice;
         $data['salesid'] = Sales::getAll();
         $data['customerid'] = Customer::all();
         $data['stockid'] = DB::table('tbl_produk')
@@ -67,6 +50,7 @@ class TransaksiSalesController extends Controller
             ->where('tbl_stok.id_cabang', $cabang)
             ->select('*')
             ->get();
+        $data['warehouse'] = DB::table('tbl_gudang')->where('id_cabang',$cabang)->get();
         return view('pages.transaksi.salestransaksi.index', $data);
     }
 
@@ -106,6 +90,57 @@ class TransaksiSalesController extends Controller
     }
 
     // api
+    public function invoice(Request $r)
+    {
+        $type = $r->type;
+        $id = strlen($r->user);
+        $inv = DB::table('transaksi_sales')->where('sales_type',$type)->orderBy('id_transaksi_sales', 'desc')->first();
+        
+        if ($id == 1) {
+            $user = '00' . $r->user;
+        } else if ($id == 2) {
+            $user = '0' . $r->user;
+        } else if ($id == 3) {
+            $user = $r->user;
+        }
+
+        if ($inv == NULL) {
+            if($type == 'CUSTOMER')
+            {
+                $invoice = 'CVS-' . date('Ym') . "-" . $user . '-1';
+            }
+            elseif($type == 'TAKING ORDER')
+            {
+                $invoice = 'TOVS-' . date('Ym') . "-" . $user . '-1';
+            }
+            elseif($type == 'CANVASING')
+            {
+                $invoice = 'CCVS-' . date('Ym') . "-" . $user . '-1';
+            }
+        } else {
+            if($type == 'CUSTOMER')
+            {
+                $cekinv = substr($inv->invoice_id, 15, 50);
+                $plus = (int)$cekinv + 1;
+                $invoice = 'CVS-' . date('Ym') . "-" . $user .  '-' . $plus;
+            }
+            elseif($type == 'TAKING ORDER')
+            {
+                $cekinv = substr($inv->invoice_id, 16, 50);
+                $plus = (int)$cekinv + 1;
+                $invoice = 'TOVS-' . date('Ym') . "-" . $user .  '-' . $plus;
+            }
+            elseif($type == 'CANVASING')
+            {
+                $cekinv = substr($inv->invoice_id, 16, 50);
+                $plus = (int)$cekinv + 1;
+                $invoice = 'CCVS-' . date('Ym') . "-" . $user .  '-' . $plus;
+            }
+        }
+        // dd($cekinv);
+        return response()->json(['inv' => $invoice, 'status' => 200]);
+    }
+
     public function getSales(Request $r)
     {
         $data = Sales::findOrFail($r->sales_id);
@@ -340,7 +375,7 @@ class TransaksiSalesController extends Controller
         }
     }
 
-    public function faktur($id)
+    public function faktur($id,$type)
     {
         $data = DB::table('transaksi_sales_details')
             ->join('tbl_stok', 'tbl_stok.stok_id', 'transaksi_sales_details.stok_id')
@@ -403,12 +438,34 @@ class TransaksiSalesController extends Controller
                 'quantity' => implode(" ", $stok)
             );
         }
-        $datas['sales'] = DB::table('transaksi_sales')
-            ->join('tbl_sales', 'tbl_sales.id_sales', 'transaksi_sales.sales_id')
-            ->join('tbl_customer', 'tbl_customer.id_customer', 'transaksi_sales.customer_id')
-            ->select('transaksi_sales.*', 'transaksi_sales.note as catatan', 'tbl_sales.*', 'tbl_customer.*')
-            ->where('transaksi_sales.invoice_id', $id)
-            ->first();
+        if($type == 'CUSTOMER')
+        {
+            $sales = DB::table('transaksi_sales')
+                ->join('tbl_customer', 'tbl_customer.id_customer', 'transaksi_sales.customer_id')
+                ->select('transaksi_sales.*', 'transaksi_sales.note as catatan', 'tbl_customer.*')
+                ->where('transaksi_sales.invoice_id', $id)
+                ->first();
+            $datas['sales'] = array(
+                'note' => $sales->catatan,
+                'nama_sales' => '-',
+                'invoice_date' => $sales->invoice_date,
+                'diskon' => $sales->diskon
+            );
+            }else{
+                $sales = DB::table('transaksi_sales')
+                    ->join('tbl_sales', 'tbl_sales.id_sales', 'transaksi_sales.sales_id')
+                    ->join('tbl_customer', 'tbl_customer.id_customer', 'transaksi_sales.customer_id')
+                    ->select('transaksi_sales.*', 'transaksi_sales.note as catatan', 'tbl_sales.*', 'tbl_customer.*')
+                    ->where('transaksi_sales.invoice_id', $id)
+                    ->first();
+                    $datas['sales'] = array(
+                        'note' => $sales->catatan,
+                        'nama_sales' => $sales->nama_sales,
+                        'invoice_date' => $sales->invoice_date,
+                        'diskon' => $sales->diskon
+                    );
+
+        }
         $datas['inv'] = $id;
         return view("pages.transaksi.salestransaksi.faktur", $datas);
     }
