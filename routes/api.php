@@ -129,7 +129,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('getproduk', 'SpesialHargaController@getProduk');
 });
 
-Route::group(['namespace' => 'transaksi'], function () {
+Route::group(['namespace' => 'Transaksi'], function () {
 
     // api purchase
     Route::get('purchasedetail/datatable/{cabang}', 'TransaksiPurchaseDetailController@all_data');
@@ -191,7 +191,7 @@ Route::group(['namespace' => 'transaksi'], function () {
 });
 
 
-Route::group(['namespace' => 'report'], function () {
+Route::group(['namespace' => 'Report'], function () {
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('datatable', 'StokReportController@datatable');
         Route::get('datatable/{id}', 'StokReportController@datatable');
@@ -223,6 +223,6 @@ Route::group(['namespace' => 'report'], function () {
     Route::post('cekdatastok/', 'BrokenExpMovementController@cekdatastok');
 });
 
-Route::group(['namespace' => 'report'], function () {
+Route::group(['namespace' => 'Report'], function () {
     Route::get('tablereport/{search}', 'BrokenExpReport@tablereport');
 });
