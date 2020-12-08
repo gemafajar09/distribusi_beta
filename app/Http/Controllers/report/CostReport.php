@@ -24,18 +24,78 @@ class CostReport extends Controller
         return datatables()->of($data)->toJson();
     }
 
-    public function findId($cari = null)
+    public function findId($select = null, $input = null, $ket_waktu = null, $filtertahun = null, $filterbulan = null, $filter_year = null, $waktuawal = null, $waktuakhir = null)
     {
         $data = DB::table('tbl_cost')
             ->select('*')
             ->leftJoin('tbl_sales', 'tbl_sales.id_sales', 'tbl_cost.id_sales')
             ->orderby('cost_id', 'asc');
-        if (!empty($cari)) {
-            $data = $data->where('tbl_sales.', 'like', '%' . $cari . '%');
+        if (!empty($select)) {
+            if ($select == 'idrequester') {
+                $data = $data->where('tbl_sales.id_sales', $input);
+            } elseif ($select == 'namarequester') {
+                $data = $data->where('tbl_sales.nama_sales', $input);
+            } elseif ($select == 'costnama') {
+                $data = $data->where('tbl_cost.cost_nama', $input);
+            }
+        }
+        if (!empty($ket_waktu)) {
+            if ($ket_waktu == 0) {
+                $data = $data->select('*')->get();
+            }
+            if ($ket_waktu == 1) {
+                $data = $data->whereRaw('Date(tanggal) = CURDATE()');
+            }
+            if ($ket_waktu == 3) {
+                $data = $data->whereMonth('tanggal', $filterbulan)->whereYear('tanggal', $filtertahun);
+            }
+            if ($ket_waktu == 4) {
+                $data = $data->whereYear('tanggal', $filter_year);
+            }
+            if ($ket_waktu == 5) {
+                $data = $data->whereBetween('tanggal', $waktuawal, $waktuakhir);
+            }
         }
         $data = $data->select('*')->get();
+        return view('report.cost.table', $data);
         // dd($data);
-        return $data;
+        // return datatables()->of($data)->toJson();
+    }
+
+    public function generatereport($select = null, $input = null, $ket_waktu = null, $filtertahun = null, $filterbulan = null, $filter_year = null, $waktuawal = null, $waktuakhir = null)
+    {
+        $data = DB::table('tbl_cost')
+            ->select('*')
+            ->leftJoin('tbl_sales', 'tbl_sales.id_sales', 'tbl_cost.id_sales')
+            ->orderby('cost_id', 'asc');
+        if (!empty($select)) {
+            if ($select == 'idrequester') {
+                $data = $data->where('tbl_sales.id_sales', $input);
+            } elseif ($select == 'namarequester') {
+                $data = $data->where('tbl_sales.nama_sales', $input);
+            } elseif ($select == 'costnama') {
+                $data = $data->where('tbl_cost.cost_nama', $input);
+            }
+        }
+        if (!empty($ket_waktu)) {
+            if ($ket_waktu == 0) {
+                $data = $data->select('*')->get();
+            }
+            if ($ket_waktu == 1) {
+                $data = $data->whereRaw('Date(tanggal) = CURDATE()');
+            }
+            if ($ket_waktu == 3) {
+                $data = $data->whereMonth('tanggal', $filterbulan)->whereYear('tanggal', $filtertahun);
+            }
+            if ($ket_waktu == 4) {
+                $data = $data->whereYear('tanggal', $filter_year);
+            }
+            if ($ket_waktu == 5) {
+                $data = $data->whereBetween('tanggal', $waktuawal, $waktuakhir);
+            }
+        }
+        $data = $data->select('*')->get();
+        return view('report.cost.printcostview', compact('data'));
     }
 
     public function today_datatable()

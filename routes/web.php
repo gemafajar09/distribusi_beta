@@ -112,11 +112,17 @@ Route::group(['namespace' => 'Report'], function () {
     });
     Route::group(['prefix' => 'cost_report'], function () {
         Route::get('/report', 'CostReport@index')->name('cost_report');
-        Route::get('/report_cost', 'CostReport@report');
-        Route::get('/report_cost_today', 'CostReport@report_today');
-        Route::get('/report_cost_month/{month}/{year}', 'CostReport@report_month');
-        Route::get('/report_cost_year/{year}', 'CostReport@report_year');
-        Route::get('/report_cost_range/{awal}/{akhir}', 'CostReport@report_range');
+        Route::get('/generate_cost/{select}/{input}/{ket_waktu}/{filtertahun}/{filterbulan}/{filter_year}/{waktuawal}/{waktuakhir}', 'CostReport@generatereport');
+        // Route::get('/report_cost_today', 'CostReport@report_today');
+        // Route::get('/report_cost_month/{month}/{year}', 'CostReport@report_month');
+        // Route::get('/report_cost_year/{year}', 'CostReport@report_year');
+        // Route::get('/report_cost_range/{awal}/{akhir}', 'CostReport@report_range');
+    });
+    Route::group(['prefix' => 'sales_achievement'], function () {
+        Route::get('/report', 'SalesAchievementReport@index')->name('sales_achievement');
+        Route::get('/report_all_stock', 'SalesAchievementReport@printallstock');
+        Route::get('/report_to_stock', 'SalesAchievementReport@printtostock');
+        Route::get('/report_canvas_stock', 'SalesAchievementReport@printtostock');
     });
 });
 

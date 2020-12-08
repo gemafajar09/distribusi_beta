@@ -7,26 +7,8 @@
 @section('content')
 <div class="row mt-3">
     <div class="col-sm-9 border p-3 mr-3">
-        <div class="card-box table-responsive">
-            <table id="tabel"
-                class="table table-striped table-responsive-sm table-bordered dt-responsive nowrap table-sm"
-                cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>Cost ID</th>
-                        <th>ID Requester</th>
-                        <th>Name</th>
-                        <th>Cost Name</th>
-                        <th>Nominal</th>
-                        <th>Costing Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+        <div class="card-box table-responsive" id="isi">
 
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
     <div class="col border p-3 bg-white rounded">
@@ -45,16 +27,11 @@
         <br>
         <div class="range" id="range">
             <legend>Range</legend>
-            <input type="date" class="form-control" id="waktu_awal" onchange="range_report()"><br>
-            <input type="date" class="form-control" id="waktu_akhir" onchange="range_report()">
+            <input type="date" class="form-control" id="waktu_awal" onchange="range_report()" value="0"><br>
+            <input type="date" class="form-control" id="waktu_akhir" onchange="range_report()" value="0">
         </div>
         <br>
-        <div class="text-center">
-            <button class="btn btn-success btn-sm btn-block" onclick="location.reload()">Refresh Report</button>
-            <button class="btn btn-danger btn-sm btn-block" onclick="print_report()">Generate Report</button>
-        </div>
         <div>
-            <input type="checkbox" id="alldata"> &nbsp; ALL TRANSACTION
             <label for="">Filter By :</label>
             <select name="" id="pilihanfilter" class="form-control">
                 <option value="alltransaction">-FILTER BY-</option>
@@ -62,320 +39,348 @@
                 <option value="namarequester">NAME REQUESTER</option>
                 <option value="costnama">COST NAME</option>
             </select><br>
-            <input type="text" onkeyup="pilihanfilter(this)" class="form-control" id="inputpilihan">
+            <input type="text" class="form-control" id="inputpilihan">
+        </div>
+        <br>
+        <div class="text-center">
+            <button class="btn btn-warning btn-sm btn-block" onclick="pilihanfilter()">View Report</button>
+            <button class="btn btn-success btn-sm btn-block" onclick="location.reload()">Refresh Report</button>
+            <button class="btn btn-danger btn-sm btn-block" onclick="print_report()">Generate Report</button>
         </div>
     </div>
 </div>
 <script>
-    document.getElementById('alldata').addEventListener('click',function(){
-        var cek = document.getElementById('alldata').checked;
-        if(cek == true)
-        {
-            axios.get("").then(function(res){
+    // $(document).ready(function(){
+    //       tables = $('#tabel').DataTable({
+    //         processing : true,
+    //         serverSide : true,
+    //         ajax:{
+    //           url: "{{ url('/api/cost_report/findid') }}",
+    //         },
+    //         columns:[
+    //           {
+    //             data: 'inv_cost'
+    //           },
+    //           {
+    //             data:'id_sales'
+    //           },
+    //           {
+    //             data:'nama_sales'
+    //           },
+    //           {
+    //             data:'cost_nama'
+    //           },
+    //           {
+    //             data:'nominal'
+    //           },
+    //           {
+    //             data:'tanggal'
+    //           }
+    //         ]
+    //       });
+    // });
 
-            }).catch(function(err){
-                console.log(err)
-            })
-        }
-    })
+    // document.getElementById('alldata').addEventListener('click',function(){
+    //     var cek = document.getElementById('alldata').checked;
+    //     if(cek == true)
+    //     {
+    //         document.getElementById('pilihanfilter').addEventListener('change', function () {
+    //             var pilihanfilter = document.getElementById('pilihanfilter').value;
+    //             var fil = document.getElementById('inputpilihan').value
+    //             if(pilihanfilter == 'idrequester'){
+    //                 //
+    //                 pilihanfilter(fil)
+    //             } else if(pilihanfilter == 'namarequester'){
+    //                 //
+    //                 pilihanfilter(fil)
+    //             } else if(pilihanfilter == 'costnama'){
+    //                 //
+    //                 pilihanfilter(fil)
+    //             }
+    //         })
+    //     }else{
 
-    $(document).ready(function(){
+    //     }
+    // })
 
-        $("#waktu_awal" ).prop( "disabled", true );
-        $("#waktu_akhir" ).prop( "disabled", true );
-        function load_all(){
-        tables = $('#tabel').DataTable({
-        processing : true,
-        ordering:false,
-        serverSide : true,
-        ajax:{
-                url: "{{ url('/api/cost_report/datatable') }}",
-                },
-                columns:[
-                {
-                    data: 'inv_cost'
-                },
-                {
-                    data: 'id_sales'
-                },
-                {
-                    data: 'nama_sales'
-                },
-                {
-                    data: 'cost_nama'
-                },
-                {
-                    data: 'nominal'
-                },
-                {
-                    data: 'tanggal'
-                }
-        ]
-        });
-        }
-        function load_today(){
-        tables = $('#tabel').DataTable({
-        processing : true,
-        ordering:false,
-        serverSide : true,
-        ajax:{
-            url: "{{ url('/api/cost_report/today_datatable') }}",
-            },
-            columns:[
-                {
-                    data: 'inv_cost'
-                },
-                {
-                    data: 'id_sales'
-                },
-                {
-                    data: 'nama_sales'
-                },
-                {
-                    data: 'cost_nama'
-                },
-                {
-                    data: 'nominal'
-                },
-                {
-                    data: 'tanggal'
-                }
-        ]
-        });
-        }
-        function load_month(month){
-        tables = $('#tabel').DataTable({
-        processing : true,
-        ordering:false,
-        serverSide : true,
-        ajax:{
-                url: "{{ url('/api/cost_report/month_datatable/') }}/"+month+'/'+year,
-                },
-                columns:[
-                {
-                    data: 'inv_cost'
-                },
-                {
-                    data: 'id_sales'
-                },
-                {
-                    data: 'nama_sales'
-                },
-                {
-                    data: 'cost_nama'
-                },
-                {
-                    data: 'nominal'
-                },
-                {
-                    data: 'tanggal'
-                }
-        ]
-        });
-        }
-        function load_year(year){
-        tables = $('#tabel').DataTable({
-        processing : true,
-        ordering:false,
-        serverSide : true,
-        ajax:{
-            url: "{{ url('/api/cost_report/year_datatable/') }}/"+year,
-        },
-            columns:[
-                    {
-                        data: 'inv_cost'
-                    },
-                    {
-                        data: 'id_sales'
-                    },
-                    {
-                        data: 'nama_sales'
-                    },
-                    {
-                        data: 'cost_nama'
-                    },
-                    {
-                        data: 'nominal'
-                    },
-                    {
-                        data: 'tanggal'
-                    }
-            ]
-        });
-        }
 
+        $("#waktu_awal" ).prop( "readonly", true );
+        $("#waktu_akhir" ).prop( "readonly", true );
         $('#ket_waktu').change(function(){
-            $("#waktu_awal" ).prop( "disabled", true );
-            $("#waktu_akhir" ).prop( "disabled", true );
-        nilai = $('#ket_waktu').val();
-        $('#wadah').html('');
-        // weekly
-        if(nilai == 0){
-            if ( $.fn.DataTable.isDataTable('#tabel') ) {
-                $('#tabel').DataTable().destroy();
+            $("waktu_awal").val('0');
+            $("waktu_akhir").val('0');
+            $("#waktu_awal" ).prop( "readonly", true );
+            $("#waktu_akhir" ).prop( "readonly", true );
+            nilai = $('#ket_waktu').val();
+            $('#wadah').html('');
+
+            if(nilai ==3){
+                $('#wadah').append(`<select name="year" id="year" class="form-control">
+                <?php
+                    $year = date('Y');
+                    $min = $year - 10;
+                    $max = $year;
+                    for( $i=$max; $i>=$min; $i-- ) {
+                    echo '<option value='.$i.'>'.$i.'</option>';
+                    }
+                ?>
+                </select><br> <select class="form-control" name="month" id="month"><option>Pilih Bulan</option>
+                <?php for( $m=1; $m<=12; ++$m ) {
+                    $month_label = date('F', mktime(0, 0, 0, $m, 1));
+                ?>
+                    <option value="<?php echo $m; ?>"><?php echo $month_label; ?></option>
+                <?php } ?>
+                    </select>  `);
+            }else if(nilai ==4){
+                $('#wadah').append(`<select name="year_filter" id="year_filter" class="form-control"><option>Pilih Tahun</option>
+                <?php
+                    $year = date('Y');
+                    $min = $year - 10;
+                    $max = $year;
+                    for( $i=$max; $i>=$min; $i-- ) {
+                    echo '<option value='.$i.'>'.$i.'</option>';
+                    }
+                ?>
+                </select>`);
+            }else if(nilai ==5){
+                $("#waktu_awal" ).prop( "readonly", false);
+                $("#waktu_akhir" ).prop( "readonly", false);
             }
-            load_all()
-        }else if(nilai ==1){
-            if ( $.fn.DataTable.isDataTable('#tabel') ) {
-                $('#tabel').DataTable().destroy();
-            }
-            load_today()
-        }else if(nilai ==2){
-                console.log("oke2");
-        }else if(nilai ==3){
-            $('#wadah').append(`<select name="year" id="year" class="form-control">
-            <?php
-                $year = date('Y');
-                $min = $year - 10;
-                $max = $year;
-                for( $i=$max; $i>=$min; $i-- ) {
-                echo '<option value='.$i.'>'.$i.'</option>';
-                }
-            ?>
-            </select><br> <select class="form-control" name="month" id="month"><option>Pilih Bulan</option>
-            <?php for( $m=1; $m<=12; ++$m ) {
-                $month_label = date('F', mktime(0, 0, 0, $m, 1));
-            ?>
-                <option value="<?php echo $m; ?>"><?php echo $month_label; ?></option>
-            <?php } ?>
-                </select>  `);
-        }else if(nilai ==4){
-            $('#wadah').append(`<select name="year_filter" id="year_filter" class="form-control"><option>Pilih Tahun</option>
-            <?php
-                $year = date('Y');
-                $min = $year - 10;
-                $max = $year;
-                for( $i=$max; $i>=$min; $i-- ) {
-                echo '<option value='.$i.'>'.$i.'</option>';
-                }
-            ?>
-            </select>`);
-        }else if(nilai ==5){
-            $("#waktu_awal" ).prop( "disabled", false );
-            $("#waktu_akhir" ).prop( "disabled", false );
-        }
         })
 
-        $('#wadah').on('change', '#month', function() {
-        month = $('#month').val();
-        year = $('#year').val();
-        if ( $.fn.DataTable.isDataTable('#tabel') ) {
-                $('#tabel').DataTable().destroy();
-            }
-        load_month(month,year)
-        });
+        // $('#wadah').on('change', '#month', function() {
+        // month = $('#month').val();
+        // year = $('#year').val();
+        // if ( $.fn.DataTable.isDataTable('#tabel') ) {
+        //         $('#tabel').DataTable().destroy();
+        //     }
+        // });
 
-        $('#wadah').on('change', '#year_filter', function() {
-        year = $('#year_filter').val();
-        if ( $.fn.DataTable.isDataTable('#tabel') ) {
-                $('#tabel').DataTable().destroy();
-            }
-        load_year(year)
-        });
-    });
+        // $('#wadah').on('change', '#year_filter', function() {
+        // year = $('#year_filter').val();
+        // if ( $.fn.DataTable.isDataTable('#tabel') ) {
+        //         $('#tabel').DataTable().destroy();
+        //     }
+        // });
 
-    function load_range(waktu_awal,waktu_akhir){
-    tables = $('#tabel').DataTable({
-    processing : true,
-    ordering:false,
-    serverSide : true,
-    ajax:{
-        url: "{{ url('/api/cost_report/range_datatable/') }}/"+waktu_awal+'/'+waktu_akhir,
-    },
-        columns:[
-                {
-                    data: 'inv_cost'
-                },
-                {
-                    data: 'id_sales'
-                },
-                {
-                    data: 'nama_sales'
-                },
-                {
-                    data: 'cost_nama'
-                },
-                {
-                    data: 'nominal'
-                },
-                {
-                    data: 'tanggal'
-                }
-        ]
-    });
-    }
-
-    function range_report(){
-    waktu_awal = $('#waktu_awal').val();
-    if(waktu_awal == ""){
-    return false;
-    }
-    waktu_akhir = $('#waktu_akhir').val();
-    if(waktu_akhir == ""){
-    return false;
-    }
-    if ( $.fn.DataTable.isDataTable('#tabel') ) {
-            $('#tabel').DataTable().destroy();
-        }
-    load_range(waktu_awal,waktu_akhir)
-    }
-
-    function print_report(){
-    ket_waktu = $('#ket_waktu').val();
-    if(ket_waktu == 0){
-    window.open(`{{url('/cost_report/report_cost')}}`);
-    }else if(ket_waktu == 1){
-    window.open(`{{url('/cost_report/report_cost_today')}}`);
-    }else if(ket_waktu == 2){
-    // window.open(`{{url('/cost/report_cost_today')}}`);
-    }else if(ket_waktu == 3){
-    month = $('#month').val();
-    year = $('#year').val();
-    window.open(`{{url('/cost_report/report_cost_month/')}}/`+month+'/'+year);
-    }
-    else if(ket_waktu == 4){
-
-    year = $('#year_filter').val();
-    window.open(`{{url('/cost_report/report_cost_year/')}}/`+year);
-    }
-    else if(ket_waktu == 5){
-
-        waktu_awal = $('#waktu_awal').val();
-        if(waktu_awal == ""){
-        return false;
-        }
-        waktu_akhir = $('#waktu_akhir').val();
-        if(waktu_akhir == ""){
-        return false;
-        }
-    window.open(`{{url('/cost_report/report_cost_range/')}}/`+waktu_awal+'/'+waktu_akhir);
-    }
-}
-
-
-    function pilihanfilter(fil)
+    function pilihanfilter()
     {
-        var cari = fil.value
         var filterdata = $('#pilihanfilter').val()
+        if(filterdata == null)
+        {
+            filterdata = 0;
+        }
+
         var caridata = $('#inputpilihan').val()
-        if(filterdata == "idrequester")
+        if(caridata == "")
         {
-            axios.post("",{'id':cari}).then(function(res){
-
-            })
+            caridata = 0;
         }
-        else if(filterdata == 'namarequester')
+
+        var filtertahun = $('#year').val()
+        if(filtertahun == null)
         {
-            axios.post("",{'id':cari}).then(function(res){
-
-            })
+            filtertahun = 0;
         }
-        else if(filterdata == 'costnama')
+
+        var filterbulan = $('#month').val()
+        if(filterbulan == null)
         {
-            axios.post("",{'id':cari}).then(function(res){
-
-            })
+            filterbulan = 0;
         }
+
+        var filter_tahun = $('#year_filter').val()
+        if(filter_tahun == null)
+        {
+            filter_tahun = 0;
+        }
+
+        var waktuawal = $('#waktu_awal').val()
+        if(waktuawal == "")
+        {
+            waktuawal = 0;
+        }
+
+        var waktuakhir = $('#waktu_akhir').val()
+        if(waktuakhir == "")
+        {
+            waktuakhir = 0;
+        }
+        var ket_waktu = $('#ket_waktu').val();
+
+        // console.log(caridata);
+        // axios.get("{{url('/api/cost_report/findid')}}/" + filterdata + "/" + caridata + "/" + ket_waktu + "/"+  filtertahun +"/" + filterbulan + "/" +filter_tahun + "/" +waktuawal + "/" +waktuakhir)
+        // .then(function(res){
+        //     tables = $('#tabel').DataTable({
+        //     processing : true,
+        //     serverSide : true,
+        //     ajax:{
+        //       url: "{{ url('/api/cost_report/findid') }}/" + filterdata + "/" + caridata + "/" + ket_waktu + "/"+  filtertahun +"/" + filterbulan + "/" +filter_tahun + "/" +waktuawal + "/" +waktuakhir,
+        //     },
+        //     columns:[
+        //       {
+        //         data: 'inv_cost'
+        //       },
+        //       {
+        //         data:'id_sales'
+        //       },
+        //       {
+        //         data:'nama_sales'
+        //       },
+        //       {
+        //         data:'cost_nama'
+        //       },
+        //       {
+        //         data:'nominal'
+        //       },
+        //       {
+        //         data:'tanggal'
+        //       }
+        //     ]
+        //   });
+        //     console.log(res.data.data)
+        // })
+        // if(filterdata == "idrequester")
+        // {
+        // }
+        // else if(filterdata == 'namarequester')
+        // {
+        //     axios.post("",{'id':cari}).then(function(res){
+
+        //     })
+        // }
+        // else if(filterdata == 'costnama')
+        // {
+        //     axios.post("",{'id':cari}).then(function(res){
+
+        //     })
+        // }
     }
+
+    // function load_range(waktu_awal,waktu_akhir){
+    //     tables = $('#tabel').DataTable({
+    //     processing : true,
+    //     ordering:false,
+    //     serverSide : true,
+    //     ajax:{
+    //         url: "{{ url('/api/cost_report/range_datatable/') }}/"+waktu_awal+'/'+waktu_akhir,
+    //     },
+    //         columns:[
+    //                 {
+    //                     data: 'inv_cost'
+    //                 },
+    //                 {
+    //                     data: 'id_sales'
+    //                 },
+    //                 {
+    //                     data: 'nama_sales'
+    //                 },
+    //                 {
+    //                     data: 'cost_nama'
+    //                 },
+    //                 {
+    //                     data: 'nominal'
+    //                 },
+    //                 {
+    //                     data: 'tanggal'
+    //                 }
+    //         ]
+    //     });
+    // }
+
+    // function range_report(){
+    //     waktu_awal = $('#waktu_awal').val();
+    //     if(waktu_awal == ""){
+    //     return false;
+    //     }
+    //     waktu_akhir = $('#waktu_akhir').val();
+    //     if(waktu_akhir == ""){
+    //     return false;
+    //     }
+    //     if ( $.fn.DataTable.isDataTable('#tabel') ) {
+    //             $('#tabel').DataTable().destroy();
+    //         }
+    //     load_range(waktu_awal,waktu_akhir)
+    // }
+
+    function print_report()
+    {
+        var filterdata = $('#pilihanfilter').val()
+        if(filterdata == null)
+        {
+            filterdata = 0;
+        }
+
+        var caridata = $('#inputpilihan').val()
+        if(caridata == "")
+        {
+            caridata = 0;
+        }
+
+        var filtertahun = $('#year').val()
+        if(filtertahun == null)
+        {
+            filtertahun = 0;
+        }
+
+        var filterbulan = $('#month').val()
+        if(filterbulan == null)
+        {
+            filterbulan = 0;
+        }
+
+        var filter_tahun = $('#year_filter').val()
+        if(filter_tahun == null)
+        {
+            filter_tahun = 0;
+        }
+
+        var waktuawal = $('#waktu_awal').val()
+        if(waktuawal == "")
+        {
+            waktuawal = 0;
+        }
+
+        var waktuakhir = $('#waktu_akhir').val()
+        if(waktuakhir == "")
+        {
+            waktuakhir = 0;
+        }
+        var ket_waktu = $('#ket_waktu').val();
+
+        window.open("{{ url('/cost_report/generate_cost') }}/" + filterdata + "/" + caridata + "/" + ket_waktu + "/"+  filtertahun +"/" + filterbulan + "/" +filter_tahun + "/" +waktuawal + "/" +waktuakhir);
+    }
+
+    // function print_report(){
+    //     ket_waktu = $('#ket_waktu').val();
+    //     if(ket_waktu == 0){
+    //     window.open(`{{url('/cost_report/report_cost')}}`);
+    //     }else if(ket_waktu == 1){
+    //     window.open(`{{url('/cost_report/report_cost_today')}}`);
+    //     }else if(ket_waktu == 2){
+    //     // window.open(`{{url('/cost/report_cost_today')}}`);
+    //     }else if(ket_waktu == 3){
+    //     month = $('#month').val();
+    //     year = $('#year').val();
+    //     window.open(`{{url('/cost_report/report_cost_month/')}}/`+month+'/'+year);
+    //     }
+    //     else if(ket_waktu == 4){
+
+    //     year = $('#year_filter').val();
+    //     window.open(`{{url('/cost_report/report_cost_year/')}}/`+year);
+    //     }
+    //     else if(ket_waktu == 5){
+
+    //         waktu_awal = $('#waktu_awal').val();
+    //         if(waktu_awal == ""){
+    //         return false;
+    //         }
+    //         waktu_akhir = $('#waktu_akhir').val();
+    //         if(waktu_akhir == ""){
+    //         return false;
+    //         }
+    //     window.open(`{{url('/cost_report/report_cost_range/')}}/`+waktu_awal+'/'+waktu_akhir);
+    //     }
+    // }
 </script>
 @endsection
