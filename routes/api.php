@@ -213,11 +213,7 @@ Route::group(['namespace' => 'report'], function () {
 
     Route::group(['prefix' => 'cost_report'], function () {
         Route::get('datatable', 'CostReport@datatable');
-        Route::get('findid{?id}', 'CostReport@findId');
-        Route::get('today_datatable', 'CostReport@today_datatable');
-        Route::get('month_datatable/{month}/{year}', 'CostReport@month_datatable');
-        Route::get('year_datatable/{year}', 'CostReport@year_datatable');
-        Route::get('range_datatable/{awal}/{akhir}', 'CostReport@range_datatable');
+        Route::get('findid/{select}/{input}/{ket_waktu}/{filtertahun}/{filterbulan}/{filter_year}/{waktuawal}/{waktuakhir}', 'CostReport@findId');
     });
     //     Route::get('purchaseinv/{id}', 'TransaksiPurchaseTmpController@generateInvoicePurchase');
     Route::get('purchasereturninv/{id}', 'TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
