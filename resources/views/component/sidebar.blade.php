@@ -28,7 +28,7 @@
                             <!-- <li><a href="{{ route('sales_transaction') }}">Report Transaction</a></li> -->
                             <li><a href="{{ route('getpayment')}}">Get Payment</a></li>
                             <li><a href="{{ route('sales_transaction') }}">Entry Transaction</a></li>
-                            <li><a href="">Return Transaction</a></li>
+                            <li><a href="{{ route('returnsales') }}">Return Transaction</a></li>
                         </ul>
                     </li>
                     <li><a><i class=""></i>Purchase Transaction <span class="fa fa-chevron-down"></span></a>
