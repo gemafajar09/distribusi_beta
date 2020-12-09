@@ -343,7 +343,8 @@ class TransaksiSalesController extends Controller
         $input->customer_id = $r->customerid;
         $input->note = $r->note;
         $input->totalsales = $r->totalsales;
-        $input->diskon = $r->discon;
+        $input->diskon = $r->ptongan;
+        $input->dp = $r->dp;
         $input->id_user = $r->id_user;
         $input->id_warehouse = $r->warehouse;
         if ($r->radiocash == 'Credit') {
@@ -449,6 +450,7 @@ class TransaksiSalesController extends Controller
                 'note' => $sales->catatan,
                 'nama_sales' => '-',
                 'invoice_date' => $sales->invoice_date,
+                'dp' => $sales->dp,
                 'diskon' => $sales->diskon
             );
             }else{

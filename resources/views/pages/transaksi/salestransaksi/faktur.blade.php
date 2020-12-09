@@ -135,19 +135,19 @@
                 </tr>
                 <tr>
                     <td>Final Discount :</td>
-                    <td>{{number_format($tot * $sales['diskon'] / 100)}}</td>
+                    <td>{{number_format($sales['diskon'])}}</td>
                 </tr>
                 <tr>
                     <td>Total After Discount :</td>
-                    <td>{{number_format($tot - ($tot * $sales['diskon'] / 100))}}</td>
+                    <td>{{number_format($tot - $sales['diskon'])}}</td>
                 </tr>
                 <tr>
                     <td>Down Payment :</td>
-                    <td>0</td>
+                    <td>{{number_format($sales['dp'])}}</td>
                 </tr>
                 <tr>
                     <td>Total Debt Balance :</td>
-                    <td>{{number_format($tot - ($tot * $sales['diskon'] / 100))}}</td>
+                    <td>{{number_format(($tot - $sales['diskon']) - $sales['dp'])}}</td>
                 </tr>
             </table>
         </div>

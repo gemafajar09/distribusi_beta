@@ -14,17 +14,38 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+    @foreach($detail as $a)
+        <tr onclick="ambil('{{$a->id_transaksi_sales}}')">
+            <td>{{$a->invoice_id}}</td>
+            <td>{{$a->invoice_date}}</td>
+            <td>{{$a->sales_type}}</td>
+            <td>{{$a->sales_type}}</td>
+            <td>{{$a->nama_customer}}</td>
+            <td>Rp.{{number_format($a->totalsales)}}</td>
+            <td>{{$a->diskon}}%</td>
+            <td>0</td>
+            <td>Rp.{{$a->totalsales - ($a->totalsales * $a->diskon / 100)}}</td>
+            <td>{{$a->transaksi_tipe}}</td>
         </tr>
+    @endforeach
     </tbody>
 </table>
+
+<script>
+    function ambil(id)
+    {
+        axios.post("{{url('/api/ambil')}}",{
+            'id_transaksi':id
+        }).then(function(res){
+            var data = res.data
+            console.log(data)
+            $('#idsalesinv').val(data.invoice_id)
+            $('#salesid').val(data.sales_id)
+            $('#invtype').val(data.transaksi_tipe)
+            $('#customerid').val(data.customer_id)
+            $('#namacustomer').val(data.nama_customer)
+            $('#paystatus').val(data.status)
+            $('#caridata').modal('hide')
+        })
+    }
+</script>

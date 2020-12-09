@@ -38,9 +38,9 @@
         @endforeach
     </tbody>
 </table>
-<input type="hidden" id="totals" value="{{$total}}">
+<input type="hidden" id="totalss" value="{{$total}}">
 <script>
-    var total = $('#totals').val()
+    var total = $('#totalss').val()
     $('#terbilang').html(terbilang(total) + ' Rupiah')
     $('#totalsales').val(convertToRupiah(total))
     $('#afterdiscount').val(convertToRupiah(total))

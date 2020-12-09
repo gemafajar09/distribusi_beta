@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReturnsalesdetailsTable extends Migration
+class CreateReturnsalestmpsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateReturnsalesdetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('returnsalesdetail', function (Blueprint $table) {
-            $table->bigIncrements('id_detailreturn');
+        Schema::create('returnsalestmps', function (Blueprint $table) {
+            $table->bigIncrements('id_tmpreturn');
             $table->string('id_returnsales',100);
             $table->date('return_date');
             $table->string('id_stok',50);
@@ -34,6 +34,6 @@ class CreateReturnsalesdetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('returnsalesdetails');
+        Schema::dropIfExists('returnsalestmps');
     }
 }

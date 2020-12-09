@@ -220,7 +220,7 @@
                                                 <td style="width: 10px;">:</td>
                                                 <td style="width: 60px;"><input onkeyup="disco(this)" id="discon" type="text" class="form-control"></td>
                                                 <td style="width: 10px;">%</td>
-                                                <td><input type="text" id="potongan" class="form-control"></td>
+                                                <td><input type="text" onkeyup="potong(this)" id="potongan" class="form-control"></td>
                                             </tr>
                                             <tr>
                                                 <td>Total After Discount</td>
@@ -230,7 +230,7 @@
                                             <tr>
                                                 <td>Down Payment</td>
                                                 <td style="width: 10px;">:</td>
-                                                <td colspan="3"><input type="text" id="downpayment" class="form-control"></td>
+                                                <td colspan="3"><input type="text" onkeyup="dp(this)" id="downpayment" class="form-control"></td>
                                             </tr>
                                             <tr>
                                                 <td>Total Credit Balance</td>
@@ -266,6 +266,13 @@
         $('#isibody').load("{{ route('datatablessales')}}")
         
     })
+
+    function dp(nilai)
+    {
+        var after = convertToAngka($('#afterdiscount').val())
+        var hasil = after - nilai.value
+        $('#creditbalance').val(convertToRupiah(hasil))
+    }
 
     $('#salesType').change(function(){
         var body = $(this).val()
@@ -321,7 +328,8 @@
         var salesmanid = $('#salesmanId').val()   
         var customerid = $('#customerid').val()   
         var note = $('#note').val()   
-        var discon = $('#discon').val()   
+        var discon = $('#potongan').val()  
+        var dp = $('#downpayment').val()  
         var totalsales = convertToAngka($('#totalsales').val())   
         var id_user = "{{Session()->get('id')}}"
         axios.post("{{url('/api/rekaptransaksi')}}",{
@@ -335,7 +343,8 @@
             'warehouse':warehouse,
             'note':note,
             'totalsales':totalsales,
-            'discon':discon,
+            'potongan':discon,
+            'dp':dp,
             'id_user':id_user
         }).then(function(res){
             var data = res.data
@@ -361,7 +370,15 @@
         $('#potongan').val(convertToRupiah((tot * persen) / 100))
         $('#downpayment').val(convertToRupiah((tot * persen) / 100))
         $('#creditbalance').val(convertToRupiah(hasil))
+        $('#afterdiscount').val(convertToRupiah(tot - (tot * persen) / 100))
 
+    }
+
+    function potong(potongan){
+        var nilai = potongan.value
+        var tot = convertToAngka($('#totalsales').val())
+        $('#afterdiscount').val(convertToRupiah(tot - nilai))
+        $('#downpayment').val(convertToRupiah(nilai))
     }
 
     function diskon1(nilai)

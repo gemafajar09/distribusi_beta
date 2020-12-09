@@ -39,7 +39,7 @@
                         </select>
                     </td>
                     <td style="text-align: center;">
-                        <button onclick="approves('{{$a->id_transaksi_sales}}')" class="btn btn-outline-success">Approve</button>
+                        <button onclick="approves('{{$a->id_transaksi_sales}}','{{$a->invoice_id}}')" class="btn btn-outline-success">Approve</button>
                     </td>
                 </tr>
                 @endforeach
@@ -80,12 +80,13 @@
 </div>
 
 <script>
-    function approves(id)
+    function approves(id,invoice)
     {
         var status = $('#aproves').val()
         axios.post("{{url('/api/approval')}}",{
             'id_transaksi':id,
             'status':status,
+            'invoice_id':invoice
         }).then(function(res){
             window.location.reload()
         })
