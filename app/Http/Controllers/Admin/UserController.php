@@ -23,6 +23,13 @@ class UserController extends Controller
             'email'=>'required|email',
             'id_cabang'=>'required|numeric',   
         );
+        $this->rules1 = array(
+            'id_user'=>'required|numeric',
+            'nama_user'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
+            'password'=>'required',
+            'telepon'=>'required|numeric',
+            'email'=>'required|email',  
+        );
 
         $this->messages = array(
             'regex' => 'The Symbol Are Not Allowed'
@@ -115,5 +122,34 @@ class UserController extends Controller
         }catch (ModelNotFoundException $e) {
             return response()->json(['message'=>'Data Tidak Ditemukan','status'=>404]);
         }
+    }
+
+    public function view_profile(){
+        $id_user = session()->get('id');
+        $data = DB::table('tbl_user as user')->where('id_user',$id_user)->join('tbl_role_user as role','role.id_role','=','user.level')->join('tbl_cabang as cabang','cabang.id_cabang','=','user.id_cabang')->select('id_user','nama_user','username','nama_role','user.telepon as telepon','user.email as email','nama_cabang')->first();
+        return view('pages.transaksi.other.index',compact('data'));
+    }
+
+    public function edit_profile(Request $request){
+        $id = $request->input('id_user');
+        try{
+            $edit = User::findOrFail($id);
+            $password = Hash::make($request->input('password'));
+            $request->merge(['password' => $password]);
+            $validator = Validator::make($request->all(),$this->rules1,$this->messages);
+            if($validator->fails()){
+                return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
+            }else{
+                $edit->nama_user = $request->input('nama_user');
+                $edit->password = $request->input('password');
+                $edit->telepon = $request->input('telepon');
+                $edit->email = $request->input('email');
+                $edit->save();
+                return response()->json(['message'=>'Data Berhasil Di Edit','data'=>$edit,'status'=>200]);
+            }
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message'=>'Data Tidak Ditemukan','status'=>404]);
+        }
+
     }
 }

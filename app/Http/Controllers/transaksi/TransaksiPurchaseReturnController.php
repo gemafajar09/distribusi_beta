@@ -120,10 +120,11 @@ class TransaksiPurchaseReturnController extends Controller
         return $data;
     }
 
-    public function join_data_return(){
+    public function join_data_return($id_cabang){
         $data = DB::table('transaksi_purchase_return as t')
                 ->where('register','0')
                 ->where('status','0')
+                ->where('t.id_cabang',$id_cabang)
                 ->join('tbl_stok as s','s.stok_id','=','t.stok_id')
                 ->join('tbl_produk as p','p.produk_id','=','s.produk_id')
                 ->join('tbl_suplier as sp','sp.id_suplier','=','t.id_suplier')
@@ -132,9 +133,9 @@ class TransaksiPurchaseReturnController extends Controller
             return $data;
     }
 
-    public function datatable(){
+    public function datatable($id_cabang){
         // untuk datatables Sistem Join Query Builder
-        $data = $this->join_data_return();
+        $data = $this->join_data_return($id_cabang);
         $format = '%d %s ';
         $stok = [];
         $this->datatable= [];
@@ -227,11 +228,11 @@ class TransaksiPurchaseReturnController extends Controller
         }
     } 
 
-    public function register(){
-        $data1 = $this->datatable();
+    public function register($id_cabang){
+        $data1 = $this->datatable($id_cabang);
         $datatmp =  $this->datatable;
-        $calculate = DB::table('transaksi_purchase_return')->where('register','0')->sum('price');
-        $update = DB::table('transaksi_purchase_return')->update(array('register' => '1'));
+        $calculate = DB::table('transaksi_purchase_return')->where('id_cabang',$id_cabang)->where('register','0')->sum('price');
+        $update = DB::table('transaksi_purchase_return')->where('id_cabang',$id_cabang)->update(array('register' => '1'));
         foreach ($datatmp as $d) {
             $stok_id = $d['stok_id'];
             $jumlah = $d['jumlah_return'];

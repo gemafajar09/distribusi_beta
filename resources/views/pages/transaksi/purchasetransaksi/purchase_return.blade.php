@@ -112,7 +112,7 @@
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/returnpurchase/datatable') }}", 
+          url: "{{ url('/api/returnpurchase/datatable/') }}/"+id_cabang, 
         },
         columns:[
           {
@@ -314,8 +314,9 @@
     })
 
     $("#register").on('click', function(e) {
+        id_cabang = {{session()->get('cabang')}}
         e.preventDefault();
-        cek = window.open("{{route('register-transaksi-purchase-return')}}", "_blank");
+        cek = window.open('{{url('/api/registerpurchasereturn/')}}/'+id_cabang+'/', "_blank");
         $(cek).on("unload", function(){
         tables.ajax.reload();
         session_cabang = {{session()->get('cabang')}};

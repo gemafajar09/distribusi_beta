@@ -92,31 +92,32 @@
 <script>
     $(document).ready(function(){
         id_cabang = {{session()->get('cabang')}}
-        load_all(id_cabang)
-
-        function load_all(id_cabang){
-        tables = $('#tabel').DataTable({
-        processing : true,
-        serverSide : true,
-        ajax:{
-          url: "{{ url('/api/stok/datatable/') }}/"+id_cabang,
-        },
-        columns:[
-          {
-            data:'produk_nama'
-          },
-          {
-            data:'jumlah'
-          },
-          {
-            data:'capital_price'
-          },
-          {
-            data:'stok_harga'
-          }
-        ]
-      });
-    }
+        id_gudang = $('#id_gudang').val();
+        load_gudang(id_gudang);
+    //     load_all(id_cabang)
+    //     function load_all(id_cabang){
+    //     tables = $('#tabel').DataTable({
+    //     processing : true,
+    //     serverSide : true,
+    //     ajax:{
+    //       url: "{{ url('/api/stok/datatable/') }}/"+id_cabang,
+    //     },
+    //     columns:[
+    //       {
+    //         data:'produk_nama'
+    //       },
+    //       {
+    //         data:'jumlah'
+    //       },
+    //       {
+    //         data:'capital_price'
+    //       },
+    //       {
+    //         data:'stok_harga'
+    //       }
+    //     ]
+    //   });
+    // }
     function load_gudang(id_gudang){
         tables = $('#tabel').DataTable({
         processing : true,

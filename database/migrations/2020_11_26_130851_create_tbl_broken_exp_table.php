@@ -15,12 +15,15 @@ class CreateTblBrokenExpTable extends Migration
     {
         Schema::create('tbl_broken_exp', function (Blueprint $table) {
             $table->bigIncrements('id_broken_exp');
-            $table->integer('inv_broken_exp');
+            $table->string('inv_broken_exp');
             $table->integer('id_gudang_dari');
             $table->integer('id_gudang_tujuan');
+            $table->integer('stok_id');
+            $table->integer('jumlah_broken');
             $table->date('movement_date');
             $table->string('note');
-            $table->integer('id_user');
+            $table->integer('id_cabang');
+            $table->char('status_broken',1);
         });
     }
 
