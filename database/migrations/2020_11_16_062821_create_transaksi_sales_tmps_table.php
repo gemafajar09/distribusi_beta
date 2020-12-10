@@ -20,7 +20,7 @@ class CreateTransaksiSalesTmpsTable extends Migration
             $table->integer('stok_id');
             $table->integer('price');
             $table->integer('quantity')->nullable();
-            $table->double('diskon');
+            $table->integer('diskon');
             $table->integer('id_user')->nullable();
             $table->integer('harga_satuan')->nullable();
         });

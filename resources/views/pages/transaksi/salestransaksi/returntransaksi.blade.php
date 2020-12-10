@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-md-3 col-sm-6 col-lg-6 col-xl-2">
                             <div class="row">
-                                <div class="col-md-12" id="warehouse">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Sales Invoice ID</label>
                                         <div class="input-group">
@@ -59,13 +59,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12" id="tampilsales">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Salesman ID</label>
-                                        <input type="text" class="form-control" style="border-radius:3px" readonly id="invdate">
+                                        <input type="text" class="form-control" style="border-radius:3px" readonly id="salesid">
                                     </div>
                                 </div>
-                                <div class="col-md-12" id="tampilsales1">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Invoice Type</label>
                                         <input type="text" readonly style="border-radius:3px" class="form-control"
@@ -75,7 +75,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Customer ID</label>
-                                        <input type="text" class="form-control" style="border-radius:3px"  readonly id="invdate">
+                                        <input type="text" class="form-control" style="border-radius:3px"  readonly id="customerid">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <label for="">Pay Status</label>
-                                    <input name="" id="note" readonly class="form-control">
+                                    <input name="" id="paystatus" readonly class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -98,29 +98,28 @@
                                         <label for="">Stok To Return</label>
                                         <select name="stockId" id="stockId" class="select2" style="width:100%">
                                             <option value="">STOCK ID</option>
-                                           
+                                            @foreach($stockid as $a)
+                                                <option value="{{$a->produk_id}}">{{$a->produk_id}} | {{$a->produk_nama}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Product Type</label>
-                                        <input type="text" style="border-radius:3px" id="produktype" name="produktype"
-                                            readonly class="form-control">
+                                        <input type="text" style="border-radius:3px" id="produktype" name="produktype" readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Product Brand</label>
-                                        <input type="text" style="border-radius:3px" id="produkbrand" name="produkbrand"
-                                            readonly class="form-control">
+                                        <input type="text" style="border-radius:3px" id="produkbrand" name="produkbrand" readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Product Name</label>
-                                        <input type="text" style="border-radius:3px" id="produknama" name="produknama"
-                                            readonly class="form-control">
+                                        <input type="text" style="border-radius:3px" id="produknama" name="produknama" readonly class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -136,29 +135,43 @@
                                                 <div id="isi1"></div>
                                             </div>
                                         </div>
-
-                                        <div class="col-md-12">
+                                        
+                                        <div class="col-md-6">
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">Price</div>
+                                                    <div style="font-size: 10px;" class="input-group-text">Selling Price</div>
                                                 </div>
-                                                <input type="text" class="form-control" id="prices">
+                                                <input type="text" class="form-control" readonly id="prices">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <div style="font-size: 10px;" class="input-group-text">Discount</div>
+                                                </div>
+                                                <input type="text" class="form-control" value="0" id="diskon">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">Discount</div>
+                                                    <div style="font-size: 10px;" class="input-group-text">Final Selling Price</div>
                                                 </div>
-                                                <input type="text" class="form-control" onkeyup="diskon(this)"
-                                                    id="discount">
+                                                <input type="text" class="form-control" readonly id="finalselling">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">%</div>
+                                                    <div style="font-size: 10px;" class="input-group-text">Note Return</div>
                                                 </div>
-                                                <div class="input-group-prepend">
-                                                    <input type="text" class="form-control" onkeyup="diskon1(this)"
-                                                        id="amount">
-                                                </div>
+                                                <select name="notereturn" class="form-control" id="note">
+                                                    <option value="">-SELECT-</option>
+                                                    <option value="BROKEN PRODUCT">BROKEN PRODUCT</option>
+                                                    <option value="EXPIRED PRODUCT">EXPIRED PRODUCT</option>
+                                                    <option value="MISMATCH PRODUCT">BMISMATCHPRODUCT</option>
+                                                    <option value="UNSOLD PRODUCT">BROUNSOLDODUCT</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -168,12 +181,10 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6" style="text-align: center;">
-                                            <button type="button" style="width:140px;" onclick="add()"
-                                                class="btn btn-outline-success">Add</button>
+                                            <button type="button" style="width:140px;" onclick="add()" class="btn btn-outline-success">Add</button>
                                         </div>
                                         <div class="col-md-6" style="text-align: center;">
-                                            <button type="button" style="width:140px;"
-                                                class="btn btn-outline-danger">Remove All</button>
+                                            <button type="button" style="width:140px;" class="btn btn-outline-danger">Remove All</button>
                                         </div>
                                     </div>
                                 </div>
@@ -197,36 +208,10 @@
                                     <div class="card-body">
                                         <table border="0" style="width: 100%;">
                                             <tr>
-                                                <td>Total Sales</td>
+                                                <td>Total Return</td>
                                                 <td style="width: 10px;">:</td>
                                                 <td colspan="3"><input type="text" id="totalsales" class="form-control">
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Final Discount</td>
-                                                <td style="width: 10px;">:</td>
-                                                <td style="width: 60px;"><input onkeyup="disco(this)" id="discon"
-                                                        type="text" class="form-control"></td>
-                                                <td style="width: 10px;">%</td>
-                                                <td><input type="text" id="potongan" class="form-control"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total After Discount</td>
-                                                <td style="width: 10px;">:</td>
-                                                <td colspan="3"><input type="text" id="afterdiscount"
-                                                        class="form-control"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Down Payment</td>
-                                                <td style="width: 10px;">:</td>
-                                                <td colspan="3"><input type="text" id="downpayment"
-                                                        class="form-control"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Credit Balance</td>
-                                                <td style="width: 10px;">:</td>
-                                                <td colspan="3"><input type="text" id="creditbalance"
-                                                        class="form-control"></td>
                                             </tr>
                                         </table>
                                         <input type="hidden" id="metode">
@@ -316,6 +301,93 @@
 </div>
 
 <script>
+    $(document).ready(function(){
+        
+        $('#isibody').load("{{ route('tmpdata')}}")
+        
+    })
+
+    function add()
+    {
+        
+        var id_user = "{{Session()->get('id')}}"
+        var invoiceid = $('#invoiceid').val()
+        var stockId = $('#stockId').val()
+        var note = $('#note').val()
+        var prices = convertToAngka($('#finalselling').val())
+        var arrays = []
+        var count = $('#totals').val()
+        for(var i = 0; i < count; i++)
+        {
+            var no = i+1
+            arrays.push(parseInt($('#pecah'+no).val()))
+        }
+        var tertinggi = Math.max.apply(Math, arrays)
+        var hargasatuan = prices /tertinggi
+        // cek diskon kosong atau tidak
+        var discount = $('#diskon').val()
+        // hitung jumlah
+        
+        if(count == 1)
+        {
+            var jumlah1 = $('#jumlah1').val()
+            var uni1 = $('#pecah1').val()
+            var total = parseInt(jumlah1 * uni1)
+        }
+        else if(count == 2)
+        {
+            if($('#jumlah1').val() == '0')
+            {
+                var jumlah1 = '0'
+                var uni1 = '0'
+            }else{
+                var jumlah1 = $('#jumlah1').val()
+                var uni1 = $('#pecah1').val()
+            }
+            var jumlah2 = $('#jumlah2').val()
+            var uni2 = $('#pecah2').val()
+            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2)
+        }
+        else if(count == 3)
+        {
+            if($('#jumlah1').val() == '0')
+            {
+                var jumlah1 = '0'
+                var uni1 = '0'
+            }else{
+                var jumlah1 = $('#jumlah1').val()
+                var uni1 = $('#pecah1').val()
+            }
+            if($('#jumlah2').val() == '0')
+            {
+                var jumlah2 = '0'
+                var uni2 = '0'
+            }else{
+                var jumlah2 = $('#jumlah2').val()
+                var uni2 = $('#pecah2').val()
+            }
+            var jumlah3 = $('#jumlah3').val()
+            var uni3 = $('#pecah3').val()
+            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
+        }
+        axios.post("{{url('/api/addkeranjangr')}}",{
+            'invoiceid':invoiceid,
+            'id_stok':stockId,
+            'prices':prices,
+            'disc':discount,
+            'quantity':total,
+            'note':note,
+            'id_user':id_user,
+            'hargasatuan':hargasatuan,
+        }).then(function(res){
+            data = res.data
+            if(data.status == 200){
+                $('#isibody').load("{{ route('tmpdata')}}")
+                // kosong()
+            }
+        })
+    }
+
     $('#compensation').change(function(){
         var cek = $(this).val()
         if(cek == 'TERM UNTIL')
@@ -325,6 +397,39 @@
             $('#termutil').hide()
         }
     })
+
+    $('#stockId').change(function(){
+        var stokid = $(this).val()
+        var customer = $('#customerid').val()
+        axios.post("{{url('/api/getProduk')}}",{
+            'produk_id': stokid,
+            'cabang': "{{session()->get('cabang')}}"
+        }).then(function(res){
+            var data = res.data.data
+            stok(data.produk_id,data.jumlah)
+            $('#produkid').val(data.produk_id)
+            $('#produktype').val(data.nama_type_produk)
+            $('#produkbrand').val(data.produk_brand)
+            $('#produknama').val(data.produk_nama)
+            $('#prices').val(convertToRupiah(data.capital_price))
+            $('#finalselling').val(convertToRupiah(data.capital_price))
+            
+        }).catch(function(err){
+            console.log(err)
+        })
+    })
+
+    function stok(id, jumlah)
+    {
+        axios.post("{{url('/api/cekstok')}}",{
+            'produk_id':id
+        }).then(function(res){
+            var data = res.data
+            $('#isi1').html(data)
+        }).catch(function(err){
+            console.log(err)
+        })
+    }
 
     function alls()
     {

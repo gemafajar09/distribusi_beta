@@ -22,6 +22,13 @@ class ApprovesalesController extends Controller
         $status = $r->status;
         $id_transaksi = $r->id_transaksi;
         $edit = DB::table('transaksi_sales')->where('id_transaksi_sales',$id_transaksi)->update(['approve' => $status]);
+        $cek = DB::table('transaksi_sales_details')->where('invoice_id',$r->invoice_id)->get();
+        foreach($cek as $i => $a)
+        {
+            $lihat = DB::table('tbl_stok')->where('stok_id',$a->stok_id)->first();
+            $stok = $lihat->jumlah - $a->quantity;
+            DB::table('tbl_stok')->where('stok_id',$a->stok_id)->update(['jumlah' => $stok]);
+        }
         if($edit == TRUE)
         {
             return response()->json(['status' => 200]);

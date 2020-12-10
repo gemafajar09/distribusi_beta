@@ -24,7 +24,8 @@ class CreateTransaksiSalesTable extends Migration
             $table->integer('customer_id');
             $table->text('note')->nullable();
             $table->integer('totalsales')->nullable();
-            $table->double('diskon')->nullable();
+            $table->integer('diskon')->nullable();
+            $table->integer('dp')->nullable();
             $table->integer('id_user');
             $table->integer('id_warehouse')->nullable();
             $table->string('status',20)->nullable();
