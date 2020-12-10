@@ -22,22 +22,22 @@ class StokReportController extends Controller
 
     
 
-    public function report($id_warehouse=null){
+    public function report($id_cabang,$id_warehouse=null){
         if($id_warehouse == null){
-            $tmp = $this->datatable();
+            $tmp = $this->datatable($id_cabang);
             $data = $this->dataisi;
             return view('report.stok.reportstok',compact('data'));
         }else{
-            $tmp = $this->datatable($id_warehouse);
+            $tmp = $this->datatable($id_cabang,$id_warehouse);
             $data = $this->dataisi;
             return view('report.stok.reportstok',compact('data'));
         }
         
     }
 
-    public function datatable($id_warehouse=null){
+    public function datatable($id_cabang,$id_warehouse=null){
         // untuk datatables Sistem Join Query Builder
-        $data = $this->join_builder($id_warehouse);
+        $data = $this->join_builder($id_cabang,$id_warehouse);
         $format = '%d %s ';
         $stok = [];
         $this->dataisi = [];
@@ -105,25 +105,26 @@ class StokReportController extends Controller
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
             $d->total_harga = $harga * $d->jumlah;
-            $this->dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"stok_harga"=>$d->total_harga,"jumlah"=>$d->stok_quantity,"produk_harga"=>$d->produk_harga,"stok_id"=>$d->stok_id,"nama_cabang"=>$d->nama_cabang];
+            $this->dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"stok_harga"=>$d->total_harga,"jumlah"=>$d->stok_quantity,"produk_harga"=>$d->produk_harga,"stok_id"=>$d->stok_id,"nama_cabang"=>$d->nama_gudang];
         }
        
         return datatables()->of($this->dataisi)->toJson();
         
     }
-    public function join_builder($id_warehouse=null){
+    public function join_builder($id_cabang,$id_warehouse=null){
         // tempat join hanya menselect beberapa field tambah join brand
         if($id_warehouse == null){
             $data = DB::table('tbl_stok')
+            ->where('tbl_stok.id_cabang',$id_cabang)
             ->join('tbl_produk','tbl_stok.produk_id','=','tbl_produk.produk_id')
-            ->leftjoin('tbl_cabang as c','c.id_cabang','=','tbl_stok.id_cabang')
+            ->leftjoin('tbl_gudang as c','c.id_gudang','=','tbl_stok.id_gudang')
             ->get();
             return $data;
         }else{
             $data = DB::table('tbl_stok')
-            ->where('tbl_stok.id_cabang',$id_warehouse)
+            ->where('tbl_stok.id_gudang',$id_warehouse)
             ->join('tbl_produk','tbl_stok.produk_id','=','tbl_produk.produk_id')
-            ->leftjoin('tbl_cabang as c','c.id_cabang','=','tbl_stok.id_cabang')
+            ->leftjoin('tbl_gudang as c','c.id_gudang','=','tbl_stok.id_gudang')
             ->get();
             return $data;
         }

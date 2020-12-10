@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card-box table-responsive">
-                    <button type="button" class="btn btn-round btn-success" onclick="tambahData()"><i
+                    <button type="button" class="btn btn-outline-success btn-sm" onclick="tambahData()" style="width:140px;"><i
                             class="fa fa-plus"></i></button>
                     <table id="tabel" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
                         width="100%">

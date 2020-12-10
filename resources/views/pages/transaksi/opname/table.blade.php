@@ -1,5 +1,11 @@
 <!-- javascript dulu -->
-<a href="#" class="btn btn-success btn-sm" onclick="print_faktur()">Export</a>
+<div class="form-group">
+<label for="">Warehouse</label>
+                   <select name="id_gudang" id="id_gudang" class="rounded" disabled="true">
+                    </select>
+                    <a href="#" class="btn btn-success btn-sm" onclick="print_faktur()"> Export</a>
+</div>
+
 <table id="example2" class="table table-bordered" style="width:100%; font-size:11px">
     <thead>
         <tr style="text-align: center; font-size:10px">
@@ -45,8 +51,9 @@
                 @else
                 {{$d['selisih']}}
                 @endif</td>
-            <td>@if($d['balance']=='0')
-                <button class="btn btn-danger btn-sm" onclick="adjustment(`{{$d['id_opname']}}`)">Adjust</button>
+            <td>
+                <div id="adjust">@if($d['balance']=='0')
+                <button class="btn btn-danger btn-sm" onclick="adjustment(`{{$d['id_opname']}}`,`{{$d['stok_id']}}`)">Adjust</button>
                 @elseif($d['balance']=='1')
                 {{"Balance"}}
                 @elseif($d['balance']=='2')
@@ -56,20 +63,39 @@
                 @else
                 {{"Not Cek"}}
                 @endif
+                </div> 
             </td>
-            <td><input type="checkbox" onchange="doalert(this,`{{$d['stok_id']}}`,`{{$d['produk_id']}}`)"> Cek</td>
+            <td><input type="checkbox" id="cek" onclick="doalert(this,`{{$d['stok_id']}}`,`{{$d['produk_id']}}`,`{{$d['id_opname']}}`)"> Cek</td>
         </tr>
         @endforeach
     </tbody>
 </table>
 <script>
     $(document).ready(function() {
+        // $('#adjust').html('Not Cek')
+        id_cabang = {{session()->get('cabang')}}
+        axios.get('{{url('api/gudangcabang/')}}/'+id_cabang)
+            .then(function(res){
+                tampilGudangAsal(res.data.data);
+            })
         var data = <?=json_encode($nilai)?>;
         
         for (var i = 0; i < data.length; i++) {
             loadinput(data[i].stok_id, data[i].capital_price)
         }
     })
+
+    function tampilGudangAsal(data)
+    {
+        warehouse_asal = [];
+
+        for(var x = 0; x < data.length; x++)
+        {
+            warehouse_asal.push({id_gudang: data[x].id_gudang, nama_gudang: data[x].nama_gudang})
+            document.getElementById("id_gudang").innerHTML += "<option value='" + data[x].id_gudang + "'>" + data[x].nama_gudang + "</option>"
+        }
+
+    }
 
     function loadinput(urut, capital_price) {
         cabang = {{session()->get('cabang')}}
@@ -96,31 +122,49 @@
             })
     }
 
-    function doalert(checkboxElem, stok_id, produk_id) {
+    function doalert(checkboxElem, stok_id, produk_id,id_opname=null) {
+        let nextd = $('td#' + stok_id).next();
+        let nextd1 = nextd.next();
+        let nextd2 = nextd1.next();
+        let nextd3 = nextd2.next();
+        let nextd4 = nextd3.next();
         cabang = {{session()->get('cabang')}}
         unit1 = $('#' + stok_id).find('#unit1').val();
         unit2 = $('#' + stok_id).find('#unit2').val();
         unit3 = $('#' + stok_id).find('#unit3').val();
-        if (checkboxElem.checked) {
+        if (checkboxElem.checked == true) {
             axios.get('{{url('/api/stok/')}}/' + stok_id)
                 .then(function(res) {
                     isi = res.data;
                     jumlah_system = isi.data['jumlah']
-                    axios.get('{{url('/api/getunitopname/')}}/' + produk_id+'/'+cabang)
+                    axios.get('{{url('/api/getunitopname/')}}/' + stok_id+'/'+cabang)
                         .then(function(res) {
-                            unit3 = conversi(res);
+                            unit3 = conversi(res,unit1, unit2, unit3);
                             if (unit3 == jumlah_system) {
+                                var html = "Balance";
                                 status = '1';
+                                nextd4.find('#adjust').html(html)
                             } else {
                                 status = '0';
-                            }
+                                if(typeof id_opname !== null){
+                                var html = `<button class='btn btn-danger btn-sm' id='${stok_id}' onclick='adjustment(${id_opname},${stok_id})'>Adjust</button>`;
+                                nextd4.find('#adjust').html(html)
+                                }
+                            } 
+                             
                             axios.post('{{url('/api/stok_opname/ ')}}', {
                                 'stok_id': stok_id,
                                 'jumlah_fisik': unit3,
                                 'balance': status,
                                 'update_opname': new Date().format('y-m-d')
                             }).then(function(res) {
-                                location.reload();
+                                var data = res.data
+                                if(status == '0'){
+                                if(typeof data['id'] !== 'undefined'){
+                                    var html = `<button class='btn btn-danger btn-sm' id='${stok_id}'  onclick='adjustment(${data['id']},${stok_id})'>Adjust</button>`;
+                                    nextd4.find('#adjust').html(html)
+                                }
+                            }
                             })
                         });
                 })
@@ -139,7 +183,7 @@
         };
     })();
 
-    function conversi(res) {
+    function conversi(res,unit1, unit2, unit3) {
         isi = res.data
         panjang = isi.data.length
         if (unit1 == 'null' && unit2 == 'null') {
@@ -172,9 +216,9 @@
             let nextd1 = nextd.next();
             nextd.html('');
             nextd1.html('');
-            axios.get('{{url('/api/getunitopname/')}}/' + produk_id+'/'+cabang)
+            axios.get('{{url('/api/getunitopname/')}}/' + stok_id+'/'+cabang)
                 .then(function(res) {
-                    unit3 = conversi(res)
+                    unit3 = conversi(res,unit1, unit2, unit3)
                     axios.get('{{url('/api/stok_opname/')}}/' + unit3 + '/' + stok_id)
                         .then(function(res) {
                             isi = res.data;
@@ -189,15 +233,24 @@
 
     }
 
-    function adjustment(id_opname){
+    function adjustment(id_opname,stok_id){
+        let nextd = $('td#' + stok_id).next();
+        let nextd1 = nextd.next();
+        let nextd2 = nextd1.next();
+        let nextd3 = nextd2.next();
+        let nextd4 = nextd3.next();
+        // console.log(id_opname)
         axios.get('{{url('/api/makeadjust/')}}/' + id_opname)
         .then(function(res){
-            location.reload();
-        })
+            console.log(id_opname);
+            nextd4.find('#adjust').html("Waiting Adjust");
+        });
     }
 
     function print_faktur(){
-        cek = window.open('{{url('/api/reportopname/')}}/', "_blank");
+        cabang = {{session()->get('cabang')}}
+        gudang = $('#id_gudang').val();
+        cek = window.open('{{url('/api/reportopname/')}}/'+cabang+'/'+gudang+'/', "_blank");
     }
 
     // $('#example2').DataTable();

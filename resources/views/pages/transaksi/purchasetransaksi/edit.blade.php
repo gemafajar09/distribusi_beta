@@ -2,28 +2,28 @@
 
 <!-- main content -->
 <!-- page Title -->
-@section('page-title','Aproval Purchase Order')
+@section('page-title','Edit Transaksi Purchase')
 <!-- Page Content -->
 @section('content')
- 
-<div class="row">
-<div class="col-sm-12">
-<button class="btn btn-info" onclick="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+<div class="row mt-3">
+<div class="col-sm-12 border p-3 mr-3">
+<button class="btn btn-info btn-sm" onclick="refresh()">Refresh</button>
     <div class="card-box table-responsive">
-        <table id="tabel" class="table table-striped table-responsive-sm table-bordered dt-responsive nowrap"
+        <table id="tabel" class="table table-striped table-responsive-sm table-bordered dt-responsive nowrap table-sm"
             cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th >Invoice ID</th>
-                    <th >Invoice Date</th>
-                    <th >Nama Suplier</th>
-                    <th>Total</th>
-                    <th>Diskon</th>
-                    <th>Bayar</th>
-                    <th>Sisa</th>
-                    <th>Detail</th>
-                    <th>Aproval</th>
-                    <th>Aksi</th>
+                   <th>Invoice ID</th>
+                   <th>Invoice Date</th>
+                   <th>Type</th>
+                   <th>Total</th>
+                   <th>Diskon</th>
+                   <th>Bayar</th>
+                   <th>Total After Diskon</th>
+                   <th>Payment Status</th>
+                   <th>Detail</th>
+                   <th>Aksi</th>
+                   <th>Print</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,13 +32,10 @@
                 </tr>
             </tbody>
         </table>
-        <!-- <button onclick="register()" class="btn btn-danger btn-sm">Register Transaksi</button> -->
-        
     </div>
 </div>
 </div>
 
-<!-- Modal -->
 <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -68,41 +65,40 @@
 
 <script>
     $(document).ready(function(){
-      {{$cabang = session()->get('cabang')}}
+      id_cabang = {{session()->get('cabang')}}
+      load_today(id_cabang);
+    function load_today(id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
+        ordering:false,
         serverSide : true,
         ajax:{
-          url: '{{ url("/api/purchasedetail/datatable/".$cabang) }}', 
+          url: "{{ url('/api/report_purchase/edit_today_datatable/') }}/"+id_cabang,
         },
         columns:[
-          {
-            data:'invoice_id',
-            defaultContent:""
+        {
+            data:'invoice_id'
+          },{
+            data:'invoice_date'
           },
           {
-            data:'invoice_date',
-            defaultContent:""
+            data:'transaksi_tipe'
           },
           {
-            data:'nama_suplier',
-            defaultContent:""
+            data:'total'
           },
           {
-            data:'total',
-            defaultContent:""
+            data:'diskon'
           },
           {
-            data:'diskon',
-            defaultContent:""
+            data:'bayar'
+          }
+          ,
+          {
+            data:'sisa'
           },
           {
-            data:'bayar',
-            defaultContent:""
-          },
-          {
-            data:'sisa',
-            defaultContent:""
+            data:'status'
           },
           {
             defaultContent:"",
@@ -115,44 +111,25 @@
             defaultContent:"",
             data: null,
             render: function(data, type, row, meta) {
-            return "<div><select id='approval'><option value='1'>Approval</option><option value='2'>Not Approval</option></select></div>";
+            return "<div><button id='detail' onclick='edit(" + data.id_transaksi_purchase + ")'><i class='fa fa-edit'></i></button></div>";
             }  
-          }
-          ,
+          },
           {
             defaultContent:"",
             data: null,
             render: function(data, type, row, meta) {
-            return "<div>" +
-                "<button type='button'  onclick='aproval(" + data.id_transaksi_purchase + ")' class='btn btn-success btn-sm'>Simpan</button> "+
-            "</div>" ;
-            }
+            return "<div><button id='detail' onclick='print(" + data.id_transaksi_purchase + ")'><i class='fa fa-print'></i></button></div>";
+            }  
           }
         ]
       });
-            });
-
-
-    function aproval(id){
-        aprove = $('#approval').val();
-        axios.post('{{url('/api/purchasedetail/approval/')}}',{
-            'id':id,
-            'status':aprove
-        }).then(function(res){
-            var data = res.data
-            tables.ajax.reload()
-            toastr.info(data.message)
-        })
     }
+});
 
-    function refresh(){
-      tables.ajax.reload()
-    }
-
-    function detail(invoice_id){
+    function detail(id_transaksi_purchase){
       $('#detailinvoice').html('');
       cabang = {{session()->get('cabang')}};
-      axios.get('{{url('/api/purchasedetailproduk/')}}/'+cabang+'/'+invoice_id)
+      axios.get('{{url('/api/report_purchase/editdetailpurchase/')}}/'+cabang+'/'+id_transaksi_purchase)
         .then(function(res){
           isi = res.data;
           result = isi.data;
@@ -169,6 +146,19 @@
           }
           $('#modal').modal('show');
         });
+    }
+
+    function edit(id_transaksi_purchase){
+      window.open(`{{url('/purchase_transaksi/edit_purchase_order/')}}/`+id_transaksi_purchase);
+    }
+
+    function print(id_transaksi_purchase){
+      
+      window.open(`{{url('/purchase/report_purchase_edit_today/')}}/`+id_transaksi_purchase);
+    }
+
+    function refresh(){
+      tables.ajax.reload();
     }
 
 </script>

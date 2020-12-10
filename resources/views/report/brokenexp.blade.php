@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-sm-12">
         <div class="text-center">
-            <h4>Report Stock Opname</h4>
+            <h4>Report Broken ExPired</h4>
             <h5>SUMBER CAHAYA REZEKI</h5>
             <h6>Jl. BY PASS TALUAK BUKITTINGGI, INDONESIA</h6>
             <H6>PHONE : 085375715757 FAX : (0752) 8810863</H6>
@@ -26,40 +26,25 @@
     <table border="2"  style="border: 2px solid black; width:100%;">
     <thead style="text-align: center;">
         <tr>
-            <td rowspan="2">Nama Produk</td>
-            <td>System Stok</td>
-            <td>Fisik Stok</td>
-            <td>Unbalance</td>
-            <td rowspan="2">Date</td>
-            <td rowspan="2">Status</td>
-        </tr>
-        <tr>
-            <td>Quantity</td>
-            <td>Quantity</td>
-            <td>Quantity</td>
+                        <th>STOCK ID</th>
+                        <th>PRODUCT TYPE</th>
+                        <th>PRODUCT BRAND</th>
+                        <th>PRODUCT NAME</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($dataisi as $d)
+        @foreach($dataconversi as $d)
         <tr>
+            <td>{{$d['stok_id']}}</td>
+            <td>{{$d['nama_type']}}</td>
+            <td>{{$d['produk_brand']}}</td>
             <td>{{$d['produk_nama']}}</td>
-            <td>{{$d['jumlah']}}</td>
-            <td>{{$d['jumlah_fisik']}}</td>
-            <td>{{$d['selisih']}}</td>
-            <td>{{$d['update_opname']}}
-            </td>
-            <td>@if($d['balance']=='0')
-                {{"Not Balance"}}
-                @elseif($d['balance']=='1')
-                {{"Balance"}}
-                @elseif($d['balance']=='2')
-                {{"Waiting Adjust"}}
-                @elseif($d['balance']=='3')
-                {{"Adjust Reject"}}
-                @else
-                {{"Not Cek"}}
-                @endif</td>
+            <td>{{$d['jumlah_broken']}}</td>
+            <td>{{$d['total']}}</td>
         </tr>
+        
         @endforeach
     </tbody>
     </table>

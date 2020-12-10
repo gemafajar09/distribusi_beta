@@ -34,9 +34,9 @@ class TransaksiPurchaseTmpController extends Controller
         $this->dataisi = [];
     }
     
-    public function datatable(){
+    public function datatable($id_cabang){
         // untuk datatables Sistem Join Query Builder
-        $data = $this->join_builder();
+        $data = $this->join_builder($id_cabang);
         $format = '%d %s ';
         $stok = [];
         $this->dataisi = [];
@@ -108,8 +108,9 @@ class TransaksiPurchaseTmpController extends Controller
         return datatables()->of($this->dataisi)->toJson();
     }
 
-    public function join_builder($id=null){
+    public function join_builder($id_cabang){
         $data = DB::table('transaksi_purchase_tmp as tmp')
+            ->where('tmp.id_cabang',$id_cabang)
             ->join('tbl_produk as a','a.produk_id','=','tmp.produk_id')
             ->join('tbl_type_produk as b','b.id_type_produk','=','a.id_type_produk')
             ->join('tbl_suplier as c','c.id_suplier','=','tmp.id_suplier')
@@ -154,9 +155,9 @@ class TransaksiPurchaseTmpController extends Controller
     }
 
 
-    public function register($tot,$dis,$down,$deb){
-        $data = TransaksiPurchaseTmp::all('invoice_id','invoice_date','transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status','id_gudang')->toArray();
-        $data1 = $this->datatable();
+    public function register($tot,$dis,$down,$deb,$id_cabang){
+        $data = TransaksiPurchaseTmp::where('id_cabang',$id_cabang)->select('invoice_id','invoice_date','transaksi_tipe','term_until','id_suplier','produk_id','quantity','unit_satuan_price','diskon','total_price','id_cabang','status','id_gudang')->get()->toArray();
+        $data1 = $this->datatable($id_cabang);
         $datatmp =  $this->dataisi;
         $tambahtodetail = TransaksiPurchaseDetail::insert($data);
         $d = $data[0];
@@ -180,7 +181,7 @@ class TransaksiPurchaseTmpController extends Controller
             $tambahutama->id_gudang = $id_gudang;
             $tambahutama->save();    
             $calculate = [$tot,$dis,$down,$deb];
-        $delete = TransaksiPurchaseTmp::truncate();
+        $delete = TransaksiPurchaseTmp::where('id_cabang',$id_cabang)->delete();
         if($delete){
             return view('report.purchase_transaksi',compact(['datatmp','calculate']));
         }    
@@ -205,5 +206,6 @@ class TransaksiPurchaseTmpController extends Controller
         $tot_price = DB::table('transaksi_purchase_tmp')->sum('total_price');
         return response()->json(['tot'=>$tot_price]);
     }
+
 
 }

@@ -22,7 +22,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="">Credit Plafond</label>
-                        <input type="text" name="credit_plafond" id="credit_plafond" class="form-control rounded" placeholder="Masukan Credit Plafond">
+                        <input type="number" name="credit_plafond" id="credit_plafond" class="form-control rounded" placeholder="Masukan Credit Plafond">
                     </div>
                     </div>
                     <div class="form-row">

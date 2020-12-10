@@ -50,6 +50,7 @@ Route::group(['namespace' => 'Admin'], function () {
     });
     Route::group(['prefix' => 'user'], function () {
         Route::get('/index', 'UserController@index')->name('user');
+        Route::get('/profile', 'UserController@view_profile')->name('view_profile');
     });
     Route::group(['prefix' => 'stok'], function () {
         Route::get('/index', 'StokController@index')->name('stok');
@@ -80,6 +81,8 @@ Route::group(['namespace' => 'Transaksi'], function () {
         Route::get('/purchase_order', 'TransaksiPurchaseController@index')->name('purchase_order');
         Route::get('/purchase_aproval', 'TransaksiPurchaseDetailController@index')->name('aproval_purchase_order');
         Route::get('/purchase_return', 'TransaksiPurchaseReturnController@index')->name('return_purchase_order');
+        Route::get('/edit_purchase', 'TransaksiPurchaseController@view_edit_purchase')->name('edit_purchase_order');
+        Route::get('/edit_purchase_order/{id_transaksi_purchase}', 'TransaksiPurchaseDetailController@edit_transaksi');
 
         // broken exp movement
         Route::get('/broken_exp', 'BrokenExpMovementController@index')->name('broken_exp');
@@ -92,29 +95,31 @@ Route::group(['namespace' => 'Transaksi'], function () {
         Route::get('/list_aproval_opname','OpnameController@list_aproval')->name('aprovalopname');
 
     });
+    
 });
 
 Route::group(['namespace' => 'Report'], function () {
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('/report', 'StokReportController@index')->name('stok-report');
-        Route::get('/report_stok', 'StokReportController@report');
-        Route::get('/report_stok/{id_warehouse}', 'StokReportController@report');
+        Route::get('/report_stok/{id_cabang}', 'StokReportController@report');
+        Route::get('/report_stok/{id_cabang}/{id_warehouse}', 'StokReportController@report');
     });
     Route::group(['prefix' => 'purchase'], function () {
         Route::get('/report', 'PurchaseReportController@index')->name('purchase-report');
-        Route::get('/report_purchase', 'PurchaseReportController@report_all');
-        Route::get('/report_purchase_today', 'PurchaseReportController@report_today');
-        Route::get('/report_purchase_month/{month}/{year}', 'PurchaseReportController@report_month');
-        Route::get('/report_purchase_year/{year}', 'PurchaseReportController@report_year');
-        Route::get('/report_purchase_range/{awal}/{akhir}', 'PurchaseReportController@report_range');
+        Route::get('/report_purchase/{status}/{id_cabang}', 'PurchaseReportController@report_all');
+        Route::get('/report_purchase_today/{status}/{id_cabang}', 'PurchaseReportController@report_today');
+        Route::get('/report_purchase_edit_today/{id_transaksi_purchase}', 'PurchaseReportController@report_edit_today');
+        Route::get('/report_purchase_month/{month}/{year}/{status}/{id_cabang}', 'PurchaseReportController@report_month');
+        Route::get('/report_purchase_year/{year}/{status}/{id_cabang}', 'PurchaseReportController@report_year');
+        Route::get('/report_purchase_range/{awal}/{akhir}/{status}/{id_cabang}', 'PurchaseReportController@report_range');
     });
     Route::group(['prefix' => 'purchase_return'], function () {
         Route::get('/report', 'PurchaseReturnReportController@index')->name('purchase-return-report');
-        Route::get('/report_purchase_return', 'PurchaseReturnReportController@report_all');
-        Route::get('/report_purchase_return_today', 'PurchaseReturnReportController@report_today');
-        Route::get('/report_purchase_return_month/{month}/{year}', 'PurchaseReturnReportController@report_month');
-        Route::get('/report_purchase_return_year/{year}', 'PurchaseReturnReportController@report_year');
-        Route::get('/report_purchase_return_range/{awal}/{akhir}', 'PurchaseReturnReportController@report_range');
+        Route::get('/report_purchase_return/{id_cabang}', 'PurchaseReturnReportController@report_all');
+        Route::get('/report_purchase_return_today/{id_cabang}', 'PurchaseReturnReportController@report_today');
+        Route::get('/report_purchase_return_month/{month}/{year}/{id_cabang}', 'PurchaseReturnReportController@report_month');
+        Route::get('/report_purchase_return_year/{year}/{id_cabang}', 'PurchaseReturnReportController@report_year');
+        Route::get('/report_purchase_return_range/{awal}/{akhir}/{id_cabang}', 'PurchaseReturnReportController@report_range');
     });
     Route::group(['prefix' => 'cost_report'], function () {
         Route::get('/report', 'CostReport@index')->name('cost_report');

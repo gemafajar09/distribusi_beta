@@ -97,6 +97,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('gudang', 'GudangController@add');
     Route::put('gudang', 'GudangController@edit');
     Route::delete('gudang/{id}', 'GudangController@remove');
+    Route::get('gudangcabang/{id_cabang}', 'GudangController@gudangcabang');
 
     // api spesial
     Route::get('spesial/datatable', 'SpesialHargaController@datatable');
@@ -113,6 +114,7 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('user', 'UserController@add');
     Route::put('user', 'UserController@edit');
     Route::delete('user/{id}', 'UserController@remove');
+    Route::put('profile', 'UserController@edit_profile');
 
     // api spesial
     Route::get('unit/datatable', 'UnitController@datatable');
@@ -133,11 +135,16 @@ Route::group(['namespace' => 'Transaksi'], function () {
 
     // api purchase
     Route::get('purchasedetail/datatable/{cabang}', 'TransaksiPurchaseDetailController@all_data');
+    Route::get('purchasedetail/edit_datatable/{id_transaksi_purchase}', 'TransaksiPurchaseDetailController@edit_datatable');
     Route::get('purchasedetailproduk/{cabang}/{invoice_id}', 'TransaksiPurchaseDetailController@datatable');
     Route::post('purchasedetail/approval', 'TransaksiPurchaseDetailController@approvalPurchase');
+    Route::delete('purchasedetail/remove/{id_transaksi_purchase}', 'TransaksiPurchaseDetailController@remove');
+    Route::post('purchasedetail', 'TransaksiPurchaseDetailController@add');
+    Route::get('calculatedetail/{id_transaksi_purchase}', 'TransaksiPurchaseDetailController@calculateDetail');
+    Route::get('editregisterpurchase/{tot}/{dis}/{down}/{debt}/{id_transaksi_purchase}', 'TransaksiPurchaseDetailController@register');
 
     // api purchase tmp
-    Route::get('purchasetmp/datatable', 'TransaksiPurchaseTmpController@datatable');
+    Route::get('purchasetmp/datatable/{id_cabang}', 'TransaksiPurchaseTmpController@datatable');
     Route::get('purchasetmp/{id}', 'TransaksiPurchaseTmpController@get');
     Route::get('purchasetmp', 'TransaksiPurchaseTmpController@get');
     Route::post('purchasetmp', 'TransaksiPurchaseTmpController@add');
@@ -145,7 +152,7 @@ Route::group(['namespace' => 'Transaksi'], function () {
     Route::delete('purchasetmp/{id}', 'TransaksiPurchaseTmpController@remove');
     Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}', 'TransaksiPurchaseTmpController@register');
     Route::get('calculatetmp', 'TransaksiPurchaseTmpController@calculateTmp');
-    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}', 'TransaksiPurchaseTmpController@register');
+    Route::get('registerpurchase/{tot}/{dis}/{down}/{debt}/{id_cabang}', 'TransaksiPurchaseTmpController@register');
     Route::get('calculatetmp', 'TransaksiPurchaseTmpController@calculateTmp');
 
     // api transaksi sales
@@ -174,10 +181,10 @@ Route::group(['namespace' => 'Transaksi'], function () {
     // api Purchase Return
     // Route::get('purchasereturn/datatable', 'TransaksiPurchareturnController@datatable');
     Route::get('purchasereturn/{id}', 'TransaksiPurchaseReturnController@get');
-    Route::get('returnpurchase/datatable', 'TransaksiPurchaseReturnController@datatable');
+    Route::get('returnpurchase/datatable/{id_cabang}', 'TransaksiPurchaseReturnController@datatable');
     Route::post('purchasereturn', 'TransaksiPurchaseReturnController@add');
     Route::delete('purchasereturn/{id}', 'TransaksiPurchaseReturnController@remove');
-    Route::get('registerpurchasereturn', 'TransaksiPurchaseReturnController@register')->name('register-transaksi-purchase-return');
+    Route::get('registerpurchasereturn/{id_cabang}', 'TransaksiPurchaseReturnController@register')->name('register-transaksi-purchase-return');
     Route::get('getsuplierproduk/{id}', 'TransaksiPurchaseReturnController@getStok');
 
 
@@ -188,32 +195,45 @@ Route::group(['namespace' => 'Transaksi'], function () {
     // opname
     Route::get('stok_opname/{fisik}/{stok_id}','OpnameController@cekbalance');
     Route::post('stok_opname','OpnameController@add');
-    Route::get('reportopname','OpnameController@print_faktur');
+    Route::get('reportopname/{id_cabang}/{id_gudang}','OpnameController@print_faktur');
     Route::get('makeadjust/{stok_id}','OpnameController@adjust');
     Route::get('aprovalopname/datatable/{id_cabang}','OpnameController@datatablesaprovalopname');
     Route::post('opname/approval','OpnameController@opname_aproval');
+
+    // broken
+    Route::get('brokenexp/datatable/{id_cabang}','BrokenExpMovementController@datatablesbroken');
+    Route::get('ambildatastok/{id}', 'BrokenExpMovementController@ambildatastok');
+    Route::post('cekdatastok/', 'BrokenExpMovementController@cekdatastok');
+    Route::post('add_broken', 'BrokenExpMovementController@add');
+    Route::delete('broken/remove/{id}', 'BrokenExpMovementController@remove');
+    Route::get('registerbroken/{id_cabang}', 'BrokenExpMovementController@register');
 
 });
 
 
 Route::group(['namespace' => 'Report'], function () {
     Route::group(['prefix' => 'inventory'], function () {
-        Route::get('datatable', 'StokReportController@datatable');
-        Route::get('datatable/{id}', 'StokReportController@datatable');
-    });
+        Route::get('datatable/{id_cabang}', 'StokReportController@datatable');
+        Route::get('datatable/{id_cabang}/{id}', 'StokReportController@datatable');
+    }); 
     Route::group(['prefix' => 'report_purchase'], function () {
-        Route::get('datatable', 'PurchaseReportController@all_datatable');
-        Route::get('today_datatable', 'PurchaseReportController@today_datatable');
-        Route::get('month_datatable/{month}/{year}', 'PurchaseReportController@month_datatable');
-        Route::get('year_datatable/{year}', 'PurchaseReportController@year_datatable');
-        Route::get('range_datatable/{awal}/{akhir}', 'PurchaseReportController@range_datatable');
+        Route::get('datatable/{status}/{id_cabang}', 'PurchaseReportController@all_datatable');
+        Route::get('today_datatable/{status}/{id_cabang}', 'PurchaseReportController@today_datatable');
+        Route::get('month_datatable/{month}/{year}/{status}/{id_cabang}', 'PurchaseReportController@month_datatable');
+        Route::get('year_datatable/{year}/{status}/{id_cabang}', 'PurchaseReportController@year_datatable');
+        Route::get('range_datatable/{awal}/{akhir}/{status}/{id_cabang}', 'PurchaseReportController@range_datatable');
+        Route::get('detailpurchase/{cabang}/{invoice_id}', 'PurchaseReportController@datatable_detail_report');
+        // edit transaksi
+        Route::get('edit_today_datatable/{id_cabang}', 'PurchaseReportController@edit_today_datatable');
+        Route::get('editdetailpurchase/{cabang}/{invoice_id}', 'PurchaseReportController@datatable_edit_detail_report');
     });
     Route::group(['prefix' => 'report_purchase_return'], function () {
-        Route::get('datatable', 'PurchaseReturnReportController@all_datatable');
-        Route::get('today_datatable', 'PurchaseReturnReportController@today_datatable');
-        Route::get('month_datatable/{month}/{year}', 'PurchaseReturnReportController@month_datatable');
-        Route::get('year_datatable/{year}', 'PurchaseReturnReportController@year_datatable');
-        Route::get('range_datatable/{awal}/{akhir}', 'PurchaseReturnReportController@range_datatable');
+        Route::get('datatable/{id_cabang}', 'PurchaseReturnReportController@all_datatable');
+        Route::get('today_datatable/{id_cabang}', 'PurchaseReturnReportController@today_datatable');
+        Route::get('month_datatable/{month}/{year}/{id_cabang}', 'PurchaseReturnReportController@month_datatable');
+        Route::get('year_datatable/{year}/{id_cabang}', 'PurchaseReturnReportController@year_datatable');
+        Route::get('range_datatable/{awal}/{akhir}/{id_cabang}', 'PurchaseReturnReportController@range_datatable');
+        Route::post('detailpurchasereturn', 'PurchaseReturnReportController@datatable_detail_report');
     });
 
     Route::group(['prefix' => 'cost_report'], function () {
@@ -221,11 +241,13 @@ Route::group(['namespace' => 'Report'], function () {
         Route::get('findid/{select}/{input}/{ket_waktu}/{filtertahun}/{filterbulan}/{filter_year}/{waktuawal}/{waktuakhir}', 'CostReport@findId');
     });
     //     Route::get('purchaseinv/{id}', 'TransaksiPurchaseTmpController@generateInvoicePurchase');
-    Route::get('purchasereturninv/{id}', 'TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
+    // Route::get('purchasereturninv/{id}', 'TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
 
     // broken and exp movement
-    Route::get('ambildatastok/{id}', 'BrokenExpMovementController@ambildatastok');
-    Route::post('cekdatastok/', 'BrokenExpMovementController@cekdatastok');
+
+    // edit transaksi
+
+    
 });
 
 Route::group(['namespace' => 'Report'], function () {

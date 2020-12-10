@@ -2,7 +2,7 @@
 
 <!-- main content -->
 <!-- page Title -->
-@section('page-title','Purchase Order Transaction')
+@section('page-title','Edit Purchase Order Transaction')
 <!-- Page Content -->
 @section('content')
 
@@ -14,15 +14,15 @@
                     <div class="form-row">
                         <div class="form-group col-sm-2">
                             <label for="">Invoice ID</label>
-                            <input type="text" class="form-control" id="invoice_id" readonly>
+                            <input type="text" class="form-control" id="invoice_id" value="{{$data1->invoice_id}}" readonly>
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="">Invoice Date</label>
-                            <input type="date" id="invoice_date" class="form-control">
+                            <input type="date" id="invoice_date" class="form-control" value="{{$data1->invoice_date}}" readonly>
                         </div>
                         <div class="form-group col-sm-2">
                         <label for="">Gudang</label>
-                        <select name="id_gudang" id="id_gudang" class="form-control rounded" disabled="true">
+                        <select name="id_gudang" id="id_gudang" class="form-control rounded" disabled="true" value="{{$data1->id_gudang}}">
                             @foreach ($gudang as $c)
                             <option value="{{$c->id_gudang}}">{{$c->nama_gudang}}</option>
                             @endforeach
@@ -31,21 +31,21 @@
                         <div class="form-group col-sm-2">
                             <label for="">Transaction Type</label><br>
                             <div style="margin-top:10px;">
-                            <input type="radio" name="transaksi_tipe" id="cash" value="0">
+                            <input type="radio" name="transaksi_tipe" id="cash" value="0" {{ ($data1->transaksi_tipe=="0")? "checked" : "" }}>
                             <b>Cash</b>
-                            <input type="radio" name="transaksi_tipe" id="credit" value="1" style="margin-left:20px;">
+                            <input type="radio" name="transaksi_tipe" id="credit" value="1" style="margin-left:20px;" {{ ($data1->transaksi_tipe=="1")? "checked" : "" }}>
                             <b>Credit</b>
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
                             <label for="">Term Until</label>
-                            <input type="date" id="term_until" class="form-control">
+                            <input type="date" id="term_until" class="form-control" value="{{$data1->invoice_date}}" readonly>
                         </div>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-sm-3">
                     <label for="">Suplier</label>
-                        <select name="id_suplier" id="id_suplier" class="selectpicker form-control" data-live-search="true" title="Pilih Suplier" autocomplete="off">
+                        <select name="id_suplier" id="id_suplier" class="selectpicker form-control" data-live-search="true" autocomplete="off" value="{{$data1->id_suplier}}" disabled="true">
                         </select>
                     </div>
                     <div class="form-group col-sm-3">
@@ -96,7 +96,7 @@
             cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th >Type Produk</th>
+                    
                     <th >Brand</th>
                     <th >Nama Produk</th>
                     <th >Harga</th>
@@ -124,11 +124,11 @@
     <table style="text-align: center;">
         <tr>
             <td>Total Purchase : </td>
-            <td><input type="number" class="form-control rounded" id="sub_tot_purchase" value="0" readonly></td>
+            <td><input type="number" class="form-control rounded" id="sub_tot_purchase" value="{{$data1->total}}" readonly></td>
         </tr>
         <tr>
             <td>Discount : %</td>
-            <td><input type="number" class="form-control rounded" id="convert_discount" value="0"></td>
+            <td><input type="number" class="form-control rounded" id="convert_discount" value="{{$data1->diskon}}"></td>
         </tr>
         <tr>
             <td></td>
@@ -140,7 +140,7 @@
         </tr>
         <tr>
             <td>Down Payment : </td>
-            <td><input type="number" class="form-control rounded" id="down_payment" value="0"></td>
+            <td><input type="number" class="form-control rounded" id="down_payment" value="{{$data1->bayar}}"></td>
         </tr>
         <tr>
             <td>Total Debt Balance : </td>
@@ -149,7 +149,7 @@
     </table>
 </div>
 <div class="col-sm-3 align-self-center">
-<a href="#" class="btn btn-danger btn-sm" id="register">Register Transaksi</a>
+<a href="#" class="btn btn-danger btn-sm" id="register">Save Transaksi</a>
 </div>
 
 </div>
@@ -160,6 +160,14 @@
 <script>
     $(document).ready(function(){
         id_cabang = {{session()->get('cabang')}}
+        id_transaksi_purchase = {{$data1->id_transaksi_purchase}}
+        axios.get('{{url('/api/calculatedetail/')}}/'+id_transaksi_purchase)
+                                .then(function(res){
+                                    isi = res.data
+                                    $('#sub_tot_purchase').val(isi.tot)
+                                    $('#tot_after_discount').val(isi.tot)
+                                    $('#tot_debt_balance').val(isi.tot)
+                                });
       tables = $('#tabel').DataTable({
         processing : true,
         paginate : false,
@@ -167,13 +175,9 @@
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/purchasetmp/datatable/') }}/"+id_cabang, 
+          url: "{{ url('/api/purchasedetail/edit_datatable/') }}/"+id_transaksi_purchase, 
         },
         columns:[
-          {
-            data:'nama_type_produk',
-            defaultContent:""
-          },
           {
             data:'produk_brand',
             defaultContent:""
@@ -207,7 +211,7 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_transaksi_purchase_tmp + ")' class='btn btn-danger btn-sm'>Hapus</button> "+
+                "<button type='button' onclick='deleted(" + data.id_transaksi_purchase_detail + ")' class='btn btn-danger btn-sm'>Hapus</button> "+
             "</div>" ;
             }
           }
@@ -266,15 +270,7 @@
                 });
 
                 $('#term_until').hide();
-                session_cabang = {{session()->get('cabang')}};
-                generateinv(session_cabang);
-                axios.get('{{url('/api/calculatetmp/')}}/')
-                    .then(function(res){
-                        isi = res.data
-                        $('#sub_tot_purchase').val(isi.tot)
-                        $('#tot_after_discount').val(isi.tot)
-                        $('#tot_debt_balance').val(isi.tot)
-                    });
+               
     
     });
 
@@ -337,7 +333,7 @@
                         total_price = total - tmp_harga;
 
                         
-                        axios.post('{{url('/api/purchasetmp/')}}',{
+                        axios.post('{{url('/api/purchasedetail/')}}',{
                             'produk_id':produk_id,
                             'invoice_id':invoice_id,
                             'invoice_date':invoice_date,
@@ -365,7 +361,7 @@
                                 $('#wadah').html('')
                                 tables.ajax.reload()
                                 toastr.info(data.message)
-                                axios.get('{{url('/api/calculatetmp/')}}/')
+                                axios.get('{{url('/api/calculatedetail/')}}/'+id_transaksi_purchase)
                                 .then(function(res){
                                     isi = res.data
                                     $('#sub_tot_purchase').val(isi.tot)
@@ -405,29 +401,30 @@
         let dis = $('#final_discount').val();
         let down = $('#down_payment').val();
         let deb = $('#tot_debt_balance').val();
-        cek = window.open('{{url('/api/registerpurchase/')}}/'+tot+'/'+dis+'/'+down+'/'+deb+'/'+id_cabang+'/', "_blank");
-        $(cek).on("unload", function(){
-        tables.ajax.reload();
-        session_cabang = {{session()->get('cabang')}}
-        generateinv(session_cabang);
-        });
-        $('#sub_tot_purchase').val('');
-        $('#final_discount').val('');
-        $('#tot_after_discount').val('');
-        $('#down_payment').val('');
-        $('#tot_debt_balance').val('');
-        $('#convert_discount').val('');
-        bersih()
+        axios.get('{{url('/api/editregisterpurchase/')}}/'+tot+'/'+dis+'/'+down+'/'+deb+'/'+id_transaksi_purchase+'/')
+        .then(function(res){
+            alert('Edit Transaksi Berhasil')
+            window.close();
+        })
+        
+        
     });
 
     function deleted(id)
     {
         
-        axios.delete('{{url('/api/purchasetmp/')}}/'+id)
+        axios.delete('{{url('/api/purchasedetail/remove/')}}/'+id)
             .then(function(res){
             var data = res.data
             tables.ajax.reload()
             toastr.info(data.message)
+            axios.get('{{url('/api/calculatedetail/')}}/'+id_transaksi_purchase)
+                                .then(function(res){
+                                    isi = res.data
+                                    $('#sub_tot_purchase').val(isi.tot)
+                                    $('#tot_after_discount').val(isi.tot)
+                                    $('#tot_debt_balance').val(isi.tot)
+                                });
         })
     }
 
@@ -445,13 +442,5 @@
         
     }
 
-    function generateinv(id){
-        axios.get('{{url('/api/purchaseinv/')}}/'+id)
-        .then(function(res){
-                isi = res.data
-                invoice = isi.invoice
-                $('#invoice_id').val(invoice)
-        })
-    }
 </script>
 @endsection
