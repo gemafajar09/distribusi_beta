@@ -44,13 +44,14 @@
 
 <script>
     $(document).ready(function(){
-      function load_all(){
+      id_cabang = {{session()->get('cabang')}}
+      function load_all(id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/inventory/datatable') }}",
+          url: "{{ url('/api/inventory/datatable/') }}/"+id_cabang,
         },
         columns:[
         {
@@ -73,13 +74,13 @@
         ]
       });
     }
-      function load_spesifik(id_warehouse){
+      function load_spesifik(id_cabang,id_warehouse){
       tables1 = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: '{{ url("/api/inventory/datatable/")}}/'+id_warehouse,
+          url: '{{ url("/api/inventory/datatable/")}}/'+id_cabang+'/'+id_warehouse,
         },
         columns:[
             {
@@ -108,7 +109,7 @@
           if ( $.fn.DataTable.isDataTable('#tabel') ) {
         $('#tabel').DataTable().destroy();
       }
-            load_all()
+            load_all(id_cabang)
             $('#filter_warehouse').html([''])
         }
     });
@@ -117,14 +118,14 @@
         $('#filter_warehouse').html([''])
         var other = document.getElementById('warehouse').checked
         if (other == true) {
-          axios.get('{{url('/api/cabang/')}}/')
+          axios.get('{{url('/api/gudangcabang/')}}/'+id_cabang)
             .then(function(res){
               isi = res.data
               data = isi.data
-              $('#filter_warehouse').append(`<option>Pilih Cabang</option>`)
+              $('#filter_warehouse').append(`<option>Pilih Gudang</option>`)
               for (let index = 0; index < data.length; index++) {
                 
-                $('#filter_warehouse').append(`<option value='${data[index].id_cabang}'>${data[index].nama_cabang}</option>`) 
+                $('#filter_warehouse').append(`<option value='${data[index].id_gudang}'>${data[index].nama_gudang}</option>`) 
                 
               }
               
@@ -138,7 +139,7 @@
         if ( $.fn.DataTable.isDataTable('#tabel') ) {
   $('#tabel').DataTable().destroy();
 }
-        load_spesifik(filter);
+        load_spesifik(id_cabang,filter);
     })
 
     
@@ -150,9 +151,9 @@ function print_report(){
         filter = $('#filter_warehouse').val()
         if(filter == null){
             // all data
-            window.open(`{{url('/inventory/report_stok/')}}`);
+            window.open(`{{url('/inventory/report_stok/')}}/`+id_cabang);
         }else{
-            window.open(`{{url('/inventory/report_stok/')}}/`+filter);
+            window.open(`{{url('/inventory/report_stok/')}}/`+id_cabang+'/'+filter);
         }
     }
 

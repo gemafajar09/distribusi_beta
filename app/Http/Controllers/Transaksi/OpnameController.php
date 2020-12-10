@@ -116,10 +116,12 @@ class OpnameController extends Controller
 
     public function join_builder(){
         $cabang = session()->get('cabang');
+        $id_gudang = DB::table('tbl_gudang')->where('id_cabang',$cabang)->first();
         $data = DB::table('tbl_stok')
                 ->join('tbl_produk','tbl_produk.produk_id','=','tbl_stok.produk_id')
                 ->leftjoin('tbl_opname as o','o.stok_id','=','tbl_stok.stok_id')
                 ->where('id_cabang',$cabang)
+                ->where('id_gudang',$id_gudang->id_gudang)
                 ->select('tbl_stok.produk_id as produk_id','produk_nama','jumlah','capital_price','tbl_stok.stok_id as stok_id','balance','update_opname','jumlah_fisik','id_opname')
                 ->get();
          return $data;
@@ -212,8 +214,8 @@ class OpnameController extends Controller
         if ($validator->fails()) {
             return response()->json(['messageForm' => $validator->errors(), 'status' => 422, 'message' => 'Data Tidak Valid']);
         } else {
-            return response()->json(['id' => Opname::create($request->all())->id_opname, 'message' => 'Data Berhasil Ditambahkan', 'status' => 200]);
-            }
+            return response()->json(['id' => Opname::create($request->all())->id_opname, 'message' => 'Data Berhasil Ditambahkan', 'status' => 999]);
+            } 
         }else{
             $jum_fisik = $request->input('jumlah_fisik');
             $status = $request->input('balance');
@@ -225,10 +227,12 @@ class OpnameController extends Controller
     }
 
 
-    public function print_faktur(){
+    public function print_faktur($id_cabang,$id_gudang){
         $data = DB::table('tbl_opname')
                 ->leftJoin('tbl_stok','tbl_stok.stok_id','=','tbl_opname.stok_id')
                 ->join('tbl_produk','tbl_stok.produk_id','=','tbl_produk.produk_id')
+                ->where('tbl_stok.id_cabang',$id_cabang)
+                ->where('tbl_stok.id_gudang',$id_gudang)
                 ->select('produk_nama','tbl_produk.produk_id as produk_id','jumlah','capital_price','balance','update_opname','jumlah_fisik')
                 ->get();
         foreach ($data as $d) {
@@ -256,7 +260,7 @@ class OpnameController extends Controller
 
 
     public function adjust($id_opname){
-        $data = Opname::find($id_opname)->select('id_opname','stok_id','jumlah_fisik','update_opname as date_adjust','balance as status')->get()->toArray();
+        $data = Opname::where('id_opname',$id_opname)->select('id_opname','stok_id','jumlah_fisik','update_opname as date_adjust','balance as status')->get()->toArray();
         $pindah = AprovalOpname::insert($data);
         $update = Opname::find($id_opname);
         $update->balance = '2';

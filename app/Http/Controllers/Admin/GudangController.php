@@ -99,4 +99,9 @@ class GudangController extends Controller
         }
     }
 
+    public function gudangcabang($id_cabang){
+        $data = DB::table('tbl_gudang')->where('id_cabang',$id_cabang)->get();
+        return response()->json(['data'=>$data]);
+    }
+
 }

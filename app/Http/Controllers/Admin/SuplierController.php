@@ -123,10 +123,13 @@ class SuplierController extends Controller
     }
 
     public function getSuplierProduk($id,$id_cabang){
+        // ambil gudang pertama
+        $id_gudang = DB::table('tbl_gudang as gdg')->where('id_cabang',$id_cabang)->first();
         $data = DB::table('tbl_stok as stk')
                 ->join('tbl_produk as prdk','prdk.produk_id','=','stk.produk_id')
                 ->where('stk.id_suplier',$id)
                 ->where('stk.id_cabang',$id_cabang)
+                ->where('stk.id_gudang',$id_gudang->id_gudang)
                 ->select('prdk.produk_id as produk_id','produk_nama','capital_price','stk.stok_id as stok_id')
                 ->get();
         return response()->json(['data' => $data, 'status' => 200]);

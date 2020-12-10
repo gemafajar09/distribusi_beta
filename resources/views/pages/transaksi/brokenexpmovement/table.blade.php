@@ -7,7 +7,7 @@
             <th>PRODUCT BRAND</th>
             <th>PRODUCT NAME</th>
             <th>Quantity</th>
-            <th>Aksi</th>
+            <th>Aksi</th> 
         </tr>
     </thead>
     <tbody>

@@ -21,6 +21,8 @@
                    
                 </ul>
             </li>
+            <li><a href="{{ route('view_profile') }}"><i class="fa fa-user"></i> Profile </a>
+            </li>
 
         </ul>
     </div>

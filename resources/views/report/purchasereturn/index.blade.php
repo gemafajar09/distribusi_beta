@@ -16,6 +16,7 @@
                    <th>SUPPLIER NAME</th>
                    <th>RETURN DATE</th>
                    <th>TOTAL RETURN</th>
+                   <th>DETAIL</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,19 +54,46 @@
 </div>
 </div>
 
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-minus"></i> Detail Purchase</h5>
+            </div>
+            <div class="modal-body" style="overflow-y: scroll;height:400px;">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <td>Produk Nama</td>
+                      <td>Quantity</td>
+                      <td>Price</td>
+                    </tr>
+                  </thead>
+                  <tbody id="detailinvoice">
+
+                  </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function(){
 
       $("#waktu_awal" ).prop( "disabled", true );
       $("#waktu_akhir" ).prop( "disabled", true );
-
-      function load_all(){
+      id_cabang = {{session()->get('cabang')}}
+      function load_all(id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase_return/datatable') }}",
+          url: "{{ url('/api/report_purchase_return/datatable/') }}/"+id_cabang,
         },
         columns:[
         {
@@ -78,17 +106,24 @@
           },
           {
             data:'price'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return `<div><button id='detail' onclick='detail("${data.return_id}")'><i class='fa fa-list-ol'></i></button></div>`;
+            }  
           }
         ]
       });
     }
-    function load_today(){
+    function load_today(id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase_return/today_datatable') }}",
+          url: "{{ url('/api/report_purchase_return/today_datatable/') }}/"+id_cabang,
         },
         columns:[
         {
@@ -101,17 +136,24 @@
           },
           {
             data:'price'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return `<div><button id='detail' onclick='detail("${data.return_id}")'><i class='fa fa-list-ol'></i></button></div>`;
+            }  
           }
         ]
       });
     }
-    function load_month(month){
+    function load_month(month,year,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase_return/month_datatable/') }}/"+month+'/'+year,
+          url: "{{ url('/api/report_purchase_return/month_datatable/') }}/"+month+'/'+year+'/'+id_cabang,
         },
         columns:[
         {
@@ -124,16 +166,23 @@
           },
           {
             data:'price'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return `<div><button id='detail' onclick='detail("${data.return_id}")'><i class='fa fa-list-ol'></i></button></div>`;
+            }  
           }
         ]
       });
-    }function load_year(year){
+    }function load_year(year,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase_return/year_datatable/') }}/"+year,
+          url: "{{ url('/api/report_purchase_return/year_datatable/') }}/"+year+'/'+id_cabang,
         },
         columns:[
         {
@@ -146,6 +195,13 @@
           },
           {
             data:'price'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return `<div><button id='detail' onclick='detail("${data.return_id}")'><i class='fa fa-list-ol'></i></button></div>`;
+            }  
           }
         ]
       });
@@ -162,12 +218,12 @@
           if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-            load_all()
+            load_all(id_cabang)
         }else if(nilai ==1){
           if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-          load_today()
+          load_today(id_cabang)
         }else if(nilai ==2){
               console.log("oke2");
         }else if(nilai ==3){
@@ -210,7 +266,7 @@
         if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-        load_month(month,year)
+        load_month(month,year,id_cabang)
     });
 
     $('#wadah').on('change', '#year_filter', function() {
@@ -218,19 +274,19 @@
         if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-        load_year(year)
+        load_year(year,id_cabang)
     });
 
     
 
 });
-function load_range(waktu_awal,waktu_akhir){
+function load_range(waktu_awal,waktu_akhir,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase_return/range_datatable/') }}/"+waktu_awal+'/'+waktu_akhir,
+          url: "{{ url('/api/report_purchase_return/range_datatable/') }}/"+waktu_awal+'/'+waktu_akhir+'/'+id_cabang,
         },
         columns:[
         {
@@ -243,6 +299,13 @@ function load_range(waktu_awal,waktu_akhir){
           },
           {
             data:'price'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return `<div><button id='detail' onclick='detail("${data.return_id}")'><i class='fa fa-list-ol'></i></button></div>`;
+            }  
           }
         ]
       });
@@ -260,27 +323,27 @@ function range_report(){
     if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-    load_range(waktu_awal,waktu_akhir)
+    load_range(waktu_awal,waktu_akhir,id_cabang)
 }
 
 
 function print_report(){
   ket_waktu = $('#ket_waktu').val();
   if(ket_waktu == 0){
-    window.open(`{{url('/purchase_return/report_purchase_return')}}`);
+    window.open(`{{url('/purchase_return/report_purchase_return/')}}/`+id_cabang);
   }else if(ket_waktu == 1){
-    window.open(`{{url('/purchase_return/report_purchase_return_today')}}`);
+    window.open(`{{url('/purchase_return/report_purchase_return_today/')}}/`+id_cabang);
   }else if(ket_waktu == 2){
     // window.open(`{{url('/purchase_return/report_purchase_return_today')}}`);
   }else if(ket_waktu == 3){
         month = $('#month').val();
         year = $('#year').val();
-        window.open(`{{url('/purchase_return/report_purchase_return_month/')}}/`+month+'/'+year);
+        window.open(`{{url('/purchase_return/report_purchase_return_month/')}}/`+month+'/'+year+'/'+id_cabang);
   }
   else if(ket_waktu == 4){
         
         year = $('#year_filter').val();
-        window.open(`{{url('/purchase_return/report_purchase_return_year/')}}/`+year);
+        window.open(`{{url('/purchase_return/report_purchase_return_year/')}}/`+year+'/'+id_cabang);
   }
   else if(ket_waktu == 5){
         
@@ -292,9 +355,34 @@ function print_report(){
           if(waktu_akhir == ""){
             return false;
           }
-        window.open(`{{url('/purchase_return/report_purchase_return_range/')}}/`+waktu_awal+'/'+waktu_akhir);
+        window.open(`{{url('/purchase_return/report_purchase_return_range/')}}/`+waktu_awal+'/'+waktu_akhir+'/'+id_cabang);
   }
   
+    }
+
+    function detail(return_id){
+      $('#detailinvoice').html('');
+      cabang = {{session()->get('cabang')}};
+      axios.post('{{url('/api/report_purchase_return/detailpurchasereturn/')}}/',{
+          'return_id':return_id,
+          'id_cabang':cabang
+      })
+        .then(function(res){
+          isi = res.data;
+          result = isi.data;
+          console.log(result);
+          for (let index = 0; index < result.length; index++) {
+            // console.log(result[index]['produk_nama']);
+            $('#detailinvoice').append(`
+              <tr>
+                  <td>${result[index]['produk_nama']}</td>
+                  <td>${result[index]['stok_quantity']}</td>
+                  <td>${result[index]['total_price']}</td>
+              </tr>
+            `);
+          }
+          $('#modal').modal('show');
+        });
     }
 
 </script>

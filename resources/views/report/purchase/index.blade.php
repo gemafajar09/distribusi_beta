@@ -20,6 +20,7 @@
                    <th>Bayar</th>
                    <th>Total After Diskon</th>
                    <th>Payment Status</th>
+                   <th>Detail</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,11 @@
 </div>
 <div class="col border p-3 bg-white rounded">
     <h6>View : </h6>
+    <select name="ket_status" id="ket_status" class="form-control mb-2">
+      <option value="1">Aproval</option>
+      <option value="2">Not Aproval</option>
+      <option value="0">Not Cek</option>
+    </select>
     <select name="ket_waktu" id="ket_waktu" class="form-control">
     <option value="">Silahkan Pilih</option>
       <option value="0">All Report</option>
@@ -57,19 +63,46 @@
 </div>
 </div>
 
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-minus"></i> Detail Purchase</h5>
+            </div>
+            <div class="modal-body" style="overflow-y: scroll;height:400px;">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <td>Produk Nama</td>
+                      <td>Quantity</td>
+                      <td>Price</td>
+                    </tr>
+                  </thead>
+                  <tbody id="detailinvoice">
+
+                  </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function(){
 
       $("#waktu_awal" ).prop( "disabled", true );
       $("#waktu_akhir" ).prop( "disabled", true );
-
-      function load_all(){
+      id_cabang = {{session()->get('cabang')}}
+      function load_all(status,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase/datatable') }}",
+          url: "{{ url('/api/report_purchase/datatable/') }}/"+status+'/'+id_cabang,
         },
         columns:[
         {
@@ -95,17 +128,24 @@
           },
           {
             data:'status'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return "<div><button id='detail' onclick='detail(" + data.id_transaksi_purchase + ")'><i class='fa fa-list-ol'></i></button></div>";
+            }  
           }
         ]
       });
     }
-    function load_today(){
+    function load_today(status,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase/today_datatable') }}",
+          url: "{{ url('/api/report_purchase/today_datatable/') }}/"+status+'/'+id_cabang,
         },
         columns:[
         {
@@ -131,17 +171,24 @@
           },
           {
             data:'status'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return "<div><button id='detail' onclick='detail(" + data.id_transaksi_purchase + ")'><i class='fa fa-list-ol'></i></button></div>";
+            }  
           }
         ]
       });
     }
-    function load_month(month){
+    function load_month(month,year,status,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase/month_datatable/') }}/"+month+'/'+year,
+          url: "{{ url('/api/report_purchase/month_datatable/') }}/"+month+'/'+year+'/'+status+'/'+id_cabang,
         },
         columns:[
         {
@@ -167,16 +214,23 @@
           },
           {
             data:'status'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return "<div><button id='detail' onclick='detail(" + data.id_transaksi_purchase + ")'><i class='fa fa-list-ol'></i></button></div>";
+            }  
           }
         ]
       });
-    }function load_year(year){
+    }function load_year(year,status,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase/year_datatable/') }}/"+year,
+          url: "{{ url('/api/report_purchase/year_datatable/') }}/"+year+'/'+status+'/'+id_cabang,
         },
         columns:[
         {
@@ -202,6 +256,13 @@
           },
           {
             data:'status'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return "<div><button id='detail' onclick='detail(" + data.id_transaksi_purchase + ")'><i class='fa fa-list-ol'></i></button></div>";
+            }  
           }
         ]
       });
@@ -212,18 +273,19 @@
           $("#waktu_awal" ).prop( "disabled", true );
           $("#waktu_akhir" ).prop( "disabled", true );
         nilai = $('#ket_waktu').val();
+        status = $('#ket_status').val();
         $('#wadah').html('');
         // weekly
         if(nilai == 0){
           if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-            load_all()
+            load_all(status,id_cabang)
         }else if(nilai ==1){
           if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-          load_today()
+          load_today(status,id_cabang)
         }else if(nilai ==2){
               console.log("oke2");
         }else if(nilai ==3){
@@ -263,30 +325,32 @@
     $('#wadah').on('change', '#month', function() {
         month = $('#month').val();
         year = $('#year').val();
+        status = $('#ket_status').val();
         if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-        load_month(month,year)
+        load_month(month,year,status,id_cabang)
     });
 
     $('#wadah').on('change', '#year_filter', function() {
         year = $('#year_filter').val();
+        status = $('#ket_status').val();
         if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-        load_year(year)
+        load_year(year,status,id_cabang)
     });
 
     
 
 });
-function load_range(waktu_awal,waktu_akhir){
+function load_range(waktu_awal,waktu_akhir,status,id_cabang){
       tables = $('#tabel').DataTable({
         processing : true,
         ordering:false,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/report_purchase/range_datatable/') }}/"+waktu_awal+'/'+waktu_akhir,
+          url: "{{ url('/api/report_purchase/range_datatable/') }}/"+waktu_awal+'/'+waktu_akhir+'/'+status+'/'+id_cabang,
         },
         columns:[
         {
@@ -312,12 +376,20 @@ function load_range(waktu_awal,waktu_akhir){
           },
           {
             data:'status'
+          },
+          {
+            defaultContent:"",
+            data: null,
+            render: function(data, type, row, meta) {
+            return "<div><button id='detail' onclick='detail(" + data.id_transaksi_purchase + ")'><i class='fa fa-list-ol'></i></button></div>";
+            }  
           }
         ]
       });
     }
 
 function range_report(){
+  status = $('#ket_status').val();
     waktu_awal = $('#waktu_awal').val();
     if(waktu_awal == ""){
       return false;
@@ -329,27 +401,28 @@ function range_report(){
     if ( $.fn.DataTable.isDataTable('#tabel') ) {
               $('#tabel').DataTable().destroy();
             }
-    load_range(waktu_awal,waktu_akhir)
+    load_range(waktu_awal,waktu_akhir,status,id_cabang)
 }
 
 
 function print_report(){
   ket_waktu = $('#ket_waktu').val();
+  status = $('#ket_status').val();
   if(ket_waktu == 0){
-    window.open(`{{url('/purchase/report_purchase')}}`);
+    window.open(`{{url('/purchase/report_purchase/')}}/`+status+'/'+id_cabang);
   }else if(ket_waktu == 1){
-    window.open(`{{url('/purchase/report_purchase_today')}}`);
+    window.open(`{{url('/purchase/report_purchase_today/')}}/`+status+'/'+id_cabang);
   }else if(ket_waktu == 2){
     // window.open(`{{url('/purchase/report_purchase_today')}}`);
   }else if(ket_waktu == 3){
         month = $('#month').val();
         year = $('#year').val();
-        window.open(`{{url('/purchase/report_purchase_month/')}}/`+month+'/'+year);
+        window.open(`{{url('/purchase/report_purchase_month/')}}/`+month+'/'+year+'/'+status+'/'+id_cabang);
   }
   else if(ket_waktu == 4){
         
         year = $('#year_filter').val();
-        window.open(`{{url('/purchase/report_purchase_year/')}}/`+year);
+        window.open(`{{url('/purchase/report_purchase_year/')}}/`+year+'/'+status+'/'+id_cabang);
   }
   else if(ket_waktu == 5){
         
@@ -361,9 +434,31 @@ function print_report(){
           if(waktu_akhir == ""){
             return false;
           }
-        window.open(`{{url('/purchase/report_purchase_range/')}}/`+waktu_awal+'/'+waktu_akhir);
+        window.open(`{{url('/purchase/report_purchase_range/')}}/`+waktu_awal+'/'+waktu_akhir+'/'+status+'/'+id_cabang);
   }
   
+    }
+
+    function detail(invoice_id){
+      $('#detailinvoice').html('');
+      cabang = {{session()->get('cabang')}};
+      axios.get('{{url('/api/report_purchase/detailpurchase/')}}/'+cabang+'/'+invoice_id)
+        .then(function(res){
+          isi = res.data;
+          result = isi.data;
+          console.log(result);
+          for (let index = 0; index < result.length; index++) {
+            // console.log(result[index]['produk_nama']);
+            $('#detailinvoice').append(`
+              <tr>
+                  <td>${result[index]['produk_nama']}</td>
+                  <td>${result[index]['stok_quantity']}</td>
+                  <td>${result[index]['total_price']}</td>
+              </tr>
+            `);
+          }
+          $('#modal').modal('show');
+        });
     }
 
 </script>

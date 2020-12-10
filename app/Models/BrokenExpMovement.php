@@ -13,6 +13,9 @@ class BrokenExpMovement extends Model
     protected $primaryKey = 'id_broken_exp';
     // define fillable
     protected $fillable = [
-        'produk_id', 'id_gudang_dari', 'id_gudang_tujuan', 'movement_date', 'note', 'id_user',
+        'produk_id', 'id_gudang_dari', 'id_gudang_tujuan', 'movement_date', 'note','jumlah_broken','stok_id','status_broken','id_cabang','inv_broken_exp'
+    ];
+    protected $attributes = [
+        'status_broken'=>'0',
     ];
 }

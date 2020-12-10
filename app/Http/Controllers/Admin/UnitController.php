@@ -73,8 +73,7 @@ class UnitController extends Controller
                 ->select('id_unit','produk_nama','a.nama_satuan as maximum_unit_name','b.nama_satuan as minimum_unit_name','default_value','d.stok_id as stok_id','d.produk_id as produk_id')
                 ->orderBy('id_unit', 'desc')
                 ->get();
-                return response()->json(['data'=>$data]);
-        
+                return response()->json(['data'=>$data]); 
     }
 
     public function get(Request $request,$id=null)

@@ -245,7 +245,7 @@ class StokController extends Controller
             $jumlah_stok = implode(" ",$stokquantity);
             $d->stok_quantity = $jumlah_stok;
             $d->total_harga = $harga * $d->jumlah;
-            $dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"stok_harga"=>number_format($d->total_harga,2,'.',''),"jumlah"=>$d->stok_quantity];
+            $dataisi[] = ["id_unit"=>$id,"produk_nama"=>$d->produk_nama,"capital_price"=>$capital_price,"stok_harga"=>number_format($d->total_harga,2,'.',''),"jumlah"=>$d->stok_quantity,'stok_id'=>$d->stok_id];
         }
        
         return datatables()->of($dataisi)->toJson();
