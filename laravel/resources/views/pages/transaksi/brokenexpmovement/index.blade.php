@@ -466,7 +466,7 @@
 
     $('#register').click(function(){
         id_cabang = {{session()->get('cabang')}}
-        window.open('{{url('/api/registerbroken/')}}/'+id_cabang+'/', "_blank");
+        window.open('{{url('/api/registerbroken')}}/'+id_cabang, "_blank");
         location.reload();
         
     });

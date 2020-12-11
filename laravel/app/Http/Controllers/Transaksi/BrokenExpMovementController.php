@@ -17,8 +17,8 @@ class BrokenExpMovementController extends Controller
         $this->rules = array(
             'id_broken_exp' => '',
             'inv_broken_exp' => '',
-            'id_gudang_dari' => 'required|numeric',
-            'id_gudang_tujuan' => 'required|numeric',
+            'id_gudang_dari' => 'required|',
+            'id_gudang_tujuan' => 'required|',
             'stok_id' => 'required|numeric',
             'jumlah_broken' => 'required|numeric',
             'movement_date' => 'required|date',

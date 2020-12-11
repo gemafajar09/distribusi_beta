@@ -2,7 +2,7 @@
 
 <!-- main content -->
 <!-- page Title -->
-@section('page-title','Ini Halaman Sales')
+@section('page-title','Halaman Sales')
 <!-- Page Content -->
 @section('content')
 <div class="mt-2">
@@ -134,8 +134,8 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.id_sales + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
-                "<button type='button' onclick='ambilData(" + data.id_sales + ")' class='btn btn-success btn-sm'>Edit</button>" +
+                `<button type='button' onclick='deleted("${data.id_sales}")' class='btn btn-danger btn-sm'>Hapus</button> ` +
+                `<button type='button' onclick='ambilData("${data.id_sales}")' class='btn btn-success btn-sm'>Edit</button>` +
             "</div>" ;
             }
           }
@@ -149,8 +149,9 @@
         var alamat = $('#alamat').val();
         var telepon = $('#telepon').val();
         var target = $('#target').val();
-
+        var id_sales = '{{$inv}}';
         axios.post('{{url('/api/sales/')}}',{
+            id_sales:id_sales,
             nama_sales: nama_sales,
             alamat: alamat,
             telepon: telepon,
@@ -187,7 +188,7 @@
         .then(function(res) {
             var isi = res.data
             console.log(isi.data)
-            document.getElementById('id_sales').value=isi.data.id_sales;
+            document.getElementById('id_sales').value=id;
             document.getElementById('nm_sales').value=isi.data.nama_sales;
             document.getElementById('almt').value=isi.data.alamat;
             document.getElementById('tlpn').value=isi.data.telepon;

@@ -363,7 +363,7 @@ function print_report(){
     function detail(return_id){
       $('#detailinvoice').html('');
       cabang = {{session()->get('cabang')}};
-      axios.post('{{url('/api/report_purchase_return/detailpurchasereturn/')}}/',{
+      axios.post('{{url('/api/report_purchase_return/detailpurchasereturn')}}',{
           'return_id':return_id,
           'id_cabang':cabang
       })
@@ -371,7 +371,7 @@ function print_report(){
           isi = res.data;
           result = isi.data;
           console.log(result);
-          for (let index = 0; index < result.length; index++) {
+          for (var index = 0; index < result.length; index++) {
             // console.log(result[index]['produk_nama']);
             $('#detailinvoice').append(`
               <tr>

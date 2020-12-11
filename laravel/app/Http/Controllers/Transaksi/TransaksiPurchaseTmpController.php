@@ -21,14 +21,14 @@ class TransaksiPurchaseTmpController extends Controller
             'invoice_date'=>'date',
             'transaksi_tipe'=>'numeric',
             'term_until'=>'date',
-            'id_suplier'=>'numeric',
-            'produk_id'=>'numeric',
+            'id_suplier'=>'',
+            'produk_id'=>'',
             'quantity'=>'numeric',
             'unit_satuan_price'=>'numeric',
             'diskon'=>'numeric',
             'total_price'=>'numeric',
             'id_cabang'=>'numeric',
-            'id_gudang'=>'numeric'
+            'id_gudang'=>''
         );
 
         $this->dataisi = [];
@@ -202,8 +202,8 @@ class TransaksiPurchaseTmpController extends Controller
         
     }
 
-    public function calculateTmp(){
-        $tot_price = DB::table('transaksi_purchase_tmp')->sum('total_price');
+    public function calculateTmp($id_cabang){
+        $tot_price = DB::table('transaksi_purchase_tmp')->where('id_cabang',$id_cabang)->sum('total_price');
         return response()->json(['tot'=>$tot_price]);
     }
 

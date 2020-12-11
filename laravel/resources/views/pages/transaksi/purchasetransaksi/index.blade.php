@@ -268,7 +268,7 @@
                 $('#term_until').hide();
                 session_cabang = {{session()->get('cabang')}};
                 generateinv(session_cabang);
-                axios.get('{{url('/api/calculatetmp/')}}/')
+                axios.get('{{url('/api/calculatetmp/')}}/'+session_cabang)
                     .then(function(res){
                         isi = res.data
                         $('#sub_tot_purchase').val(isi.tot)
@@ -365,7 +365,7 @@
                                 $('#wadah').html('')
                                 tables.ajax.reload()
                                 toastr.info(data.message)
-                                axios.get('{{url('/api/calculatetmp/')}}/')
+                                axios.get('{{url('/api/calculatetmp/')}}/'+id_cabang)
                                 .then(function(res){
                                     isi = res.data
                                     $('#sub_tot_purchase').val(isi.tot)
@@ -405,7 +405,7 @@
         let dis = $('#final_discount').val();
         let down = $('#down_payment').val();
         let deb = $('#tot_debt_balance').val();
-        cek = window.open('{{url('/api/registerpurchase/')}}/'+tot+'/'+dis+'/'+down+'/'+deb+'/'+id_cabang+'/', "_blank");
+        cek = window.open('{{url('/api/registerpurchase')}}/'+tot+'/'+dis+'/'+down+'/'+deb+'/'+id_cabang, "_blank");
         $(cek).on("unload", function(){
         tables.ajax.reload();
         session_cabang = {{session()->get('cabang')}}
@@ -428,6 +428,13 @@
             var data = res.data
             tables.ajax.reload()
             toastr.info(data.message)
+            axios.get('{{url('/api/calculatetmp/')}}/'+id_cabang)
+                                .then(function(res){
+                                    isi = res.data
+                                    $('#sub_tot_purchase').val(isi.tot)
+                                    $('#tot_after_discount').val(isi.tot)
+                                    $('#tot_debt_balance').val(isi.tot)
+                                });
         })
     }
 

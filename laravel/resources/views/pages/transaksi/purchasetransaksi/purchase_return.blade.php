@@ -316,7 +316,7 @@
     $("#register").on('click', function(e) {
         id_cabang = {{session()->get('cabang')}}
         e.preventDefault();
-        cek = window.open('{{url('/api/registerpurchasereturn/')}}/'+id_cabang+'/', "_blank");
+        cek = window.open('{{url('/api/registerpurchasereturn')}}/'+id_cabang, "_blank");
         $(cek).on("unload", function(){
         tables.ajax.reload();
         session_cabang = {{session()->get('cabang')}};

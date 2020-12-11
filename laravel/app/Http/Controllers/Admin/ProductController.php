@@ -45,7 +45,29 @@ class ProductController extends Controller
     }
 
     public function index(){
-        return view('pages.admin.produk.index');
+        $tanggal = date('ym');
+        $codeinv = DB::table('tbl_produk')->orderBy('produk_id','desc')->first();
+                if($codeinv == NULL){
+                    $inv= "P".$tanggal."00001";
+                }else{
+                    $cekinv = substr($codeinv->produk_id,5,10);
+                    $plus = (int)$cekinv + 1;
+                    $index = (int)$cekinv;
+                    if($index < 9){
+                        $inv = "P".$tanggal."0000".$plus;
+                    }
+                    else if($index >= 9 && $index < 99){
+                        $inv = "P".$tanggal."000".$plus;
+                    }else if($index >= 99 && $index < 999){
+                        $inv = "P".$tanggal."00".$plus;
+                    }else if($index >= 999 && $index < 9999){
+                        $inv = "P".$tanggal."0".$plus;
+                    }
+                    else if($index >= 9999){
+                        $inv = "P".$tanggal."".$plus;
+                    }
+                }
+        return view('pages.admin.produk.index',compact('inv'));
     }
 
     public function get(Request $request,$id=null)
@@ -70,7 +92,8 @@ class ProductController extends Controller
         if($validator->fails()){
             return response()->json(['messageForm'=>$validator->errors(),'status'=>422,'message'=>'Data Tidak Valid']);
         }else{
-            return response()->json(['id'=>Produk::create($request->all())->produk_id,'message'=>'Data Berhasil Ditambahkan','status'=>200]);
+            $data = Produk::insert($request->all());
+            return response()->json(['message'=>'Data Berhasil Ditambahkan','status'=>200]);
         }
     }
 

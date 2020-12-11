@@ -15,11 +15,11 @@
             <h5>SUMBER CAHAYA REZEKI</h5>
             <h6>Jl. BY PASS TALUAK BUKITTINGGI, INDONESIA</h6>
             <H6>PHONE : 085375715757 FAX : (0752) 8810863</H6>
-            <br>
+            <hr style="border:2px solid black;">
         </div>
         </div>
         </div>
-        <br>
+        
     <table border="2" id="tabel"  style="border: 2px solid black; width:100%;">
     <thead>
                 <tr>

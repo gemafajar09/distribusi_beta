@@ -65,7 +65,7 @@
                             <td>P.I.C</td>
                         </tr>
                         <tr>
-                            <td>ADMIN1</td>
+                            <td>ADMIN</td>
                         </tr>
                     </table>
                 </div>
@@ -116,20 +116,20 @@
             <hr style="border-top: 5px solid black;">
             <div class="row mb-5">
                 <div class="col-sm-8">
-                    <p class="ml-4">Prepared By</p>
+                    <p class="ml-4">Disiapkan Oleh</p>
                 </div>
                 <div class="col-sm-4">
-                    <p class="ml-3">Approved By</p>
+                    <p class="ml-3">Disetujui Oleh</p>
                 </div>
             </div>
             <div class="row">
             <div class="col-sm-8">
                     <p>............................</p>
-                    <p>Date : {{date('d-m-Y')}}</p>
+                    <p>Tanggal : {{date('d-m-Y')}}</p>
                 </div>
                 <div class="col-sm-4">
                 <p>............................</p>
-                    <p>Date : </p>
+                    <p>Tanggal : </p>
                 </div>
             </div>
         </div>

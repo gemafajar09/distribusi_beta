@@ -33,11 +33,8 @@
                     </li>
                     <li><a><i class=""></i>Purchase Transaction <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-<<<<<<< HEAD
                             <!-- <li><a href="{{ route('purchase_order') }}">Report Transaction</a></li> -->
-=======
                             <li><a href="{{ route('edit_purchase_order') }}">Edit Transaction</a></li>
->>>>>>> brokenother
                             <li><a href="{{ route('purchase_order') }}">Entry Transaction</a></li>
                             <li><a href="{{ route('return_purchase_order') }}">Return Transaction</a></li>
 
