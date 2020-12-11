@@ -102,6 +102,7 @@
                                                 <option value="{{$a->produk_id}}">{{$a->produk_id}} | {{$a->produk_nama}}</option>
                                             @endforeach
                                         </select>
+                                        <input type="hidden" id="stok_id">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -307,12 +308,45 @@
         
     })
 
+    function register()
+    {
+        var invoiceid = $('#invoiceid').val()   
+        var invoicedate = $('#invoiceDate').val()   
+        var compensation = $('#compensation').val()   
+        var term_util = $('#term_util').val()   
+        var idsalesinv = $('#idsalesinv').val()  
+        var totalsales = convertToAngka($('#totalsales').val())   
+        var id_user = "{{Session()->get('id')}}"
+        axios.post("{{url('/api/rekaptransaksir')}}",{
+            'invoiceid':invoiceid,
+            'invoicedate':invoicedate,
+            'compensation':compensation,
+            'term_util':term_util,
+            'idsalesinv':idsalesinv,
+            'totalsales':totalsales,
+            'id_user':id_user
+        }).then(function(res){
+            var data = res.data
+            if(data.status == 200){
+                var check = document.getElementById('print').checked;
+                if(check == true)
+                {
+                    // window.open("{{url('/sales_transaksi/fakturs')}}/"+data.invoice_id+"/"+salestype, '_blank');
+                    window.location.reload()
+                }else{
+                    window.location.reload()
+                }
+            }
+            
+        })
+    }
+
     function add()
     {
         
         var id_user = "{{Session()->get('id')}}"
         var invoiceid = $('#invoiceid').val()
-        var stockId = $('#stockId').val()
+        var stockId = $('#stok_id').val()
         var note = $('#note').val()
         var prices = convertToAngka($('#finalselling').val())
         var arrays = []
@@ -383,9 +417,21 @@
             data = res.data
             if(data.status == 200){
                 $('#isibody').load("{{ route('tmpdata')}}")
-                // kosong()
+                kosong()
             }
         })
+    }
+
+    function kosong()
+    {
+        $("#stockId").val('').trigger('change')
+        $('#produktype').val('')
+        $('#produkbrand').val('')
+        $('#produknama').val('')
+        $('#prices').val('')
+        $('#finalselling').val('')
+        $('#isi1').html('')
+        $('#isi2').html('')
     }
 
     $('#compensation').change(function(){
@@ -407,6 +453,7 @@
         }).then(function(res){
             var data = res.data.data
             stok(data.produk_id,data.jumlah)
+            $('#stok_id').val(data.stok_id)
             $('#produkid').val(data.produk_id)
             $('#produktype').val(data.nama_type_produk)
             $('#produkbrand').val(data.produk_brand)

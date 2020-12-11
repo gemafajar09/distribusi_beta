@@ -171,6 +171,7 @@ Route::group(['namespace' => 'Transaksi'], function () {
     Route::post('ambil', 'ReturnsalesController@ambil');
     Route::post('deleteitemr', 'ReturnsalesController@deleteitemr');
     Route::post('addkeranjangr', 'ReturnsalesController@addkeranjangr');
+    Route::post('rekaptransaksir', 'ReturnsalesController@rekaptransaksir');
 
     // api get payment
     Route::post('paymentcustomer', 'GetpaymentController@caricustomer');

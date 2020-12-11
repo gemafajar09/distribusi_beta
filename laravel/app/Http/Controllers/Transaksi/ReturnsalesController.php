@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 use App\Returnsalestmp;
+use App\Returnsales;
 use App\Models\Sales;
 use App\Models\Customer;
 use DB;
@@ -31,7 +32,7 @@ class ReturnsalesController extends Controller
         if ($inv == NULL) {
             $invoice = 'RTS-' . date('Ym') . "-" . $user . '-1';
         } else {
-            $cekinv = substr($inv->invoice_id, 15, 50);
+            $cekinv = substr($inv->id_returnsales, 15, 50);
             $plus = (int)$cekinv + 1;
             $invoice = 'RTS-' . date('Ym') . "-" . $user .  '-' . $plus;
         }
@@ -308,6 +309,45 @@ class ReturnsalesController extends Controller
             } else {
                 return response()->json(['status' => 422, 'message' => 'Data Tidak Valid']);
             }
+        }
+    }
+
+    public function rekaptransaksir(Request $r)
+    {
+        $input = new Returnsales();
+        $input->id_returnsales	 = $r->invoiceid;
+        $input->return_date = $r->invoicedate;
+        $input->compensation = $r->compensation;
+        $input->date_term = $r->term_util;
+        $input->id_sales_inv = $r->idsalesinv;
+        $input->totalbiaya = $r->totalsales;
+        $input->id_user = $r->id_user;
+        $input->save();
+
+        $id_user = $r->id_user;
+        $data = DB::table('returnsalestmps')->where('id_returnsales', $r->invoiceid)->where('id_user', $id_user)->get();
+        foreach ($data as $a) {
+            DB::table('returnsalesdetail')->insert([
+                'id_returnsales' => $a->id_returnsales,
+                'return_date' => $a->return_date,
+                'id_stok' => $a->id_stok,
+                'price' => $a->price,
+                'quantity' => $a->quantity,
+                'diskon' => $a->diskon,
+                'id_user' => $a->id_user,
+                'harga_satuan' => $a->harga_satuan
+            ]);
+            // update stok
+            $lihat = DB::table('tbl_stok')->where('stok_id',$a->id_stok)->first();
+            $stok = $lihat->jumlah + $a->quantity;
+            DB::table('tbl_stok')->where('stok_id',$a->id_stok)->update(['jumlah' => $stok]);
+            // hapus
+            DB::table('returnsalestmps')->where('id_tmpreturn', $a->id_tmpreturn)->delete();
+        }
+        if ($input == TRUE) {
+            return response()->json(['status' => 200, 'invoice_id' => $r->invoiceid]);
+        } else {
+            return response()->json(['message' => 'Data Tidak Ditemukan', 'status' => 404]);
         }
     }
 

@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->rules = array(
-            'produk_id'=>'numeric',
+            'produk_id'=>'required',
             'id_type_produk'=>'required|numeric',
             'produk_brand'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'produk_nama'=>'required|regex:/(^[A-Za-z0-9 ]+$)+/',
@@ -63,6 +63,8 @@ class ProductController extends Controller
     }
 
     public function add(Request $request){
+        // buat kode produk
+        
         // id_brand belum final
         $validator = Validator::make($request->all(),$this->rules,$this->messages);
         if($validator->fails()){

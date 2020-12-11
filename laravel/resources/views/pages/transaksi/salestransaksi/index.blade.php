@@ -70,7 +70,7 @@
                                         <select name="salesmanId" id="salesmanId" class="select2" style="width:100%">
                                             <option value="">Sales ID</option>
                                             @foreach($salesid as $i => $sales):
-                                                <option value="{{$sales->id_sales}}">{{$sales->id_sales}}</option>
+                                                <option value="{{$sales->id_sales}}">{{$sales->id_sales}} | {{$sales->nama_sales}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -87,7 +87,7 @@
                                         <select name="customerid" id="customerid" class="select2" style="width:100%">
                                             <option value="">Customer ID</option>
                                             @foreach($customerid as $i => $customer):
-                                                <option value="{{$customer->id_customer}}">{{$customer->id_customer}}</option>
+                                                <option value="{{$customer->id_customer}}">{{$customer->id_customer}} | {{$customer->nama_customer}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -112,9 +112,10 @@
                                         <select name="stockId" id="stockId" class="select2" style="width:100%">
                                             <option value="">STOCK ID</option>
                                             @foreach($stockid as $a)
-                                                <option value="{{$a->produk_id}}">{{$a->produk_id}}</option>
+                                                <option value="{{$a->produk_id}}">{{$a->produk_id}} | {{$a->produk_nama}}</option>
                                             @endforeach
                                         </select>
+                                        <input type="hidden" id="stok_id">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -328,7 +329,7 @@
         var salesmanid = $('#salesmanId').val()   
         var customerid = $('#customerid').val()   
         var note = $('#note').val()   
-        var discon = $('#potongan').val()  
+        var discon = convertToAngka($('#potongan').val())
         var dp = $('#downpayment').val()  
         var totalsales = convertToAngka($('#totalsales').val())   
         var id_user = "{{Session()->get('id')}}"
@@ -378,7 +379,6 @@
         var nilai = potongan.value
         var tot = convertToAngka($('#totalsales').val())
         $('#afterdiscount').val(convertToRupiah(tot - nilai))
-        $('#downpayment').val(convertToRupiah(nilai))
     }
 
     function diskon1(nilai)
@@ -415,10 +415,11 @@
         })
     }
 
-    function stok(id, jumlah)
+    function stok(id, jumlah, cabang)
     {
         axios.post("{{url('/api/cekstok')}}",{
-            'produk_id':id
+            'produk_id':id,
+            'cabang':cabang
         }).then(function(res){
             var data = res.data
             $('#isi1').html(data)
@@ -469,7 +470,7 @@
         
         var id_user = "{{Session()->get('id')}}"
         var invoiceid = $('#invoiceid').val()
-        var stockId = $('#stockId').val()
+        var stockId = $('#stok_id').val()
         var produkid = $('#produkid').val()
         var prices = convertToAngka($('#prices').val())
         var arrays = []
@@ -590,12 +591,14 @@
     $('#stockId').change(function(){
         var stokid = $(this).val()
         var customer = $('#customerid').val()
+        var cabang = "{{session()->get('cabang')}}"
         axios.post("{{url('/api/getProduk')}}",{
             'produk_id': stokid,
-            'cabang': "{{session()->get('cabang')}}"
+            'cabang': cabang
         }).then(function(res){
             var data = res.data.data
-            stok(data.produk_id,data.jumlah)
+            stok(data.produk_id,data.jumlah,cabang)
+            $('#stok_id').val(data.stok_id)
             $('#produkid').val(data.produk_id)
             $('#produktype').val(data.nama_type_produk)
             $('#produkbrand').val(data.produk_brand)

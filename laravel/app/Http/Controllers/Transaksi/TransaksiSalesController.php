@@ -43,7 +43,7 @@ class TransaksiSalesController extends Controller
     public function index()
     {
         $cabang = session()->get('cabang');
-        $data['salesid'] = Sales::getAll();
+        $data['salesid'] = DB::table('tbl_sales')->get();
         $data['customerid'] = Customer::all();
         $data['stockid'] = DB::table('tbl_produk')
             ->join('tbl_stok', 'tbl_produk.produk_id', 'tbl_stok.produk_id')
@@ -74,7 +74,7 @@ class TransaksiSalesController extends Controller
             $input = new TransaksiSalesTmp();
             $input->invoice_id = $r->invoiceid;
             $input->invoice_date = date('Y-m-d');
-            $input->stok_id = $r->produkid;
+            $input->stok_id = $r->stockId;
             $input->price = $r->prices;
             $input->quantity = $r->quantity;
             $input->diskon = $r->amount;
@@ -464,7 +464,8 @@ class TransaksiSalesController extends Controller
                         'note' => $sales->catatan,
                         'nama_sales' => $sales->nama_sales,
                         'invoice_date' => $sales->invoice_date,
-                        'diskon' => $sales->diskon
+                        'diskon' => $sales->diskon,
+                        'dp' => $sales->dp
                     );
 
         }
