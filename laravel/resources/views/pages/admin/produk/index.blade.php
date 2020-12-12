@@ -2,7 +2,7 @@
 
 <!-- main content -->
 <!-- page Title -->
-@section('page-title','Ini Halaman Produk')
+@section('page-title','Halaman Produk')
 <!-- Page Content -->
 @section('content')
 <div class="mt-2">
@@ -176,8 +176,8 @@
             data: null,
             render: function(data, type, row, meta) {
             return "<div>" +
-                "<button type='button' onclick='deleted(" + data.produk_id + ")' class='btn btn-danger btn-sm'>Hapus</button> " +
-                "<button type='button' onclick='ambilData(" + data.produk_id + ")' class='btn btn-success btn-sm'>Edit</button>" +
+                `<button type='button' onclick='deleted("${data.produk_id}")' class='btn btn-danger btn-sm'>Hapus</button> ` +
+                `<button type='button' onclick='ambilData("${data.produk_id}")' class='btn btn-success btn-sm'>Edit</button>` +
             "</div>" ;
             }
           }
@@ -212,7 +212,9 @@
 
     $('#add').click(function(e){
         e.preventDefault();
+        var produk_id = '{{$inv}}';
         axios.post('{{url('/api/produk')}}',{
+            produk_id:produk_id,
             id_type_produk : $('#id_type_produk').val(),
             produk_brand : $('#produk_brand').val(),
             produk_nama : $('#produk_nama').val(),
@@ -238,7 +240,7 @@
         axios.get('{{url('/api/produk')}}/'+ id)
         .then(function(res) {
             var isi = res.data
-            document.getElementById('produk_id').value=isi.data.produk_id;
+            document.getElementById('produk_id').value=id;
             $("#id_type_produk_edit").val([isi.data.id_type_produk]).selectpicker('refresh');
             document.getElementById('produk_brand_edit').value=isi.data.produk_brand;
             document.getElementById('produk_nama_edit').value=isi.data.produk_nama;

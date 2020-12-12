@@ -17,7 +17,7 @@ class TransaksiPurchaseReturnController extends Controller
             'id_transaksi_purchase_return'=>'numeric',
             'return_id'=>'',
             'return_date'=>'date',
-            'id_suplier'=>'numeric',
+            'id_suplier'=>'',
             'note_return'=>'numeric',
             'jumlah_return'=>'numeric',
             'price'=>'numeric',

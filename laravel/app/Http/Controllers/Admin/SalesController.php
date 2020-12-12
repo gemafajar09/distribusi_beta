@@ -14,7 +14,7 @@ class SalesController extends Controller
     public function __construct()
     {
         $this->rules = array(
-            'id_sales' => 'numeric',
+            'id_sales' => '',
             'nama_sales' => 'required|regex:/(^[A-Za-z0-9 ]+$)+/',
             'alamat' => 'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
             'telepon' => 'required|numeric',
@@ -29,13 +29,31 @@ class SalesController extends Controller
 
     public function index()
     {
-        return view("pages.admin.sales.index");
+        $codeinv = DB::table('tbl_sales')->orderBy('id_sales','desc')->first();
+                if($codeinv == NULL){
+                    $inv= "SL-00001";
+                }else{
+                    $cekinv = substr($codeinv->id_sales,3,10);
+                    $plus = (int)$cekinv + 1;
+                    $index = (int)$cekinv;
+                    if($index < 9){
+                        $inv = "SL-0000".$plus;
+                    }
+                    else if($index >= 9 && $index < 99){
+                        $inv = "SL-000".$plus;
+                    }else if($index >= 99 && $index < 999){
+                        $inv = "SL-00".$plus;
+                    }else if($index >= 999 && $index < 9999){
+                        $inv = "SL-0".$plus;
+                    }
+                }
+        return view("pages.admin.sales.index",compact('inv'));
     }
 
     public function datatable($id_cabang)
     {
         // untuk datatables Sistem Join Query Builder
-        return datatables()->of(Sales::where('id_cabang',$id_cabang)->get())->toJson();
+        return datatables()->of(DB::table('tbl_sales')->where('id_cabang',$id_cabang)->get())->toJson();
     }
 
 
@@ -60,7 +78,8 @@ class SalesController extends Controller
         if ($validator->fails()) {
             return response()->json(['messageForm' => $validator->errors(), 'status' => 422, 'message' => 'Data Tidak Valid']);
         } else {
-            return response()->json(['id' => Sales::create($request->all())->id_sales, 'message' => 'Data Berhasil Ditambahkan', 'status' => 200]);
+            $data = Sales::insert($request->all());
+            return response()->json(['message' => 'Data Berhasil Ditambahkan', 'status' => 200]);
         }
     }
 

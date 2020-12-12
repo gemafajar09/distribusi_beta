@@ -401,7 +401,7 @@
         let dis = $('#final_discount').val();
         let down = $('#down_payment').val();
         let deb = $('#tot_debt_balance').val();
-        axios.get('{{url('/api/editregisterpurchase/')}}/'+tot+'/'+dis+'/'+down+'/'+deb+'/'+id_transaksi_purchase+'/')
+        axios.get('{{url('/api/editregisterpurchase')}}/'+tot+'/'+dis+'/'+down+'/'+deb+'/'+id_transaksi_purchase)
         .then(function(res){
             alert('Edit Transaksi Berhasil')
             window.close();

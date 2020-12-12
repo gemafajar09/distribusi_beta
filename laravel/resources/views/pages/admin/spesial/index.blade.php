@@ -2,7 +2,7 @@
 
 <!-- main content -->
 <!-- page Title -->
-@section('page-title','Ini Halaman Harga Khusus')
+@section('page-title','Halaman Harga Khusus')
 <!-- Page Content -->
 @section('content')
 <div class="mt-2">
