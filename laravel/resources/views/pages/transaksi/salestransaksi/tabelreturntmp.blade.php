@@ -1,7 +1,7 @@
 <table id="datatable-keytable" class="table table-striped table-bordered" style="width:100%; font-size:11px">
     <thead>
         <tr>
-            <th>INVENTORY ID</th>
+            <th>PRODUCT ID</th>
             <th>PRODUCT DESCRIPTION</th>
             <th>QUANTITY</th>
             <th>PRICE</th>
