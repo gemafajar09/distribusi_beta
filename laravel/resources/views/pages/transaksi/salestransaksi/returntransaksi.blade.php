@@ -150,7 +150,7 @@
                                                 <div class="input-group-prepend">
                                                     <div style="font-size: 10px;" class="input-group-text">Discount</div>
                                                 </div>
-                                                <input type="text" class="form-control" value="0" id="diskon">
+                                                <input type="text" class="form-control" value="0" onkeyup="diskont(this)" id="diskon">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -308,6 +308,14 @@
         
     })
 
+    function diskont(nilai)
+    {
+        var disc = nilai.value
+        var amn = convertToAngka($('#prices').val())
+        var hasil = amn - disc
+        $('#finalselling').val(convertToRupiah(hasil))
+    }
+
     function register()
     {
         var invoiceid = $('#invoiceid').val()   
@@ -315,7 +323,8 @@
         var compensation = $('#compensation').val()   
         var term_util = $('#term_util').val()   
         var idsalesinv = $('#idsalesinv').val()  
-        var totalsales = convertToAngka($('#totalsales').val())   
+        var diskon = $('#diskon').val() 
+        var totalsales = convertToAngka($('#finalselling').val())   
         var id_user = "{{Session()->get('id')}}"
         axios.post("{{url('/api/rekaptransaksir')}}",{
             'invoiceid':invoiceid,
@@ -324,6 +333,7 @@
             'term_util':term_util,
             'idsalesinv':idsalesinv,
             'totalsales':totalsales,
+            'diskon':diskon,
             'id_user':id_user
         }).then(function(res){
             var data = res.data
@@ -341,6 +351,8 @@
         })
     }
 
+
+
     function add()
     {
         
@@ -349,61 +361,29 @@
         var stockId = $('#stok_id').val()
         var note = $('#note').val()
         var prices = convertToAngka($('#finalselling').val())
-        var arrays = []
         var count = $('#totals').val()
-        for(var i = 0; i < count; i++)
-        {
-            var no = i+1
-            arrays.push(parseInt($('#pecah'+no).val()))
-        }
-        var tertinggi = Math.max.apply(Math, arrays)
-        var hargasatuan = prices /tertinggi
         // cek diskon kosong atau tidak
         var discount = $('#diskon').val()
-        // hitung jumlah
-        
-        if(count == 1)
+       // hitung jumlah
+       if($('#jumlah1').val() == '0')
         {
+            var jumlah1 = '0'
+        }else{
             var jumlah1 = $('#jumlah1').val()
-            var uni1 = $('#pecah1').val()
-            var total = parseInt(jumlah1 * uni1)
         }
-        else if(count == 2)
+        if($('#jumlah2').val() == '0')
         {
-            if($('#jumlah1').val() == '0')
-            {
-                var jumlah1 = '0'
-                var uni1 = '0'
-            }else{
-                var jumlah1 = $('#jumlah1').val()
-                var uni1 = $('#pecah1').val()
-            }
+            var jumlah2 = '0'
+        }else{
             var jumlah2 = $('#jumlah2').val()
-            var uni2 = $('#pecah2').val()
-            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2)
         }
-        else if(count == 3)
-        {
-            if($('#jumlah1').val() == '0')
-            {
-                var jumlah1 = '0'
-                var uni1 = '0'
-            }else{
-                var jumlah1 = $('#jumlah1').val()
-                var uni1 = $('#pecah1').val()
-            }
-            if($('#jumlah2').val() == '0')
-            {
-                var jumlah2 = '0'
-                var uni2 = '0'
-            }else{
-                var jumlah2 = $('#jumlah2').val()
-                var uni2 = $('#pecah2').val()
-            }
-            var jumlah3 = $('#jumlah3').val()
-            var uni3 = $('#pecah3').val()
-            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
-        }
+        var jumlah3 = $('#jumlah3').val()
+        // cari nilai unit
+        var uni1 = parseInt($('#pecah1').val())
+        var uni2 = parseInt($('#pecah2').val())
+        var uni3 = $('#pecah3').val()
+        var hargasatuan = prices / uni1
+        var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
         axios.post("{{url('/api/addkeranjangr')}}",{
             'invoiceid':invoiceid,
             'id_stok':stockId,
@@ -416,9 +396,12 @@
         }).then(function(res){
             data = res.data
             if(data.status == 200){
+                toastr.info('Tersimpan')
                 $('#isibody').load("{{ route('tmpdata')}}")
                 kosong()
             }
+        }).catch(function(err){
+            toastr.warning('Periksa Kembali')
         })
     }
 
@@ -447,12 +430,13 @@
     $('#stockId').change(function(){
         var stokid = $(this).val()
         var customer = $('#customerid').val()
+        var cabang = "{{session()->get('cabang')}}"
         axios.post("{{url('/api/getProduk')}}",{
             'produk_id': stokid,
-            'cabang': "{{session()->get('cabang')}}"
+            'cabang': cabang
         }).then(function(res){
             var data = res.data.data
-            stok(data.produk_id,data.jumlah)
+            stok(data.stok_id,cabang)
             $('#stok_id').val(data.stok_id)
             $('#produkid').val(data.produk_id)
             $('#produktype').val(data.nama_type_produk)
@@ -469,7 +453,7 @@
     function stok(id, jumlah)
     {
         axios.post("{{url('/api/cekstok')}}",{
-            'produk_id':id
+            'stok_id':id
         }).then(function(res){
             var data = res.data
             $('#isi1').html(data)

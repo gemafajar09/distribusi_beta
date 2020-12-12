@@ -415,10 +415,10 @@
         })
     }
 
-    function stok(id, jumlah, cabang)
+    function stok(id, cabang)
     {
         axios.post("{{url('/api/cekstok')}}",{
-            'produk_id':id,
+            'stok_id':id,
             'cabang':cabang
         }).then(function(res){
             var data = res.data
@@ -467,21 +467,13 @@
 
     function add()
     {
-        
         var id_user = "{{Session()->get('id')}}"
         var invoiceid = $('#invoiceid').val()
         var stockId = $('#stok_id').val()
         var produkid = $('#produkid').val()
         var prices = convertToAngka($('#prices').val())
-        var arrays = []
         var count = $('#totals').val()
-        for(var i = 0; i < count; i++)
-        {
-            var no = i+1
-            arrays.push(parseInt($('#pecah'+no).val()))
-        }
-        var tertinggi = Math.max.apply(Math, arrays)
-        var hargasatuan = prices /tertinggi
+        
         // cek diskon kosong atau tidak
         var discount = $('#discount').val()
         if(discount == '')
@@ -499,49 +491,25 @@
             var amount = amou
         }
         // hitung jumlah
-        
-        if(count == 1)
+        if($('#jumlah1').val() == '0')
         {
+            var jumlah1 = '0'
+        }else{
             var jumlah1 = $('#jumlah1').val()
-            var uni1 = $('#pecah1').val()
-            var total = parseInt(jumlah1 * uni1)
         }
-        else if(count == 2)
+        if($('#jumlah2').val() == '0')
         {
-            if($('#jumlah1').val() == '0')
-            {
-                var jumlah1 = '0'
-                var uni1 = '0'
-            }else{
-                var jumlah1 = $('#jumlah1').val()
-                var uni1 = $('#pecah1').val()
-            }
+            var jumlah2 = '0'
+        }else{
             var jumlah2 = $('#jumlah2').val()
-            var uni2 = $('#pecah2').val()
-            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2)
         }
-        else if(count == 3)
-        {
-            if($('#jumlah1').val() == '0')
-            {
-                var jumlah1 = '0'
-                var uni1 = '0'
-            }else{
-                var jumlah1 = $('#jumlah1').val()
-                var uni1 = $('#pecah1').val()
-            }
-            if($('#jumlah2').val() == '0')
-            {
-                var jumlah2 = '0'
-                var uni2 = '0'
-            }else{
-                var jumlah2 = $('#jumlah2').val()
-                var uni2 = $('#pecah2').val()
-            }
-            var jumlah3 = $('#jumlah3').val()
-            var uni3 = $('#pecah3').val()
-            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
-        }
+        var jumlah3 = $('#jumlah3').val()
+        // cari nilai unit
+        var uni1 = parseInt($('#pecah1').val())
+        var uni2 = parseInt($('#pecah2').val())
+        var uni3 = $('#pecah3').val()
+        var hargasatuan = prices / uni1
+        var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
         axios.post("{{url('/api/addkeranjang')}}",{
             'invoiceid':invoiceid,
             'stockId':stockId,
@@ -555,9 +523,12 @@
         }).then(function(res){
             data = res.data
             if(data.status == 200){
+                toastr.info('Success')
                 $('#isibody').load("{{ route('datatablessales')}}")
                 kosong()
             }
+        }).catch(function(err){
+            toastr.warning('Periksa Kembali')
         })
     }
 
@@ -571,7 +542,7 @@
             console.log(data.nama_sales)
             $('#namasales').val(data.nama_sales)
         }).catch(function(err){
-            console.log(err)
+            toastr.warning('Oops Ada Kesalahan')
         })
     })
 
@@ -584,7 +555,7 @@
             var data = res.data.data
             $('#namacustomer').val(data.nama_customer)
         }).catch(function(err){
-            console.log(err)
+            toastr.warning('Oops Ada Kesalahan')
         })
     })
 
@@ -597,7 +568,7 @@
             'cabang': cabang
         }).then(function(res){
             var data = res.data.data
-            stok(data.produk_id,data.jumlah,cabang)
+            stok(data.stok_id,cabang)
             $('#stok_id').val(data.stok_id)
             $('#produkid').val(data.produk_id)
             $('#produktype').val(data.nama_type_produk)
@@ -607,7 +578,7 @@
             hargakhusus(stokid,customer,data.produk_harga)
             
         }).catch(function(err){
-            console.log(err)
+            toastr.warning('Oops Ada Kesalahan')
         })
     })
 
