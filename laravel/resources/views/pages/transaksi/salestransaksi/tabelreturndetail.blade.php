@@ -24,7 +24,7 @@
             <td>Rp.{{number_format($a->totalsales)}}</td>
             <td>{{$a->diskon}}%</td>
             <td>0</td>
-            <td>Rp.{{$a->totalsales - ($a->totalsales * $a->diskon / 100)}}</td>
+            <td>Rp.{{number_format($a->totalsales - ($a->totalsales * $a->diskon / 100))}}</td>
             <td>{{$a->transaksi_tipe}}</td>
         </tr>
     @endforeach

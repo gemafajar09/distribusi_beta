@@ -88,7 +88,6 @@ class TransaksiSalesController extends Controller
             }
         }
     }
-
     // api
     public function invoice(Request $r)
     {
@@ -164,12 +163,12 @@ class TransaksiSalesController extends Controller
     public function getProduk(Request $r)
     {
         $cab = $r->cabang;
-        $id_produk = $r->produk_id;
+        $id_stok = $r->id_stok;
         $data =  DB::table('tbl_produk')
             ->select('*')
             ->join('tbl_stok', 'tbl_produk.produk_id', 'tbl_stok.produk_id')
             ->join('tbl_type_produk', 'tbl_produk.id_type_produk', 'tbl_type_produk.id_type_produk')
-            ->where('tbl_stok.produk_id', $id_produk)
+            ->where('tbl_stok.stok_id', $id_stok)
             ->where('tbl_stok.id_cabang', $cab)
             ->first();
         if ($data == TRUE) {
@@ -177,6 +176,84 @@ class TransaksiSalesController extends Controller
         } else {
             return response()->json(['message' => 'Data Tidak Ditemukan', 'status' => 404]);
         }
+    }
+
+    public function tampilstok($cabang)
+    {
+        $data = DB::table('tbl_stok')
+            ->join('tbl_produk', 'tbl_stok.produk_id', '=', 'tbl_produk.produk_id')
+            ->join('tbl_suplier', 'tbl_stok.id_suplier', '=', 'tbl_suplier.id_suplier')
+            ->where('tbl_stok.id_cabang', $cabang)
+            ->get();
+            // ====================
+        $format = '%d %s';
+        $stok = [];
+        $datas = [];
+        foreach ($data as $d) {
+            $id = $d->produk_id;
+            $jumlah = $d->jumlah;
+            // untuk mencari nilai unitnya, karton, bungkus, pieces
+            $proses = DB::table('tbl_unit')->where('produk_id', $id)
+                ->join('tbl_satuan', 'tbl_unit.maximum_unit_name', '=', 'tbl_satuan.id_satuan')
+                ->select('id_unit', 'nama_satuan as unit', 'default_value')
+                ->orderBy('id_unit', 'ASC')
+                ->get();
+            $hasilbagi = 0;
+            foreach ($proses as $index => $list) {
+                $banyak = sizeof($proses);
+                if($index == 0 ){
+                    $sisa = $jumlah % $list->default_value;
+                    $hasilbagi = ($jumlah-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $lebih[$index] = $sisa;
+                    if ($sisa > 0){
+                        $stok[] = sprintf($format, $sisa, $list->unit);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }else if($index == 1){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $lebih[$index] = $sisa;
+                    if($sisa > 0){
+                        $stok[] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index-1]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }else if($index == 2){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $lebih[$index] = $sisa;
+                    if($sisa > 0){
+                        $stok[] = sprintf($format, $sisa,  $satuan[$index-1]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }    
+            } 
+            $datas[] = array(
+                'stok_id' => $d->stok_id,
+                'produk_id' => $d->produk_id,
+                'produk_nama' => $d->produk_nama,
+                'quantity' => implode(" ",$stokquantity),
+                'capital_price' => $d->capital_price,
+            );
+        }
+            return view("pages.transaksi.salestransaksi.caristoktransaksi",compact('datas'));
     }
 
     public function hargakusus(Request $r)
@@ -197,46 +274,86 @@ class TransaksiSalesController extends Controller
 
     public function cekstok(Request $r)
     { 
-        $format = '%d %s %s';
-        $stok = [];
-        $namasatuan = array();
         $id_pro = $r->stok_id;
-        $data = DB::table('tbl_produk')
-            ->join('tbl_stok', 'tbl_stok.produk_id', '=', 'tbl_produk.produk_id')
+        $id_cab = $r->cabang;
+        $data = DB::table('tbl_stok')
+            ->join('tbl_produk', 'tbl_stok.produk_id', '=', 'tbl_produk.produk_id')
             ->where('tbl_stok.stok_id', $id_pro)
-            ->first();
-            
-            // ============================
-            $proses = DB::table('tbl_unit')->where('produk_id', $data->produk_id)
+            ->where('tbl_stok.id_cabang', $id_cab)
+            ->get();
+            $format = '%d %s %s';
+            $stok = [];
+            $datas = [];
+            $valuei = array();
+        foreach ($data as $d) {
+            $id = $d->produk_id;
+            $jumlah = $d->jumlah;
+            // untuk mencari nilai unitnya, karton, bungkus, pieces
+            $proses = DB::table('tbl_unit')->where('produk_id', $id)
                 ->join('tbl_satuan', 'tbl_unit.maximum_unit_name', '=', 'tbl_satuan.id_satuan')
                 ->select('id_unit', 'nama_satuan as unit', 'default_value')
-                ->orderBy('id_unit', 'DESC')
+                ->orderBy('id_unit', 'ASC')
                 ->get();
-            // nilai jumlah dari tabel stok
-            $jumlah = $data->jumlah;
-            if($jumlah >= 0)
-            {
-                // pembagian satuan terbesar
-                $sisa1 = $jumlah % ($proses[0]->default_value * $proses[1]->default_value);
-                $nilai1 = ($jumlah - $sisa1) / ($proses[0]->default_value * $proses[1]->default_value);
-                $stok[0] = sprintf($format, $nilai1, $proses[0]->unit, ($proses[0]->default_value * $proses[1]->default_value));
-                if($sisa1 >= 0)
-                {
-                    // pembagian nilai menengah
-                    $sisa2 = $sisa1 % $proses[1]->default_value;
-                    $nilai2 = ($sisa1 - $sisa2) / $proses[1]->default_value;
-                    $stok[1] = sprintf($format, $nilai2, $proses[1]->unit, $proses[1]->default_value);
-                    if($sisa2 >= 0)
-                    {
-                        // pembagian nilai terkecil
-                        $sisa3 = $sisa2 % $proses[2]->default_value;
-                        $nilai3 = ($sisa2 - $sisa3) / $proses[2]->default_value;
-                        $stok[2] = sprintf($format, $nilai3, $proses[2]->unit, $proses[2]->default_value);
+                $valuei[] = $proses[0]->default_value;
+                $valuei[] = $proses[1]->default_value;
+                $valuei[] = $proses[2]->default_value * $proses[1]->default_value;
+            $hasilbagi = 0;
+            $stokquantity = [];
+            foreach ($proses as $index => $list) {
+                $banyak = sizeof($proses);
+                if($index == 0 ){
+                    $sisa = $jumlah % $list->default_value;
+                    $hasilbagi = ($jumlah-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $value[$index] = $list->default_value;
+                    $lebih[$index] = $sisa;
+                    if ($sisa > 0){
+                        $stok[] = sprintf($format, $sisa, $list->unit, $valuei[0]);
                     }
-                }
-                
-            }
-            $dataisi['isi'] = $stok;
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $satuan[$index-1], $valuei[0]);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }else if($index == 1){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $value[$index] = $list->default_value;
+                    $lebih[$index] = $sisa;
+                    if($sisa > 0){
+                        $stok[] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index-1],$valuei[0]);
+                    }else{
+                        $stok[] = sprintf($format, 0, $satuan[$index-1], $valuei[0]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit, $valuei[1]);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }else if($index == 2){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $value[$index] = $list->default_value;
+                    $lebih[$index] = $sisa;
+                    if($sisa > 0){
+                        $stok[] = sprintf($format, $sisa, $satuan[$index-1], $valuei[1]);
+                    }else{
+                        $stok[] = sprintf($format, 0, $satuan[$index-1], $valuei[1]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit, $valuei[2]);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }    
+            } 
+            $dataisi['isi'] = $stokquantity;
+        }
             return view('pages.transaksi.salestransaksi.satuantampil', $dataisi);
     }
 
@@ -260,32 +377,65 @@ class TransaksiSalesController extends Controller
             $proses = DB::table('tbl_unit')->where('produk_id', $a->produk_id)
             ->join('tbl_satuan', 'tbl_unit.maximum_unit_name', '=', 'tbl_satuan.id_satuan')
             ->select('id_unit', 'nama_satuan as unit', 'default_value')
-            ->orderBy('id_unit', 'DESC')
+            ->orderBy('id_unit', 'ASC')
             ->get();
         // nilai jumlah dari tabel stok
         $jumlah = $a->quantity;
-        if($jumlah >= 0)
-        {
-            // pembagian satuan terbesar
-            $sisa1 = $jumlah % ($proses[0]->default_value * $proses[1]->default_value);
-            $nilai1 = ($jumlah - $sisa1) / ($proses[0]->default_value * $proses[1]->default_value);
-            $stok[0] = sprintf($format, $nilai1, $proses[0]->unit);
-            if($sisa1 >= 0)
-            {
-                // pembagian nilai menengah
-                $sisa2 = $sisa1 % $proses[1]->default_value;
-                $nilai2 = ($sisa1 - $sisa2) / $proses[1]->default_value;
-                $stok[1] = sprintf($format, $nilai2, $proses[1]->unit);
-                if($sisa2 >= 0)
-                {
-                    // pembagian nilai terkecil
-                    $sisa3 = $sisa2 % $proses[2]->default_value;
-                    $nilai3 = ($sisa2 - $sisa3) / $proses[2]->default_value;
-                    $stok[2] = sprintf($format, $nilai3, $proses[2]->unit);
-                }
-            }
-            
-        }
+        $hasilbagi = 0;
+            $stokquantity = [];
+            foreach ($proses as $index => $list) {
+                $banyak = sizeof($proses);
+                if($index == 0 ){
+                    $sisa = $jumlah % $list->default_value;
+                    $hasilbagi = ($jumlah-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $value[$index] = $list->default_value;
+                    $lebih[$index] = $sisa;
+                    if ($sisa > 0){
+                        $stok[] = sprintf($format, $sisa, $list->unit);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $satuan[$index-1]);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }else if($index == 1){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $value[$index] = $list->default_value;
+                    $lebih[$index] = $sisa;
+                    if($sisa > 0){
+                        $stok[] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index-1]);
+                    }else{
+                        $stok[] = sprintf($format, 0, $satuan[$index-1]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }else if($index == 2){
+                    $sisa = $hasilbagi % $list->default_value;
+                    $hasilbagi = ($hasilbagi-$sisa)/$list->default_value;
+                    $satuan[$index] = $list->unit;
+                    $value[$index] = $list->default_value;
+                    $lebih[$index] = $sisa;
+                    if($sisa > 0){
+                        $stok[] = sprintf($format, $sisa, $satuan[$index-1]);
+                    }else{
+                        $stok[] = sprintf($format, 0, $satuan[$index-1]);
+                    }
+                    if($banyak == $index+1){
+                        $satuan = array();
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
+                        $stokquantity = array_values($stok);
+                        $stok = array();
+                    }
+                }    
+            } 
             $init[] = array(
                 'stok_id' => $a->stok_id,
                 'produk_id' => $a->produk_id,
@@ -298,7 +448,7 @@ class TransaksiSalesController extends Controller
                 'tot' => 0,
                 'amount' => ($a->quantity * $a->harga_satuan) - $a->diskon,
                 'id_transaksi_tmp' => $a->id_transaksi_tmp,
-                'quantity' => implode(" ", $stok)
+                'quantity' => implode(" ",$stokquantity)
             );
         }
         // dd($init);
@@ -327,14 +477,14 @@ class TransaksiSalesController extends Controller
         $input->customer_id = $r->customerid;
         $input->note = $r->note;
         $input->totalsales = $r->totalsales;
-        $input->diskon = $r->ptongan;
+        $input->diskon = $r->potongan;
         $input->dp = $r->dp;
         $input->id_user = $r->id_user;
         $input->id_warehouse = $r->warehouse;
         if ($r->radiocash == 'Credit') {
             $input->status = 'UNPAID';
         } else {
-            $input->status = '';
+            $input->status = 'PAID';
         }
         $input->save();
 

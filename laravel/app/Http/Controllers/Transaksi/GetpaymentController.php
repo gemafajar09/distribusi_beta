@@ -44,13 +44,12 @@ class GetpaymentController extends Controller
     {
         $datas = DB::table('transaksi_sales')
             ->join('tbl_customer', 'tbl_customer.id_customer', 'transaksi_sales.customer_id')
-            ->join('tbl_sales', 'tbl_sales.id_sales', 'transaksi_sales.sales_id')
+            // ->join('tbl_sales', 'tbl_sales.id_sales', 'transaksi_sales.sales_id')
             ->where('transaksi_sales.transaksi_tipe', 'Credit')
             ->where('transaksi_sales.status', 'UNPAID')
             ->where('transaksi_sales.approve', '1')
             ->where('tbl_customer.nama_customer','Like','%'.$r->nama.'%')
             ->get();
-            // dd($datas);
 
         if($datas == TRUE)
         {
@@ -70,7 +69,7 @@ class GetpaymentController extends Controller
                 $data['hasil'][] = array(
                     'invoice_id' => $a->invoice_id,
                     'invoice_date' => $a->invoice_date,
-                    'nama_customer' => $a->nama_customer,
+                    // 'nama_customer' => $a->nama_customer,
                     'nama_sales' => $a->nama_sales,
                     'totalsales' => $a->totalsales,
                     'payment' => $payment,
@@ -84,7 +83,7 @@ class GetpaymentController extends Controller
                 'invoice_id' => '',
                 'invoice_date' => '',
                 'nama_customer' => '',
-                'nama_sales' => '',
+                // 'nama_sales' => '',
                 'totalsales' => '',
                 'payment' => '',
                 'remaining' => '',

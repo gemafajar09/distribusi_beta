@@ -164,6 +164,7 @@ Route::group(['namespace' => 'Transaksi'], function () {
     Route::post('deleteitem', 'TransaksiSalesController@deleteitem');
     Route::post('rekaptransaksi', 'TransaksiSalesController@rekaptransaksi');
     Route::post('invoice', 'TransaksiSalesController@invoice');
+    Route::get('tampilstok/{cabang}', 'TransaksiSalesController@tampilstok');
 
     // api return sales
     Route::post('ambil', 'ReturnsalesController@ambil');

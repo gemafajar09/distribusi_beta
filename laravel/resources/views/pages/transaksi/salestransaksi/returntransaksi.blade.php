@@ -95,14 +95,16 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="">Stok To Return</label>
-                                        <select name="stockId" id="stockId" class="select2" style="width:100%">
-                                            <option value="">STOCK ID</option>
-                                            @foreach($stockid as $a)
-                                                <option value="{{$a->produk_id}}">{{$a->produk_id}} | {{$a->produk_nama}}</option>
-                                            @endforeach
-                                        </select>
+                                        <button style="margin-top:28px" type="button"
+                                            class="btn btn-success btn-sm" onclick="stokcari('{{Session()->get('cabang')}}')">Stok To Return</button>
                                         <input type="hidden" id="stok_id">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="">Product ID</label>
+                                        <input type="text" style="border-radius:3px" id="produkid" name="produkid"
+                                            readonly class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -226,7 +228,9 @@
                                     </div>
                                 </div>
                                 <br>
-                                <input type="checkbox" id="print">&nbsp;<i>Print Invoice</i>
+                                <div id="printt" style="display:none">
+                                    <input type="checkbox" id="print">&nbsp;<i>Print Invoice</i>
+                                </div>
                                 <br>
                                 <button type="button" onclick="register()" class="btn btn-outline-success">Register
                                     Transaction </button>
@@ -301,12 +305,53 @@
   </div>
 </div>
 
+<div class="modal" tabindex="-1" id="tmpmodal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Stok Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12" id="datastoktampil">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script>
     $(document).ready(function(){
         
         $('#isibody').load("{{ route('tmpdata')}}")
         
     })
+
+    $('#compensation').change(function(){
+        var isi = $('#compensation').val()
+        if(isi == 'TERM UNTIL')
+        {
+            $('#printt').hide()
+            document.getElementById('print').checked = false
+        }else if(isi == 'CASH'){
+            $('#printt').show()
+            document.getElementById('print').checked = true
+        }
+    })
+
+    function stokcari(cabang)
+    {
+        axios.get("{{url('/api/tampilstok')}}/"+cabang).then(function(res){
+            var data = res.data
+            $('#tmpmodal').modal()
+            $('#datastoktampil').html(data)
+        })
+    }
 
     function diskont(nilai)
     {
@@ -324,7 +369,7 @@
         var term_util = $('#term_util').val()   
         var idsalesinv = $('#idsalesinv').val()  
         var diskon = $('#diskon').val() 
-        var totalsales = convertToAngka($('#finalselling').val())   
+        var totalsales = convertToAngka($('#totalsales').val())   
         var id_user = "{{Session()->get('id')}}"
         axios.post("{{url('/api/rekaptransaksir')}}",{
             'invoiceid':invoiceid,
@@ -350,8 +395,6 @@
             
         })
     }
-
-
 
     function add()
     {
@@ -427,12 +470,11 @@
         }
     })
 
-    $('#stockId').change(function(){
-        var stokid = $(this).val()
+   function pilihstok(stokid){
         var customer = $('#customerid').val()
         var cabang = "{{session()->get('cabang')}}"
         axios.post("{{url('/api/getProduk')}}",{
-            'produk_id': stokid,
+            'id_stok': stokid,
             'cabang': cabang
         }).then(function(res){
             var data = res.data.data
@@ -444,23 +486,23 @@
             $('#produknama').val(data.produk_nama)
             $('#prices').val(convertToRupiah(data.capital_price))
             $('#finalselling').val(convertToRupiah(data.capital_price))
-            
-        }).catch(function(err){
-            console.log(err)
-        })
-    })
-
-    function stok(id, jumlah)
-    {
-        axios.post("{{url('/api/cekstok')}}",{
-            'stok_id':id
-        }).then(function(res){
-            var data = res.data
-            $('#isi1').html(data)
+            $('#tmpmodal').modal('hide')
         }).catch(function(err){
             console.log(err)
         })
     }
+
+    function stok(id, cabang) {
+            axios.post("{{url('/api/cekstok')}}", {
+                'stok_id': id,
+                'cabang': cabang
+            }).then(function (res) {
+                var data = res.data
+                $('#isi1').html(data)
+            }).catch(function (err) {
+                console.log(err)
+            })
+        }
 
     function alls()
     {
