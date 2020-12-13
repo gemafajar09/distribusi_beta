@@ -131,11 +131,11 @@ class BrokenExpMovementController extends Controller
                 $lebih[$index] = $sisa;
                 $harga = $harga / $list->default_value;
                 if ($sisa > 0){
-                    $stok[$index] = sprintf($format, $sisa, $list->unit);
+                    $stok[] = sprintf($format, $sisa, $list->unit);
                 }
                  if($banyak == $index+1){
                     $satuan = array();
-                    $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                    $stok[] = sprintf($format, $hasilbagi, $list->unit);
                     $stokquantity = array_values($stok);
                     $stok = array();
                 }
@@ -146,11 +146,11 @@ class BrokenExpMovementController extends Controller
                     $lebih[$index] = $sisa;
                     $harga = $harga / $list->default_value;
                     if($sisa > 0){
-                        $stok[$index-1] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index-1]);
+                        $stok[] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index-1]);
                     }
                     if($banyak == $index+1){
                         $satuan = array();
-                        $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
                         $stokquantity = array_values($stok);
                         $stok = array();
                     }
@@ -161,11 +161,11 @@ class BrokenExpMovementController extends Controller
                     $lebih[$index] = $sisa;
                     $harga = $harga / $list->default_value;
                     if($sisa > 0){
-                        $stok[$index-1] = sprintf($format, $sisa,  $satuan[$index-1]);
+                        $stok[] = sprintf($format, $sisa,  $satuan[$index-1]);
                     }
                     if($banyak == $index+1){
                         $satuan = array();
-                        $stok[$index] = sprintf($format, $hasilbagi, $list->unit);
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
                         $stokquantity = array_values($stok);
                         $stok = array();
                     }
