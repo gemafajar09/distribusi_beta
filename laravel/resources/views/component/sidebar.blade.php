@@ -14,7 +14,7 @@
                     <li><a href="{{ route('sales') }}">Data Sales</a></li>
                     <li><a href="{{ route('suplier') }}">Data Suplier</a></li>
                     <li><a href="{{route('customer')}}">Data Customer</a></li>
-                    
+
                     <li><a href="{{route('spesial')}}">Data Harga Kshusus</a></li>
                     <li><a href="{{route('type')}}">Data Type Produk</a></li>
                     <li><a href="{{route('unit')}}">Data Unit</a></li>
@@ -50,6 +50,7 @@
                 <ul class="nav child_menu">
                     <li><a href="{{ route('cost_report') }}">Cost</a></li>
                     <li><a href="{{ route('sales_achievement') }}">Sales Achievement</a></li>
+                    <li><a href="{{ route('sales_transaksi') }}">Sales Transaction</a></li>
                     <li><a href="{{ route('broken_exp_report') }}">Broken & Exp Movement</a></li>
                     <li><a href="{{ route('stok-report') }}">Stok Inventory</a></li>
                     <li><a href="{{ route('purchase-report') }}">Purchase</a></li>

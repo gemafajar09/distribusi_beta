@@ -90,12 +90,10 @@ Route::group(['namespace' => 'Transaksi'], function () {
     });
     Route::group(['prefix' => 'opname'], function () {
 
-        Route::get('/stok_opname','OpnameController@index')->name('opname');
-        Route::get('/datatablesopname','OpnameController@datatablesopname')->name('datatablesopname');
-        Route::get('/list_aproval_opname','OpnameController@list_aproval')->name('aprovalopname');
-
+        Route::get('/stok_opname', 'OpnameController@index')->name('opname');
+        Route::get('/datatablesopname', 'OpnameController@datatablesopname')->name('datatablesopname');
+        Route::get('/list_aproval_opname', 'OpnameController@list_aproval')->name('aprovalopname');
     });
-    
 });
 
 Route::group(['namespace' => 'Report'], function () {
@@ -135,6 +133,11 @@ Route::group(['namespace' => 'Report'], function () {
         Route::get('/report_all_stock', 'SalesAchievementReport@printallstock');
         Route::get('/report_to_stock', 'SalesAchievementReport@printtostock');
         Route::get('/report_canvas_stock', 'SalesAchievementReport@printtostock');
+    });
+
+    Route::group(['prefix' => 'sales_transaksi'], function () {
+        Route::get('/report', 'SalesTransaksiReport@index')->name('sales_transaksi');
+        Route::get('/table_sales_transaksi', 'SalesTransaksiReport@table')->name('table_sales_transaksi');
     });
 });
 
