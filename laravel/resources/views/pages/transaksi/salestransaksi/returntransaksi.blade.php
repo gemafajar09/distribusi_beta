@@ -228,9 +228,9 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div id="printt" style="display:none">
+                                <!-- <div id="printt" style="display:none">
                                     <input type="checkbox" id="print">&nbsp;<i>Print Invoice</i>
-                                </div>
+                                </div> -->
                                 <br>
                                 <button type="button" onclick="register()" class="btn btn-outline-success">Register
                                     Transaction </button>
@@ -332,17 +332,17 @@
         
     })
 
-    $('#compensation').change(function(){
-        var isi = $('#compensation').val()
-        if(isi == 'TERM UNTIL')
-        {
-            $('#printt').hide()
-            document.getElementById('print').checked = false
-        }else if(isi == 'CASH'){
-            $('#printt').show()
-            document.getElementById('print').checked = true
-        }
-    })
+    // $('#compensation').change(function(){
+    //     var isi = $('#compensation').val()
+    //     if(isi == 'TERM UNTIL')
+    //     {
+    //         $('#printt').hide()
+    //         document.getElementById('print').checked = false
+    //     }else if(isi == 'CASH'){
+    //         $('#printt').show()
+    //         document.getElementById('print').checked = true
+    //     }
+    // })
 
     function stokcari(cabang)
     {
@@ -383,14 +383,15 @@
         }).then(function(res){
             var data = res.data
             if(data.status == 200){
-                var check = document.getElementById('print').checked;
-                if(check == true)
-                {
-                    // window.open("{{url('/sales_transaksi/fakturs')}}/"+data.invoice_id+"/"+salestype, '_blank');
-                    window.location.reload()
-                }else{
-                    window.location.reload()
-                }
+                // var check = document.getElementById('print').checked;
+                // if(check == true)
+                // {
+                //     // window.open("{{url('/sales_transaksi/fakturs')}}/"+data.invoice_id+"/"+salestype, '_blank');
+                //     window.location.reload()
+                // }else{
+                //     window.location.reload()
+                // }
+                window.location.reload()
             }
             
         })
@@ -407,26 +408,47 @@
         var count = $('#totals').val()
         // cek diskon kosong atau tidak
         var discount = $('#diskon').val()
-       // hitung jumlah
-       if($('#jumlah1').val() == '0')
-        {
-            var jumlah1 = '0'
-        }else{
-            var jumlah1 = $('#jumlah1').val()
-        }
-        if($('#jumlah2').val() == '0')
-        {
-            var jumlah2 = '0'
-        }else{
-            var jumlah2 = $('#jumlah2').val()
-        }
-        var jumlah3 = $('#jumlah3').val()
-        // cari nilai unit
-        var uni1 = parseInt($('#pecah1').val())
-        var uni2 = parseInt($('#pecah2').val())
-        var uni3 = $('#pecah3').val()
-        var hargasatuan = prices / uni1
-        var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
+       // cek amount
+       var amou = $('#amount').val()
+            if (amou == '') {
+                var amount = 0
+            } else {
+                var amount = amou
+            }
+            // hitung jumlah
+            if ($('#jumlah1').val() == '0') {
+                var jumlah1 = '0'
+            } else {
+                var jumlah1 = $('#jumlah1').val()
+            }
+            if ($('#jumlah2').val() == '0') {
+                var jumlah2 = '0'
+            } else {
+                var jumlah2 = $('#jumlah2').val()
+            }
+            if ($('#jumlah3').val() == '0') {
+                var jumlah3 = '0'
+            }else{
+                var jumlah3 = $('#jumlah3').val()
+            }
+            // cari nilai unit
+
+            if(count == 1){
+                var uni1 = parseInt($('#pecah1').val())
+                var hargasatuan = prices / uni1
+                var total = parseInt(jumlah1 * uni1)
+            }else if(count == 2){
+                var uni1 = parseInt($('#pecah1').val())
+                var uni2 = parseInt($('#pecah2').val())
+                var hargasatuan = prices / uni2
+                var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2)
+            }else if(count == 3){
+                var uni1 = parseInt($('#pecah1').val())
+                var uni2 = parseInt($('#pecah2').val())
+                var uni3 = parseInt($('#pecah3').val())
+                var hargasatuan = prices / uni3
+                var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
+            }
         axios.post("{{url('/api/addkeranjangr')}}",{
             'invoiceid':invoiceid,
             'id_stok':stockId,

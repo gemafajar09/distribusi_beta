@@ -28,13 +28,15 @@ class GetpaymentController extends Controller
             $plus = (int)$cekinv + 1;
             $invoice = 'CC-'.date('Ym')."-".date('H').'-'.$plus;
         }
+        $cek = DB::table('tbl_getpayment')->selectRaw('SUM(payment) as payment')->where('invoice_id',$ids)->first();
+        // ===================================
         $data = DB::table('transaksi_sales')
                     ->join('tbl_customer','tbl_customer.id_customer','transaksi_sales.customer_id')
                     ->where('transaksi_sales.invoice_id',$ids)
                     ->first();
                     if($data == TRUE)
                     {
-                        return response()->json(['status' => 200, 'data' => $data, 'invoice' => $invoice]);
+                        return response()->json(['status' => 200, 'data' => $data, 'invoice' => $invoice, 'payment' => $cek->payment]);
                     }else{
                         return response()->json(['message' => 'Data Tidak Ditemukan', 'status' => 404]);
                     }
@@ -55,9 +57,9 @@ class GetpaymentController extends Controller
             $data['hasil'] = [];
             foreach($datas as $a)
             {
-                $cek = DB::table('tbl_getpayment')->where('invoice_id',$a->invoice_id)->first();
+                $cek = DB::table('tbl_getpayment')->selectRaw('SUM(payment) as payment')->where('invoice_id',$a->invoice_id)->first();
                 $sales = DB::table('tbl_sales')->where('id_sales',$a->sales_id)->first();
-                
+                // dd($cek);
                 if($cek == TRUE)
                 {
                     $payment = $cek->payment;
@@ -92,6 +94,13 @@ class GetpaymentController extends Controller
             );
         }
         return view('pages.transaksi.getpayment.tabelpayment', $data);
+    }
+
+    public function changedue(Request $r)
+    {
+        // DB::table('tbl_stok')->where('stok_id',$a->stok_id)->update(['jumlah' => $stok]);
+        DB::table('transaksi_sales')->where('id_transaksi_sales', $r->id_transaksi)->update(['term_until' => $r->tanggal]);
+        return response()->json(['status' => 200]);
     }
 
     public function detailtrans(Request $r)

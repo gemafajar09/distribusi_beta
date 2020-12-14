@@ -283,8 +283,9 @@ class ReturnsalesController extends Controller
                 'produk_nama' => $a->produk_nama,
                 'produk_harga' => $a->price,
                 'total' => $a->quantity * $a->harga_satuan,
-                'amount' => ($a->quantity * $a->harga_satuan),
+                'amount' => ($a->quantity * $a->harga_satuan) - $a->diskon,
                 'id_tmpreturn' => $a->id_tmpreturn,
+                'diskon' => $a->diskon,
                 'note' => $a->note,
                 'quantity' => implode(" ", $stokquantity)
             );
