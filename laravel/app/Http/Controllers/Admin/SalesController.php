@@ -61,9 +61,10 @@ class SalesController extends Controller
     {
         try {
             if ($id) {
-                $data = Sales::findOrFail($id);
+                // $data = Sales::findOrFail($id);
+                $data = DB::table('tbl_sales')->where('id_sales',$id)->first();
             } else {
-                $data = Sales::all();
+                $data = DB::table('tbl_sales')->get();
             }
             return response()->json(['data' => $data, 'status' => 200]);
         } catch (ModelNotFoundException $e) {
@@ -116,7 +117,7 @@ class SalesController extends Controller
     }
 
     public function getSales($id_cabang){
-            $data = Sales::where('id_cabang',$id_cabang)->select('id_sales','nama_sales')->get();
+            $data = DB::table('tbl_sales')->where('id_cabang',$id_cabang)->get();
             return response()->json(['data' => $data, 'status' => 200]);
     }
 }

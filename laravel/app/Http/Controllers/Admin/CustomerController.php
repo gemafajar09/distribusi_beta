@@ -23,7 +23,7 @@ class CustomerController extends Controller
             'telepon'=>'required|numeric',
             'kartu_kredit'=>'required|numeric',
             'fax'=>'required|numeric',
-            'id_sales'=>'required|numeric',
+            'id_sales'=>'required',
             'note'=>'required|regex:/(^[A-Za-z0-9 .,]+$)+/',
             'id_cabang'=>'numeric'
         );

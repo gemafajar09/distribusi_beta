@@ -178,6 +178,9 @@ Route::group(['namespace' => 'Transaksi'], function () {
     Route::post('getcredit', 'GetpaymentController@getcredit');
     Route::post('addpayment', 'GetpaymentController@addpayment');
     Route::post('approval', 'ApprovesalesController@approve');
+    Route::get('detailapp/{id}', 'ApprovesalesController@detailapp');
+
+
     // api Purchase Return
     // Route::get('purchasereturn/datatable', 'TransaksiPurchareturnController@datatable');
     Route::get('purchasereturn/{id}', 'TransaksiPurchaseReturnController@get');

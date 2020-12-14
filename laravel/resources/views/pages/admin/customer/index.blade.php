@@ -65,13 +65,13 @@
                     </div>
                     </div>
                     <div class="row">
-                                        <div class="col-md-2" align="center">
-                                            <button type="button" style="width:140px;" id="add" class="btn btn-outline-success btn-sm">Add</button>
-                                        </div>
-                                        <div class="col-md-2" align="center">
-                                            <button type="button" style="width:140px;" class="btn btn-outline-danger btn-sm" onclick="bersih()">Remove All</button>
-                                        </div>
-                                    </div>
+                        <div class="col-md-2" align="center">
+                            <button type="button" style="width:140px;" id="add" class="btn btn-outline-success btn-sm">Add</button>
+                        </div>
+                        <div class="col-md-2" align="center">
+                            <button type="button" style="width:140px;" class="btn btn-outline-danger btn-sm" onclick="bersih()">Remove All</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -257,7 +257,6 @@
         var fax = $('#fax').val();
         var id_sales = $('#id_sales').val();
         var note = $('#note').val();
-
         axios.post('{{url('/api/customer')}}',{
             nama_customer: nama_customer,
             nama_perusahaan: nama_perusahaan,
