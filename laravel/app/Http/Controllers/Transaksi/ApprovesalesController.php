@@ -17,14 +17,19 @@ class ApprovesalesController extends Controller
         foreach($trans as $a)
         {
             $sales = DB::table('tbl_sales')->where('id_sales',$a->sales_id)->first();
-            
+            if($sales == NULL)
+            {
+                $namasales = '';
+            }else{
+                $namasales = $sales->nama_sales;
+            }
             $data['list'][] = array(
                 'invoice_id' => $a->invoice_id,
                 'invoice_date' => $a->invoice_date,
                 'totalsales' => $a->totalsales,
                 'diskon' => $a->diskon,
                 'id_transaksi_sales' => $a->id_transaksi_sales,
-                'nama_sales' => $sales->nama_sales
+                'nama_sales' => $namasales
             );
         }
         return view('pages.transaksi.salestransaksi.approve',$data);

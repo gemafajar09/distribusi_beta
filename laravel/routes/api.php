@@ -176,6 +176,7 @@ Route::group(['namespace' => 'Transaksi'], function () {
     Route::post('paymentcustomer', 'GetpaymentController@caricustomer');
     Route::post('detailtrans', 'GetpaymentController@detailtrans');
     Route::post('getcredit', 'GetpaymentController@getcredit');
+    Route::post('changedue', 'GetpaymentController@changedue');
     Route::post('addpayment', 'GetpaymentController@addpayment');
     Route::post('approval', 'ApprovesalesController@approve');
     Route::get('detailapp/{id}', 'ApprovesalesController@detailapp');
