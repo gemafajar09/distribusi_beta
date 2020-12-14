@@ -171,7 +171,7 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">Price</div>
                                                 </div>
-                                                <input type="text" class="form-control" id="prices">
+                                                <input type="text" class="form-control" readonly id="prices">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -270,8 +270,8 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div id="printt" style="display:none">
-                                    <input type="checkbox" id="print">&nbsp;<i>Print Invoice</i>
+                                <div id="printt" >
+                                    <input checked type="checkbox" id="print">&nbsp;<i>Print Invoice</i>
                                 </div>
                                 <br>
                                 <button type="button" onclick="register()" class="btn btn-outline-success">Register
@@ -366,6 +366,7 @@
         })
 
         function register() {
+            var id_cabang = '{{Session()->get('cabang')}}'
             var salestype = $('#salesType').val()
             var invoiceid = $('#invoiceid').val()
             var invoicedate = $('#invoiceDate').val()
@@ -398,7 +399,7 @@
                 if (data.status == 200) {
                     var check = document.getElementById('print').checked;
                     if (check == true) {
-                        window.open("{{url('/sales_transaksi/fakturs')}}/" + data.invoice_id + "/" + salestype,
+                        window.open("{{url('/sales_transaksi/fakturs')}}/" + data.invoice_id + "/" + salestype + "/" + id_cabang,
                             '_blank');
                         window.location.reload()
                     } else {
@@ -414,7 +415,7 @@
             var tot = convertToAngka($('#totalsales').val())
             var hasil = tot - ((tot * persen) / 100)
             $('#potongan').val(convertToRupiah((tot * persen) / 100))
-            $('#downpayment').val(convertToRupiah((tot * persen) / 100))
+            $('#terbilang').html(terbilang(''+hasil) + ' Rupiah')
             $('#creditbalance').val(convertToRupiah(hasil))
             $('#afterdiscount').val(convertToRupiah(tot - (tot * persen) / 100))
 
@@ -486,8 +487,8 @@
             if (radio == true) {
                 $('#termutil').show()
                 $('#metode').val('Credit')
-                $('#printt').hide()
-                document.getElementById('print').checked = false
+                // $('#printt').hide()
+                // document.getElementById('print').checked = false
             } else {
                 $('#termutil').hide()
             }
@@ -498,8 +499,8 @@
             if (radio == true) {
                 $('#termutil').hide()
                 $('#metode').val('Cash')
-                $('#printt').show()
-                document.getElementById('print').checked = true
+                // $('#printt').show()
+                // document.getElementById('print').checked = true
             } else {
                 $('#termutil').show()
             }
@@ -512,7 +513,6 @@
             var produkid = $('#produkid').val()
             var prices = convertToAngka($('#prices').val())
             var count = $('#totals').val()
-
             // cek diskon kosong atau tidak
             var discount = $('#discount').val()
             if (discount == '') {
@@ -538,13 +538,29 @@
             } else {
                 var jumlah2 = $('#jumlah2').val()
             }
-            var jumlah3 = $('#jumlah3').val()
+            if ($('#jumlah3').val() == '0') {
+                var jumlah3 = '0'
+            }else{
+                var jumlah3 = $('#jumlah3').val()
+            }
             // cari nilai unit
-            var uni1 = parseInt($('#pecah1').val())
-            var uni2 = parseInt($('#pecah2').val())
-            var uni3 = $('#pecah3').val()
-            var hargasatuan = prices / uni3
-            var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
+
+            if(count == 1){
+                var uni1 = parseInt($('#pecah1').val())
+                var hargasatuan = prices / uni1
+                var total = parseInt(jumlah1 * uni1)
+            }else if(count == 2){
+                var uni1 = parseInt($('#pecah1').val())
+                var uni2 = parseInt($('#pecah2').val())
+                var hargasatuan = prices / uni2
+                var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2)
+            }else if(count == 3){
+                var uni1 = parseInt($('#pecah1').val())
+                var uni2 = parseInt($('#pecah2').val())
+                var uni3 = parseInt($('#pecah3').val())
+                var hargasatuan = prices / uni3
+                var total = parseInt(jumlah1 * uni1) + parseInt(jumlah2 * uni2) + parseInt(jumlah3 * uni3)
+            }
             axios.post("{{url('/api/addkeranjang')}}", {
                 'invoiceid': invoiceid,
                 'stockId': stockId,

@@ -64,7 +64,7 @@ Route::group(['namespace' => 'Transaksi'], function () {
     Route::group(['prefix' => 'sales_transaksi'], function () {
         Route::get('/sales_transaction', 'TransaksiSalesController@index')->name('sales_transaction');
         Route::get('/datatablessales', 'TransaksiSalesController@datatablessales')->name('datatablessales');
-        Route::get('/fakturs/{id}/{type}', 'TransaksiSalesController@faktur');
+        Route::get('/fakturs/{id}/{type}/{id_cabang}', 'TransaksiSalesController@faktur');
         // return
         Route::get('/returnsales', 'ReturnsalesController@index')->name('returnsales');
         Route::get('/tmpdata', 'ReturnsalesController@tmpdata')->name('tmpdata');
@@ -123,6 +123,7 @@ Route::group(['namespace' => 'Report'], function () {
     });
     Route::group(['prefix' => 'cost_report'], function () {
         Route::get('/report', 'CostReport@index')->name('cost_report');
+        Route::get('/table_cost/{select?}/{input?}/{ket_waktu?}/{filtertahun?}/{filterbulan?}/{filter_year?}/{waktuawal?}/{waktuakhir?}', 'CostReport@table')->name('table_cost');
         Route::get('/generate_cost/{select}/{input}/{ket_waktu}/{filtertahun}/{filterbulan}/{filter_year}/{waktuawal}/{waktuakhir}', 'CostReport@generatereport');
         // Route::get('/report_cost_today', 'CostReport@report_today');
         // Route::get('/report_cost_month/{month}/{year}', 'CostReport@report_month');

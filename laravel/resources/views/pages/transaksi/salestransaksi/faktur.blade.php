@@ -14,10 +14,9 @@
         <div class="row">
             <div class="col-sm-8">
         <div class="text-left">
-            <h5>SUMBER CAHAYA REZEKI</h5>
-            <h6>Jl. BY PASS TALUAK</h6>
-            <h6>BUKITTINGGI, INDONESIA</h6>
-            <H6>PHONE : 085375715757 FAX : (0752) 8810863</H6>
+            <h5>{{$data_cabang->nama_cabang}}</h5>
+            <h6>{{$data_cabang->alamat}}</h6>
+            <H6>PHONE : {{$data_cabang->telepon}} EMAIL : {{$data_cabang->email}}</H6>
             <br>
             <p>Sales : {{$sales['nama_sales']}}</p>
         </div>
@@ -105,53 +104,67 @@
     </table>
     <br>
     <div class="row">
-        <div class="col-sm-7">
-            <p>Note : {{$sales['note']}}</p>
-            <hr style="border-top: 5px solid black;">
-            <div class="row mb-5">
-                <div class="col-sm-8">
-                    <p class="ml-4">Prepared By</p>
-                </div>
-                <div class="col-sm-4">
-                    <p class="ml-3">Approved By</p>
-                </div>
+            <div class="col-sm-12 mt-5">
+                <table border="2" style="width: 50%; margin-left:50%">
+                    <tr>
+                        <td style="border-bottom: none;">Total Purchase :</td>
+                        <td style="text-align:right;">Rp.{{number_format($tot)}}</td>
+                    </tr>
+                    <tr>
+                        <td>Final Discount :</td>
+                        <td style="text-align:right;">Rp.{{number_format($sales['diskon'])}}</td>
+                    </tr>
+                    <tr>
+                        <td>Total After Discount :</td>
+                        <td style="text-align:right;">Rp.{{number_format($tot - $sales['diskon'])}}</td>
+                    </tr>
+                    <tr>
+                        <td>Down Payment :</td>
+                        <td style="text-align:right;">Rp.{{number_format($sales['dp'])}}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Debt Balance :</td>
+                        <td style="text-align:right;">Rp.{{number_format(($tot - $sales['diskon']) - $sales['dp'] )}}</td>
+                    </tr>
+                </table>
             </div>
-            <div class="row">
-            <div class="col-sm-8">
-                    <p>............................</p>
-                    <p>Date : {{date('d-m-Y')}}</p>
+            <div class="col-sm-12">
+                <p>Note : {{$sales['note']}}</p>
+                <hr style="border-top: 5px solid black;">
+                <div class="row mb-5">
+                    <div class="col-sm-3">
+                        <p class="ml-4">Penyedia</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p class="ml-3">Sopir</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p class="ml-4">Penerima</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p class="ml-3">Gudang Penyedia</p>
+                    </div>
                 </div>
-                <div class="col-sm-4">
-                <p>............................</p>
-                    <p>Date : </p>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p>............................</p>
+                        <p>Date : {{date('d-m-Y')}}</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>............................</p>
+                        <p>Date : </p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>............................</p>
+                        <p>Date : </p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>............................</p>
+                        <p>Date : </p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-5 mt-5">
-            <table  border="2" style="width: 100%;">
-                <tr>
-                    <td style="border-bottom: none;">Total Purchase :</td>
-                    <td>{{number_format($tot)}}</td>
-                </tr>
-                <tr>
-                    <td>Final Discount :</td>
-                    <td>{{number_format($sales['diskon'])}}</td>
-                </tr>
-                <tr>
-                    <td>Total After Discount :</td>
-                    <td>{{number_format($tot - $sales['diskon'])}}</td>
-                </tr>
-                <tr>
-                    <td>Down Payment :</td>
-                    <td>{{number_format($sales['dp'])}}</td>
-                </tr>
-                <tr>
-                    <td>Total Debt Balance :</td>
-                    <td>{{number_format(($tot - $sales['diskon']) - $sales['dp'])}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
 </div>
 
     

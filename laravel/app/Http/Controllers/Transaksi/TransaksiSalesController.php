@@ -22,7 +22,7 @@ class TransaksiSalesController extends Controller
             'id_transaksi_sales' => 'numeric',
             'id_transaksi_detail' => 'numeric',
             'id_transaksi_tmp' => 'numeric',
-            'sales_id' => 'numeric',
+            'sales_id' => '',
             'stok_id' => 'numeric',
             'qty_carton' => 'numeric',
             'qty_cup' => 'numeric',
@@ -43,7 +43,7 @@ class TransaksiSalesController extends Controller
     public function index()
     {
         $cabang = session()->get('cabang');
-        $data['salesid'] = DB::table('tbl_sales')->get();
+        $data['salesid'] = DB::table('tbl_sales')->where('id_cabang',$cabang)->get();
         $data['customerid'] = Customer::all();
         $data['stockid'] = DB::table('tbl_produk')
             ->join('tbl_stok', 'tbl_produk.produk_id', 'tbl_stok.produk_id')
@@ -294,9 +294,18 @@ class TransaksiSalesController extends Controller
                 ->select('id_unit', 'nama_satuan as unit', 'default_value')
                 ->orderBy('id_unit', 'ASC')
                 ->get();
-                $valuei[] = $proses[0]->default_value;
-                $valuei[] = $proses[1]->default_value;
-                $valuei[] = $proses[2]->default_value * $proses[1]->default_value;
+                $total = count($proses);
+                if($total == 1)
+                {
+                    $valuei[] = $proses[0]->default_value;
+                }elseif($total == 2){
+                    $valuei[] = $proses[0]->default_value;
+                    $valuei[] = $proses[1]->default_value;
+                }elseif($total == 3){
+                    $valuei[] = $proses[0]->default_value;
+                    $valuei[] = $proses[1]->default_value;
+                    $valuei[] = $proses[2]->default_value * $proses[1]->default_value;
+                }
             $hasilbagi = 0;
             $stokquantity = [];
             foreach ($proses as $index => $list) {
@@ -312,7 +321,7 @@ class TransaksiSalesController extends Controller
                     }
                     if($banyak == $index+1){
                         $satuan = array();
-                        $stok[] = sprintf($format, $hasilbagi, $satuan[$index-1], $valuei[0]);
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit, $valuei[0]);
                         $stokquantity = array_values($stok);
                         $stok = array();
                     }
@@ -323,7 +332,7 @@ class TransaksiSalesController extends Controller
                     $value[$index] = $list->default_value;
                     $lebih[$index] = $sisa;
                     if($sisa > 0){
-                        $stok[] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index-1],$valuei[0]);
+                        $stok[] = sprintf($format, $sisa+$lebih[$index-1], $satuan[$index],$valuei[0]);
                     }else{
                         $stok[] = sprintf($format, 0, $satuan[$index-1], $valuei[0]);
                     }
@@ -353,6 +362,7 @@ class TransaksiSalesController extends Controller
                 }    
             } 
             $dataisi['isi'] = $stokquantity;
+            $dataisi['total'] = $total;
         }
             return view('pages.transaksi.salestransaksi.satuantampil', $dataisi);
     }
@@ -396,7 +406,7 @@ class TransaksiSalesController extends Controller
                     }
                     if($banyak == $index+1){
                         $satuan = array();
-                        $stok[] = sprintf($format, $hasilbagi, $satuan[$index-1]);
+                        $stok[] = sprintf($format, $hasilbagi, $list->unit);
                         $stokquantity = array_values($stok);
                         $stok = array();
                     }
@@ -501,6 +511,9 @@ class TransaksiSalesController extends Controller
                 'id_user' => $a->id_user,
                 'harga_satuan' => $a->harga_satuan
             ]);
+            $lihat = DB::table('tbl_stok')->where('stok_id',$a->stok_id)->first();
+            $stok = $lihat->jumlah - $a->quantity;
+            DB::table('tbl_stok')->where('stok_id',$a->stok_id)->update(['jumlah' => $stok]);
             DB::table('transaksi_sales_tmps')->where('id_transaksi_tmp', $a->id_transaksi_tmp)->delete();
         }
         if ($input == TRUE) {
@@ -510,8 +523,9 @@ class TransaksiSalesController extends Controller
         }
     }
 
-    public function faktur($id,$type)
+    public function faktur($id,$type,$id_cabang)
     {
+        $datas['data_cabang'] = DB::table('tbl_cabang')->where('id_cabang',$id_cabang)->first();
         $data = DB::table('transaksi_sales_details')
             ->join('tbl_stok', 'tbl_stok.stok_id', 'transaksi_sales_details.stok_id')
             ->join('tbl_produk', 'tbl_produk.produk_id', 'tbl_stok.produk_id')
@@ -567,7 +581,6 @@ class TransaksiSalesController extends Controller
                 'produk_harga' => number_format($a->price),
                 'total' => number_format($a->quantity * $a->harga_satuan),
                 'diskon' => number_format($a->diskon),
-                'tot' => 0,
                 'amount' => ($a->quantity * $a->harga_satuan) - $a->diskon,
                 'id_transaksi_tmp' => $a->id_transaksi_detail,
                 'quantity' => implode(" ", $stok)

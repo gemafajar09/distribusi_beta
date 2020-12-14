@@ -2,16 +2,70 @@
 
 <!-- main content -->
 <!-- page Title -->
-@section('page-title','Halaman Cost')
+@section('page-title','Ini Halaman Cost')
 <!-- Page Content -->
 @section('content')
 <div class="mt-2">
     <div class="x_content">
         <div class="row">
             <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <input type="radio" name="radio" id="salesman" value="0"> Salesman
+                        <input type="radio" name="radio" id="other" value="1"> Other
+                        <hr>
+                        <div id="body" style="display: none">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Cost ID</label>
+                                    <input type="hidden" id="id_cabang" class="form-control">
+                                    <input type="text" id="inv_cost" value="" readonly="" class="form-control">
+                                    {{-- <input type="hidden" id="inv_cost_edit" value="" readonly="" class="form-control">
+                                    <input type="hidden" id="cost_id" name=""> --}}
+                                </div>
+                                <div class="form-group" id="id_requester">
+                                    <label>Id Requester</label>
+                                    <select class="form-control" id="id_sales">
+                                        @foreach ($datasales as $sales): ?>
+                                        <option value="{{ $sales->id_sales }}">
+                                            {{ $sales->id_sales }} - {{ $sales->nama_sales }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Transaksi</label>
+                                    <input type="date" name="" class="form-control" id="tanggal">
+                                </div>
+                                <div class="form-group" id="nama_other">
+                                    <label>Nama</label>
+                                    <input type="text" name="" class="form-control" id="note">
+                                </div>
+                                <button type="button" id="buttonSimpan" class="btn btn-outline-success"
+                                    onclick="simpanData()"><i class="fa fa-plus"></i>
+                                    {{-- <span id="namaButton"></span> --}}
+                                </button>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Cost Name</label>
+                                    <input type="text" name="" class="form-control" id="cost_nama">
+                                </div>
+                                <div class="form-group">
+                                    <label>Nominal Cost</label>
+                                    <input type="number" name="" class="form-control" id="nominal"
+                                        onkeyup="terbilang();">
+                                    <br>
+                                    <div class="card-body bg-dark text-white text-center text-uppercase"
+                                        id="terbilang_">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
                 <div class="card-box table-responsive">
-                    <button type="button" class="btn btn-outline-success btn-sm" onclick="tambahData()" style="width:140px;"><i
-                            class="fa fa-plus"></i></button>
                     <table id="tabel" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
                         width="100%">
                         <thead>
@@ -42,56 +96,56 @@
             <div class="modal-header">
                 <h5><i class="fa fa-plus"></i> Operational Cost</h5>
             </div>
-            <div class="modal-body">
-                <input type="radio" name="radio" id="salesman" value="0"> Salesman
-                <input type="radio" name="radio" id="other" value="1"> Other
+            <div class="modal-body" id="modal_body">
+                <input type="radio" name="radio" id="salesman_edit" value="0"> Salesman
+                <input type="radio" name="radio" id="other_edit" value="1"> Other
                 <hr>
-                <div class="row" id="modal_body" style="display: none">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Cost ID</label>
-                            <input type="hidden" id="id_cabang" class="form-control">
-                            <input type="text" id="inv_cost" value="" readonly="" class="form-control">
-                            <input type="hidden" id="inv_cost_edit" value="" readonly="" class="form-control">
-                            <input type="hidden" id="cost_id" name="">
-                        </div>
-                        <div class="form-group" id="id_requester">
-                            <label>Id Requester</label>
-                            <select class="form-control" id="id_sales">
-                                @foreach ($datasales as $sales): ?>
-                                <option value="{{ $sales->id_sales }}">
-                                    {{ "SL-".str_pad($sales->id_sales,5,"0",STR_PAD_LEFT) }} - {{ $sales->nama_sales }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Tanggal Transaksi</label>
-                            <input type="date" name="" class="form-control" id="tanggal">
-                        </div>
-                        <div class="form-group" id="nama_other">
-                            <label>Nama</label>
-                            <input type="text" name="" class="form-control" id="note">
-                        </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Cost ID</label>
+                        <input type="hidden" id="id_cabang_edit" class="form-control">
+                        <input type="text" id="inv_cost_edit" value="" readonly="" class="form-control">
+                        {{-- <input type="hidden" id="inv_cost_edit" value="" readonly="" class="form-control"> --}}
+                        <input type="hidden" id="cost_id_edit" name="">
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Cost Name</label>
-                            <input type="text" name="" class="form-control" id="cost_nama">
-                        </div>
-                        <div class="form-group">
-                            <label>Nominal Cost</label>
-                            <input type="number" name="" class="form-control" id="nominal" onkeyup="terbilang();">
-                            <br>
-                            <div class="card-body bg-dark text-white text-center text-uppercase" id="terbilang">
-                            </div>
+                    <div class="form-group" id="id_requester_edit">
+                        <label>Id Requester</label>
+                        <select class="form-control" id="id_sales_edit">
+                            @foreach ($datasales as $sales): ?>
+                            <option value="{{ $sales->id_sales }}">
+                                {{ $sales->id_sales }} - {{ $sales->nama_sales }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Transaksi</label>
+                        <input type="date" name="" class="form-control" id="tanggal_edit">
+                    </div>
+                    <div class="form-group" id="nama_other_edit">
+                        <label>Nama</label>
+                        <input type="text" name="" class="form-control" id="note_edit">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Cost Name</label>
+                        <input type="text" name="" class="form-control" id="cost_nama_edit">
+                    </div>
+                    <div class="form-group">
+                        <label>Nominal Cost</label>
+                        <input type="number" name="" class="form-control" id="nominal_edit" onkeyup="terbilang();">
+                        <br>
+                        <div class="card-body bg-dark text-white text-center text-uppercase" id="terbilang">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="buttonSimpan" class="btn btn-success" onclick="simpanData()"><span
-                        id="namaButton"></span></button>
+                <button type="button" id="buttonEdit" class="btn btn-success" onclick="editData()"> Edit
+                    Data
+                    {{-- <span id="namaButton"></span> --}}
+                </button>
                 <button type="button" class="btn btn-secondary" id="close">Close</button>
             </div>
         </div>
@@ -100,6 +154,7 @@
 <script>
     function terbilang(){
     var bilangan=document.getElementById("nominal").value;
+    var bilangan=document.getElementById("nominal_edit").value;
     var kalimat="";
     var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
     var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
@@ -173,16 +228,23 @@
         }
     }
     document.getElementById("terbilang").innerHTML=kalimat +"Rupiah";
+    document.getElementById("terbilang_").innerHTML=kalimat +"Rupiah";
 }
 </script>
 
 <script>
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
     $(document).ready(function(){
+      id_cabang = {{session()->get('cabang')}}
       tables = $('#tabel').DataTable({
         processing : true,
         serverSide : true,
         ajax:{
-          url: "{{ url('/api/cost/datatable') }}",
+          url: "{{ url('/api/cost/datatable') }}/"+id_cabang,
         },
         columns:[
         {
@@ -222,23 +284,23 @@
       });
     });
 
-   function tambahData()
-   {
-    var now = new Date();
-    var day = ("0" + now.getDate()).slice(-2);
-    var month = ("0" + (now.getMonth() + 1)).slice(-2);
-    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
-    $('#tanggal').val(today)
-    $('#salesman').prop('checked', false)
-    $('#other').prop('checked', false)
-    $('#buttonSimpan').css('display', 'block');
-    $('#buttonEdit').css('display', 'none');
-    $('#modalCost').modal('show')
-    $('#cost_id').val('');
-    $('#inv_cost').attr('type', 'text');
-    $('#inv_cost_edit').attr('type', 'hidden');
-    $('#namaButton').text('Simpan Data')
-   }
+//    function tambahData()
+//    {
+//     var now = new Date();
+//     var day = ("0" + now.getDate()).slice(-2);
+//     var month = ("0" + (now.getMonth() + 1)).slice(-2);
+//     var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+//     $('#tanggal').val(today)
+//     $('#salesman').prop('checked', false)
+//     $('#other').prop('checked', false)
+    // $('#buttonSimpan').css('display', 'block');
+    // $('#buttonEdit').css('display', 'none');
+    // $('#modalCost').modal('show')
+    // $('#cost_id').val('');
+    // $('#inv_cost').attr('type', 'text');
+    // $('#inv_cost_edit').attr('type', 'hidden');
+    // $('#namaButton').text('Simpan Data')
+//    }
 
    function simpanData()
    {
@@ -255,7 +317,6 @@
     var id_cabang = $('#id_cabang').val()
     if(radio_salesman){
         var data_cost = {
-            cost_id: parseInt(cost_id),
             inv_cost:inv_cost,
             tanggal: tanggal,
             cost_nama: cost_nama,
@@ -266,7 +327,6 @@
         }
     }else{
         var data_cost = {
-            cost_id: parseInt(cost_id),
             inv_cost:inv_cost,
             tanggal: tanggal,
             cost_nama: cost_nama,
@@ -276,8 +336,8 @@
             note:note
         }
     }
-    if(cost_id.toString().length == 0)
-    {
+    // if(cost_id.toString().length == 0)
+    // {
         axios.post('{{url('/api/cost/')}}', data_cost)
         .then(function (res) {
             var data = res.data
@@ -295,14 +355,69 @@
                 $('#salesman').prop('checked', false)
                 $('#other').prop('checked', false)
                 $('#inv_cost').val(d);
-                $('#modal_body').css('display', 'none');
+                $('#body').css('display', 'none');
                 $('#modalCost').modal('hide')
             }
         })
+    // }
+    // else
+    // {
+    //     axios.put('{{url('/api/cost/')}}', data_cost)
+    //     .then(function (res) {
+    //         var data = res.data
+    //         console.log(data.status)
+    //         if(data.status == 200)
+    //         {
+    //             tables.ajax.reload()
+    //             toastr.info(data.message)
+    //             bersih()
+    //             $('#inv_cost').val('{{ $invoice }}');
+    //             $('#salesman').prop('checked', false)
+    //             $('#other').prop('checked', false)
+    //             $('#body').css('display', 'none');
+    //             $('#modalCost').modal('hide')
+    //         }
+    //     })
+    // }
+   }
+
+   function editData()
+   {
+    var radio_salesman_edit = $('#salesman_edit:checked').val();
+    var inv_cost_edit = $('#inv_cost_edit').val();
+    var tanggal_edit = $('#tanggal_edit').val();
+    var id_sales_edit = $('#id_sales_edit').val();
+    var cost_nama_edit = $('#cost_nama_edit').val();
+    var nominal_edit = $('#nominal_edit').val();
+    var note_edit = $('#note_edit').val();
+    var salesman_edit = $('#salesman_edit').val()
+    var other_edit = $('#other_edit').val()
+    var cost_id_edit = $('#cost_id_edit').val()
+    var id_cabang_edit = $('#id_cabang_edit').val()
+    if(radio_salesman_edit){
+        var data_cost_edit = {
+            cost_id:cost_id_edit,
+            inv_cost:inv_cost_edit,
+            tanggal: tanggal_edit,
+            cost_nama: cost_nama_edit,
+            nominal: nominal_edit,
+            type:salesman_edit,
+            id_cabang:id_cabang_edit,
+            id_sales:id_sales_edit
+        }
+    }else{
+        var data_cost_edit = {
+            cost_id:cost_id_edit,
+            inv_cost:inv_cost_edit,
+            tanggal: tanggal_edit,
+            cost_nama: cost_nama_edit,
+            nominal: nominal_edit,
+            type:other_edit,
+            id_cabang:id_cabang_edit,
+            note:note_edit
+        }
     }
-    else
-    {
-        axios.put('{{url('/api/cost/')}}', data_cost)
+    axios.put('{{url('/api/cost/')}}', data_cost_edit)
         .then(function (res) {
             var data = res.data
             console.log(data.status)
@@ -310,16 +425,11 @@
             {
                 tables.ajax.reload()
                 toastr.info(data.message)
-                bersih()
-                // $('#inv_cost').val('{{ $invoice }}');
-                $('#salesman').prop('checked', false)
-                $('#other').prop('checked', false)
-                $('#modal_body').css('display', 'none');
                 $('#modalCost').modal('hide')
             }
         })
-    }
    }
+
 
    function deleted(id)
     {
@@ -341,74 +451,108 @@
         $('#terbilang').empty()
     }
 
-    $('#other').click(function(){
-        var other = document.getElementById('other').checked
-        console.log(other)
-        if (other == true) {
-            $('#nama_other').show()
-            $('#modal_body').show()
-            $('#id_requester').css('display', 'none')
-        }else{
-            $('#nama_other').css('display', 'none')
-            $('#modal_body').hide()
-            $('#id_requester').css('display', 'none')
-        }
-    })
-
     function ambilData(id)
     {
         axios.get('{{url('/api/cost')}}/'+ id)
         .then(function(res) {
             var isi = res.data
             pemilihan = isi.data.type
-            console.log(isi.data.type)
+            console.log(isi.data)
             if(pemilihan == 0)
             {
-                $('#salesman').prop('checked', true)
-                $('#id_requester').show()
+                $('#salesman_edit').prop('checked', true)
+                $('#id_requester_edit').show()
                 $('#modal_body').show()
-                $('#nama_other').css('display', 'none')
-                document.getElementById('cost_id').value=isi.data.cost_id;
+                $('#nama_other_edit').css('display', 'none')
+                document.getElementById('cost_id_edit').value=isi.data.cost_id;
                 document.getElementById('inv_cost_edit').value=isi.data.inv_cost;
-                document.getElementById('id_sales').value=isi.data.id_sales;
-                document.getElementById('tanggal').value=isi.data.tanggal;
-                document.getElementById('cost_nama').value=isi.data.cost_nama;
-                document.getElementById('nominal').value=isi.data.nominal;
-                document.getElementById('id_cabang').value=isi.data.id_cabang;
-                $('#inv_cost').attr('type', 'hidden');
-                $('#inv_cost_edit').attr('type', 'text');
+                document.getElementById('id_sales_edit').value=isi.data.id_sales;
+                document.getElementById('tanggal_edit').value=isi.data.tanggal;
+                document.getElementById('cost_nama_edit').value=isi.data.cost_nama;
+                document.getElementById('nominal_edit').value=isi.data.nominal;
+                document.getElementById('id_cabang_edit').value=isi.data.id_cabang;
+                // $('#inv_cost').attr('type', 'hidden');
+                // $('#inv_cost_edit').attr('type', 'text');
             }
             else
             {
-                $('#other').prop('checked', true)
-                $('#nama_other').show()
+                $('#other_edit').prop('checked', true)
+                $('#nama_other_edit').show()
                 $('#modal_body').show()
-                $('#id_requester').css('display', 'none')
-                document.getElementById('cost_id').value=isi.data.cost_id;
+                $('#id_requester_edit').css('display', 'none')
+                document.getElementById('cost_id_edit').value=isi.data.cost_id;
                 document.getElementById('inv_cost_edit').value=isi.data.inv_cost;
-                document.getElementById('note').value=isi.data.note;
-                document.getElementById('tanggal').value=isi.data.tanggal;
-                document.getElementById('cost_nama').value=isi.data.cost_nama;
-                document.getElementById('nominal').value=isi.data.nominal;
-                $('#inv_cost').attr('type', 'hidden');
-                $('#inv_cost_edit').attr('type', 'text');
+                document.getElementById('note_edit').value=isi.data.note;
+                document.getElementById('tanggal_edit').value=isi.data.tanggal;
+                document.getElementById('cost_nama_edit').value=isi.data.cost_nama;
+                document.getElementById('nominal_edit').value=isi.data.nominal;
+                document.getElementById('id_cabang_edit').value=isi.data.id_cabang;
+                // $('#inv_cost').attr('type', 'hidden');
+                // $('#inv_cost_edit').attr('type', 'text');
             }
-            $('#namaButton').text('Edit Data')
+            // $('#namaButton').text('Edit Data')
             $('#modalCost').modal('show')
         })
     }
 
+    $('#other').click(function(){
+        $('#tanggal_edit').val(today)
+        var other = document.getElementById('other').checked
+        console.log(other)
+        if (other == true) {
+            $('#nama_other').show()
+            $('#body').show()
+            $('#id_requester').css('display', 'none')
+        }else{
+            $('#nama_other').css('display', 'none')
+            $('#body').hide()
+            $('#id_requester').css('display', 'none')
+        }
+    })
+
     $('#salesman').click(function(){
+        $('#tanggal').val(today)
         var salesman = document.getElementById('salesman').checked
         console.log(salesman)
         if (salesman == true) {
             $('#id_requester').show()
-            $('#modal_body').show()
+            $('#body').show()
             $('#nama_other').css('display', 'none')
         }else{
             $('#id_requester').css('display', 'none')
-            $('#modal_body').hide()
+            $('#body').hide()
             $('#nama_other').css('display', 'none')
+        }
+    })
+
+    // edit
+    $('#other_edit').click(function(){
+        $('#tanggal_edit').val(today)
+        var other = document.getElementById('other_edit').checked
+        console.log(other)
+        if (other == true) {
+            $('#nama_other_edit').show()
+            $('#modal_body').show()
+            $('#id_requester_edit').css('display', 'none')
+        }else{
+            $('#nama_other_edit').css('display', 'none')
+            $('#modal_body').hide()
+            $('#id_requester_edit').css('display', 'none')
+        }
+    })
+
+    $('#salesman_edit').click(function(){
+        $('#tanggal_edit').val(today)
+        var salesman = document.getElementById('salesman_edit').checked
+        console.log(salesman)
+        if (salesman == true) {
+            $('#id_requester_edit').show()
+            $('#modal_body').show()
+            $('#nama_other_edit').css('display', 'none')
+        }else{
+            $('#id_requester_edit').css('display', 'none')
+            $('#modal_body').hide()
+            $('#nama_other_edit').css('display', 'none')
         }
     })
 
@@ -416,7 +560,7 @@
         $('input[name ="radio"]').prop('checked', false);
         bersih()
         $('#modalCost').modal('hide')
-        $('#modal_body').hide()
+        $('#body').hide()
     })
 
     $('#inv_cost').val('{{ $invoice }}');

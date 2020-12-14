@@ -46,7 +46,7 @@
             <th>Invoice Id</th>
             <th>Invoice Date</th>
             <th>Customer Name</th>
-            <th>Salesman</th>
+            <th>Sales Name</th>
             <th>Total Credit Balance</th>
             <th>Total Payment</th>
             <th>Remainening Credit</th>
