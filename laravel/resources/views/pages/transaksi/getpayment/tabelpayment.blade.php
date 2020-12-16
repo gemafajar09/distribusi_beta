@@ -114,8 +114,8 @@
                             </div>
                             <div class="form-group" style="display: none;" id="due">
                                 <label for="">Chnage Due Date</label><br>
-                                <input type="date" id="duedate" class="form-control">
-                                <input type="text" id="id_transaksi">
+                                <input type="date" id="duedatee" class="form-control">
+                                <input type="hidden" id="id_transaksi">
                             </div>
                             <br>
                             <div>
@@ -185,7 +185,7 @@
 
     $('#change').click(function(){
         var id_transaksi = parseInt($('#id_transaksi').val())
-        var tanggal = $('#duedate').val()
+        var tanggal = $('#duedatee').val()
         axios.post("{{url('/api/changedue')}}",{
             'id_transaksi':id_transaksi,
             'tanggal':tanggal

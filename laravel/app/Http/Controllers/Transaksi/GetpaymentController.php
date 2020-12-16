@@ -98,6 +98,7 @@ class GetpaymentController extends Controller
 
     public function changedue(Request $r)
     {
+        dd($r->id_transaksi, $r->tanggal);
         // DB::table('tbl_stok')->where('stok_id',$a->stok_id)->update(['jumlah' => $stok]);
         DB::table('transaksi_sales')->where('id_transaksi_sales', $r->id_transaksi)->update(['term_until' => $r->tanggal]);
         return response()->json(['status' => 200]);
