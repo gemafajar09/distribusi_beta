@@ -154,7 +154,8 @@ class SalesController extends Controller
         $username = $r->username;
         $password = $r->password;
         $data = array();
-        $cek = DB::table('tbl_sales')->where('username',$username)->where('password1',$password)->first();
+        $cek = DB::table('tbl_sales')->where('username',$username)->first();
+        dd($cek);
         if($cek->username == TRUE)
         {
             if(password_verify($password,$cek->password))
