@@ -805,7 +805,7 @@ class TransaksiSalesController extends Controller
             } 
             $dataisi['isi'] = $stokquantity;
             $dataisi['total'] = $total;
-            return response()->json(['status' => 200,'stokdata' => $r->stok_id]);
+            return response()->json(['status' => 200,'stokdata' => $dataisi]);
         }
     }
 }
