@@ -202,21 +202,20 @@ Route::group(['namespace' => 'Transaksi'], function () {
     Route::get('purchasereturninv/{id}', 'TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
 
     // opname
-    Route::get('stok_opname/{fisik}/{stok_id}','OpnameController@cekbalance');
-    Route::post('stok_opname','OpnameController@add');
-    Route::get('reportopname/{id_cabang}/{id_gudang}','OpnameController@print_faktur');
-    Route::get('makeadjust/{stok_id}','OpnameController@adjust');
-    Route::get('aprovalopname/datatable/{id_cabang}','OpnameController@datatablesaprovalopname');
-    Route::post('opname/approval','OpnameController@opname_aproval');
+    Route::get('stok_opname/{fisik}/{stok_id}', 'OpnameController@cekbalance');
+    Route::post('stok_opname', 'OpnameController@add');
+    Route::get('reportopname/{id_cabang}/{id_gudang}', 'OpnameController@print_faktur');
+    Route::get('makeadjust/{stok_id}', 'OpnameController@adjust');
+    Route::get('aprovalopname/datatable/{id_cabang}', 'OpnameController@datatablesaprovalopname');
+    Route::post('opname/approval', 'OpnameController@opname_aproval');
 
     // broken
-    Route::get('brokenexp/datatable/{id_cabang}','BrokenExpMovementController@datatablesbroken');
+    Route::get('brokenexp/datatable/{id_cabang}', 'BrokenExpMovementController@datatablesbroken');
     Route::get('ambildatastok/{id}', 'BrokenExpMovementController@ambildatastok');
     Route::post('cekdatastok/', 'BrokenExpMovementController@cekdatastok');
     Route::post('add_broken', 'BrokenExpMovementController@add');
     Route::delete('broken/remove/{id}', 'BrokenExpMovementController@remove');
     Route::get('registerbroken/{id_cabang}', 'BrokenExpMovementController@register');
-
 });
 
 
@@ -224,7 +223,7 @@ Route::group(['namespace' => 'Report'], function () {
     Route::group(['prefix' => 'inventory'], function () {
         Route::get('datatable/{id_cabang}', 'StokReportController@datatable');
         Route::get('datatable/{id_cabang}/{id}', 'StokReportController@datatable');
-    }); 
+    });
     Route::group(['prefix' => 'report_purchase'], function () {
         Route::get('datatable/{status}/{id_cabang}', 'PurchaseReportController@all_datatable');
         Route::get('today_datatable/{status}/{id_cabang}', 'PurchaseReportController@today_datatable');
@@ -249,14 +248,24 @@ Route::group(['namespace' => 'Report'], function () {
         Route::get('datatable', 'CostReport@datatable');
         Route::get('findid/{select}/{input}/{ket_waktu}/{filtertahun}/{filterbulan}/{filter_year}/{waktuawal}/{waktuakhir}', 'CostReport@findId');
     });
-    //     Route::get('purchaseinv/{id}', 'TransaksiPurchaseTmpController@generateInvoicePurchase');
+
+    Route::group(['prefix' => 'sales_transaksi'], function () {
+        Route::get('detailreport/{id}', 'SalesTransaksiReport@detailreport');
+    });
+
+    Route::group(['prefix' => 'sales_achievement'], function () {
+        Route::get('ambiltarget/{id}', 'SalesAchievementReport@ambiltarget');
+        Route::get('transaksisalesachievement/{id}', 'SalesAchievementReport@transaksisales');
+    });
+
+    // Route::get('purchaseinv/{id}', 'TransaksiPurchaseTmpController@generateInvoicePurchase');
     // Route::get('purchasereturninv/{id}', 'TransaksiPurchaseReturnController@generateInvoicePurchaseReturn');
 
     // broken and exp movement
 
     // edit transaksi
 
-    
+
 });
 
 Route::group(['namespace' => 'Report'], function () {

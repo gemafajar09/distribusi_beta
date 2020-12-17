@@ -31,16 +31,76 @@
         </div>
         <br>
         <div class="text-center">
-            <button class="btn btn-success btn-sm btn-block">Refresh Report</button>
-            <button class="btn btn-danger btn-sm btn-block">Generate Report</button>
+            <button class="btn btn-warning btn-sm btn-block" onclick="pilihanfilter()">View Report</button>
+            <button class="btn btn-success btn-sm btn-block" onclick="refresh()">Refresh Report</button>
         </div>
     </div>
 </div>
 
+<div id="detailm" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Detail Transaction</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="detailsemua">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <script>
-    $(document).ready(function () {
-        $('#isitable').load('{{ route('table_sales_transaksi')}}')
-    });
+    // $(document).ready(function () {
+    //     $('#isitable').load('{{ route('table_sales_transaksi')}}')
+    // });
+    function refresh() 
+    {
+        window.location.reload()
+    }
+
+    function pilihanfilter()
+    {
+        var filtertahun = $('#year').val()
+        if(filtertahun == null)
+        {
+            filtertahun = 0;
+        }
+
+        var filterbulan = $('#month').val()
+        if(filterbulan == null)
+        {
+            filterbulan = 0;
+        }
+
+        var filter_tahun = $('#year_filter').val()
+        if(filter_tahun == null)
+        {
+            filter_tahun = 0;
+        }
+
+        var waktuawal = $('#waktu_awal').val()
+        if(waktuawal == "")
+        {
+            waktuawal = 0;
+        }
+
+        var waktuakhir = $('#waktu_akhir').val()
+        if(waktuakhir == "")
+        {
+            waktuakhir = 0;
+        }
+        var ket_waktu = $('#ket_waktu').val();
+
+        $('#isitable').load("{{ route('table_sales_transaksi') }}/" + ket_waktu + "/"+  filtertahun +"/" + filterbulan + "/" +filter_tahun + "/" +waktuawal + "/" +waktuakhir)
+    }
 
     $("#waktu_awal" ).prop( "readonly", true );
     $("#waktu_akhir" ).prop( "readonly", true );

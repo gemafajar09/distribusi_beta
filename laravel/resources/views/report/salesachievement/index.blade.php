@@ -9,6 +9,11 @@
     <div class="col border p-3 mr-3 bg-white rounded">
         <h6>Salesman :</h6>
         <select name="" id="data_salesman" class="form-control">
+            <option value="">-SALESMAN-</option>
+            @foreach($data as $a)
+            <option value="{{$a->id_sales}}">{{$a->nama_sales}}</option>
+
+            @endforeach
         </select>
         <br>
         <div class="card-body bg-dark text-white text-center text-uppercase" id="terbilang">
@@ -35,7 +40,7 @@
         <br>
         <div class="text-center">
             <button class="btn btn-success btn-sm btn-block" onclick="refresh()">Refresh Report</button>
-            <button class="btn btn-danger btn-sm btn-block" onclick="">Generate Report</button>
+            <button class="btn btn-danger btn-sm btn-block" id="generate">Generate Report</button>
         </div>
         <div>
             <label for="">Filter By :</label>
@@ -56,53 +61,35 @@
         </div>
     </div>
     <div class="col-sm-9 border p-3">
-        <div class="card-box table-responsive">
-            <table id="tabel"
-                class="table table-striped table-responsive-sm table-bordered dt-responsive nowrap table-sm"
-                cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>INVOICE ID</th>
-                        <th>INVOICE DATE</th>
-                        <th>INVOICE TYPE</th>
-                        <th>CUSTOMER NAME</th>
-                        <th>TOTAL</th>
-                        <th>DISCOUT</th>
-                        <th>DP</th>
-                        <th>TOTAL AFTER DISCOUNT</th>
-                        <th>PAY STATUS</th>
-                        <th>TRANSACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+        <div class="card-box table-responsive" id="isitable">
 
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
 <script>
-    var data_salesman = null;
-    var data_salesman_terpilih = null;
-    function DataSalesman() {
-        document.getElementById("data_salesman").innerHTML = null;
-        axios.get('/api/sales/')
-            .then(function(res){
-                data_salesman = res.data.data;
-                for(var x = 0; x < data_salesman.length; x++)
-                {
-                    document.getElementById("data_salesman").innerHTML += "<option value='" + data_salesman[x].id_sales +"'>" + data_salesman[x].nama_sales + "</option>"
-                }
-            })
-    }
+    var cabang = {{ session()->get('cabang')}};
 
-    function detailSales()
-    {
-        data_salesman_terpilih = data_salesman[document.getElementById("data_salesman").selectedIndex];
-        document.getElementById("target_sales").innerHTML = data_salesman_terpilih.target;
-    }
+    $('#data_salesman').change(function(){
+        var id_sales = $(this).val()
+        console.log(id_sales);
+        axios.get("{{url('/api/sales_achievement/ambiltarget')}}/"+id_sales)
+        .then(function(res){
+            var data = res.data
+            document.getElementById("target_sales").innerHTML = data.target;
+        })
+    })
+
+    $('#generate').click(function () { 
+        var id_sales = $('#data_salesman').val()
+        console.log(id_sales);
+        axios.get("{{url('/api/sales_achievement/transaksisalesachievement')}}/"+id_sales)
+        .then(function(res){
+            var data = res.data
+            console.log(data)
+            // document.getElementById("target_sales").innerHTML = data.target;
+            $('#isitable').load('{{ route('table_achievement')}}/' + id_sales)
+        })
+    });
 
     function allstock()
     {
@@ -163,12 +150,10 @@
             }
         })
 
+    
     function refresh()
     {
         window.location.reload()
     }
-
-    DataSalesman()
-    document.getElementById('data_salesman').addEventListener("change", detailSales);
 </script>
 @endsection
