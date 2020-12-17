@@ -130,6 +130,7 @@ Route::group(['namespace' => 'Report'], function () {
     });
     Route::group(['prefix' => 'sales_achievement'], function () {
         Route::get('/report', 'SalesAchievementReport@index')->name('sales_achievement');
+        Route::get('/table_sales_achievement/{id?}', 'SalesAchievementReport@transaksisales')->name('table_achievement');
         Route::get('/report_all_stock', 'SalesAchievementReport@printallstock');
         Route::get('/report_to_stock', 'SalesAchievementReport@printtostock');
         Route::get('/report_canvas_stock', 'SalesAchievementReport@printtostock');
@@ -137,7 +138,7 @@ Route::group(['namespace' => 'Report'], function () {
 
     Route::group(['prefix' => 'sales_transaksi'], function () {
         Route::get('/report', 'SalesTransaksiReport@index')->name('sales_transaksi');
-        Route::get('/table_sales_transaksi', 'SalesTransaksiReport@table')->name('table_sales_transaksi');
+        Route::get('/table_sales_transaksi/{ket_waktu?}/{filtertahun?}/{filterbulan?}/{filter_year?}/{waktuawal?}/{waktuakhir?}', 'SalesTransaksiReport@table')->name('table_sales_transaksi');
     });
 });
 
