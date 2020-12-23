@@ -10,6 +10,6 @@ class TransaksiSalesDetail extends Model
     protected $table = 'transaksi_sales_details';
     protected $primaryKey = 'id_transaksi_detail ';
     protected $fillable = [
-        'invoice_id', 'invoice_date', 'stok_id','price','quantity','diskon','id_user','harga_satuan'
+        'invoice_id', 'invoice_date', 'stok_id','price','quantity','diskon','id_user','harga_satuan','id_sales'
     ];
 }
