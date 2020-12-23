@@ -60,7 +60,7 @@ class SuplierController extends Controller
     public function datatable($id_cabang)
     {
         // untuk datatables Sistem Join Query Builder
-        return datatables()->of(DB::table('tbl_suplier')->where('id_cabang',$id_cabang)->get())->toJson();
+        return datatables()->of(DB::table('tbl_suplier')->orderBy('nama_suplier', 'ASC')->where('id_cabang',$id_cabang)->get())->toJson();
     }
 
     public function join_builder($id = null)
